@@ -1,0 +1,832 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Virtual Health Assistant | AI-Powered Healthcare</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2a9d8f;
+            --primary-dark: #1d7a6e;
+            --secondary-color: #264653;
+            --secondary-dark: #1a3340;
+            --accent-color: #e9c46a;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-medium: #6c757d;
+            --gray-light: #e9ecef;
+            --danger-color: #e76f51;
+            --success-color: #2a9d8f;
+            --box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f8fafc;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1140px;
+            }
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .display-4 {
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: var(--secondary-color) !important;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            padding: 0.75rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.35rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color) !important;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+            border-radius: 8px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(38,70,83,0.9), rgba(42,157,143,0.9)),
+                        url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 6rem 0 5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: #f8fafc;
+            transform: skewY(-2deg);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Main Content */
+        .main-form-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 3rem;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .main-form-container:hover {
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+
+        .form-control {
+            padding: 0.875rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(42, 157, 143, 0.15);
+        }
+
+        /* Buttons */
+        .btn {
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(42, 157, 143, 0.3);
+        }
+
+        .btn-outline-primary {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            border: none;
+        }
+
+        .btn-danger:hover {
+            background-color: #d45a3d;
+        }
+
+        /* Cards */
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            height: 100%;
+            border: none;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.25rem;
+            background: rgba(42, 157, 143, 0.1);
+            width: 80px;
+            height: 80px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        /* Results Section */
+        .result-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 3rem;
+            border: none;
+        }
+
+        .toggle-button {
+            padding: 0.75rem 1.5rem;
+            margin: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .toggle-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+
+        /* Modals */
+        .modal-header {
+            background: var(--secondary-color);
+            color: white;
+            border-bottom: none;
+            padding: 1.5rem;
+        }
+
+        .modal-title {
+            font-weight: 600;
+        }
+
+        .modal-content {
+            border-radius: 12px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 12px 36px rgba(0,0,0,0.15);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-dark);
+            color: white;
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        footer h5 {
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        footer ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        footer a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Utility Classes */
+        .text-muted {
+            color: var(--gray-medium) !important;
+        }
+
+        .bg-light {
+            background-color: var(--gray-light) !important;
+        }
+
+        /* Specific Components */
+        #transcription {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border: 1px dashed #ddd;
+            font-size: 0.95rem;
+        }
+
+        .speech-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .delivery-btn {
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        .appointment-btn {
+            margin-top: 1rem;
+            width: 100%;
+            background-color: #3a86ff;
+            border: none;
+        }
+
+        .appointment-btn:hover {
+            background-color: #2667cc;
+        }
+
+        .section-title {
+            position: relative;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .hero-section {
+                padding: 4rem 0 3rem;
+            }
+
+            .hero-section::after {
+                bottom: -30px;
+                height: 60px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 3rem 0 2rem;
+            }
+
+            .main-form-container {
+                padding: 1.75rem;
+            }
+
+            .toggle-button {
+                width: 100%;
+                margin: 0.5rem 0;
+            }
+
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-section {
+                padding: 2.5rem 0 1.5rem;
+            }
+
+            .main-form-container {
+                padding: 1.5rem;
+            }
+
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img class="logo" src="{{ url_for('static', filename='VirtualHealthAssistant.png') }}" alt="Virtual Health Assistant Logo">
+                Virtual Health Assistant
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">
+                            <i class="fas fa-home me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">
+                            <i class="fas fa-info-circle me-1"></i> About
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">
+                            <i class="fas fa-envelope me-1"></i> Contact
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/doctor-appointment">
+                            <i class="fas fa-user-md me-1"></i> Doctors
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/medicine-delivery">
+                            <i class="fas fa-pills me-1"></i> Medicine
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">
+                            <i class="fas fa-sign-in-alt me-1"></i> Login
+                        </a>
+                    </li>
+                </ul>
+                <form class="d-flex ms-3" role="search">
+                    <div class="input-group">
+                        <input class="form-control" type="search" placeholder="Search health topics...">
+                        <button class="btn btn-outline-light" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-center">
+        <div class="container hero-content">
+            <h1 class="display-4 fw-bold mb-4">AI-Powered Health Diagnosis</h1>
+            <p class="lead mb-5">Get accurate health insights and connect with healthcare professionals in minutes</p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="#diagnosis-section" class="btn btn-primary btn-lg px-4">
+                    <i class="fas fa-diagnoses me-2"></i>Try Symptom Checker
+                </a>
+                <a href="/doctor-appointment" class="btn btn-outline-light btn-lg px-4">
+                    <i class="fas fa-user-md me-2"></i>Book Doctor
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="container mb-5">
+        <div class="row text-center mb-5">
+            <div class="col">
+                <h2 class="fw-bold section-title">Our Services</h2>
+                <p class="text-muted">Comprehensive healthcare solutions at your fingertips</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h4>AI Diagnosis</h4>
+                    <p class="text-muted">Our advanced machine learning model analyzes your symptoms to provide accurate health assessments.</p>
+                    <a href="#diagnosis-section" class="btn btn-outline-primary mt-3">
+                        <i class="fas fa-diagnoses me-2"></i> Try Now
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h4>Doctor Consultation</h4>
+                    <p class="text-muted">Connect with certified healthcare professionals for online or in-person consultations.</p>
+                    <a href="/doctor-appointment" class="btn appointment-btn mt-3">
+                        <i class="fas fa-calendar-check me-2"></i> Book Appointment
+                    </a>
+                    <a href="/manage-doctors" class="btn btn-warning btn-lg mt-2">
+                        <i class="fas fa-user-cog me-2"></i>Manage Doctors
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <h4>Medicine Delivery</h4>
+                    <p class="text-muted">Get your prescribed medications delivered to your doorstep within hours.</p>
+                    <a href="/medicine-delivery" class="btn btn-outline-primary delivery-btn">
+                        <i class="fas fa-pills me-2"></i> Order Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Form -->
+    <section id="diagnosis-section" class="container">
+        <div class="main-form-container">
+            <h2 class="text-center mb-4 fw-bold" style="color: var(--primary-color);">
+                <i class="fas fa-diagnoses me-2"></i>Symptom Checker
+            </h2>
+            <form action="/predict" method="post">
+                <div class="form-group mb-4">
+                    <label for="symptoms" class="form-label fw-bold mb-3">
+                        <i class="fas fa-notes-medical me-2"></i>Describe Your Symptoms:
+                    </label>
+                    <input type="text" class="form-control" id="symptoms" name="symptoms" placeholder="e.g., headache, fever, fatigue, etc." required>
+                    <small class="text-muted">Separate multiple symptoms with commas</small>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <button type="button" id="startSpeechRecognition" class="btn btn-primary speech-btn flex-grow-1">
+                        <i class="fas fa-microphone me-2"></i>Voice Input
+                    </button>
+
+                    <button type="submit" class="btn btn-danger flex-grow-1">
+                        <i class="fas fa-search me-2"></i>Analyze Symptoms
+                    </button>
+                </div>
+
+                <!-- Display the transcribed text here -->
+                <div name="mysysms" id="transcription"></div>
+
+                {% if message %}
+                <div class="alert alert-warning mt-3">
+                    <i class="fas fa-exclamation-triangle me-2"></i>{{ message }}
+                </div>
+                {% endif %}
+            </form>
+        </div>
+    </section>
+
+    {% if predicted_disease %}
+    <!-- Results Section -->
+    <section class="container">
+        <div class="result-container">
+            <h2 class="text-center mb-4 fw-bold section-title" style="color: var(--primary-color);">
+                <i class="fas fa-clipboard-check me-2"></i>Diagnosis Results
+            </h2>
+
+            <div class="d-flex flex-wrap justify-content-center mb-4 gap-2">
+                <!-- Buttons to toggle display -->
+                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#diseaseModal" style="background-color: var(--secondary-color); color: white;">
+                    <i class="fas fa-disease me-2"></i>Disease
+                </button>
+                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#descriptionModal" style="background-color: #268AF3; color: white;">
+                    <i class="fas fa-file-alt me-2"></i>Description
+                </button>
+                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#precautionModal" style="background-color: #F371F9; color: white;">
+                    <i class="fas fa-shield-alt me-2"></i>Precaution
+                </button>
+                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#medicationsModal" style="background-color: #F8576F; color: white;">
+                    <i class="fas fa-pills me-2"></i>Medications
+                </button>
+                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#dietModal" style="background-color: #4CAF50; color: white;">
+                    <i class="fas fa-utensils me-2"></i>Diet
+                </button>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/doctor-appointment" class="btn btn-primary btn-lg px-4">
+                    <i class="fas fa-user-md me-2"></i> Consult a Doctor About These Results
+                </a>
+            </div>
+
+            <div class="alert alert-info mt-4">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Disclaimer:</strong> This AI-powered health assistant is designed to provide preliminary health information only.
+                Always consult with a qualified healthcare provider for any health concerns.
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5><i class="fas fa-heartbeat me-2"></i>Virtual Health Assistant</h5>
+                    <p class="text-muted">Empowering individuals with AI-driven health insights for better wellness decisions.</p>
+                    <div class="social-icons mt-3">
+                        <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="/" class="text-muted">Home</a></li>
+                        <li><a href="/about" class="text-muted">About</a></li>
+                        <li><a href="/contact" class="text-muted">Contact</a></li>
+                        <li><a href="/blog" class="text-muted">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4 mb-4 mb-md-0">
+                    <h5>Services</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#diagnosis-section" class="text-muted">Symptom Checker</a></li>
+                        <li><a href="/doctor-appointment" class="text-muted">Doctor Consultation</a></li>
+                        <li><a href="/medicine-delivery" class="text-muted">Medicine Delivery</a></li>
+                        <li><a href="#" class="text-muted">Health Records</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <h5>Contact Us</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> Graphic Era University, MedCity</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i> (123) 456-7890</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i> info@virtualhealth.com</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4 bg-light opacity-25">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <p class="mb-0 text-muted">&copy; 2023 Virtual Health Assistant. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0">
+                        <a href="#" class="text-muted me-3">Privacy Policy</a>
+                        <a href="#" class="text-muted">Terms of Service</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    {% if predicted_disease %}
+    <!-- Disease Modal -->
+    <div class="modal fade" id="diseaseModal" tabindex="-1" aria-labelledby="diseaseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="diseaseModalLabel"><i class="fas fa-disease me-2"></i>Predicted Disease</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 class="text-center mb-3 text-primary">{{ predicted_disease }}</h4>
+                    <p class="text-muted text-center">This is the most likely condition based on your symptoms.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description Modal -->
+    <div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="descriptionModalLabel"><i class="fas fa-file-alt me-2"></i>Disease Description</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 class="text-center mb-3 text-primary">{{ predicted_disease }}</h4>
+                    <p>{{ dis_des }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Precaution Modal -->
+    <div class="modal fade" id="precautionModal" tabindex="-1" aria-labelledby="precautionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="precautionModalLabel"><i class="fas fa-shield-alt me-2"></i>Precautions</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 class="text-center mb-3 text-primary">{{ predicted_disease }}</h4>
+                    <ul class="list-group list-group-flush">
+                        {% for precaution in my_precautions %}
+                        <li class="list-group-item">{{ precaution }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Medications Modal -->
+    <div class="modal fade" id="medicationsModal" tabindex="-1" aria-labelledby="medicationsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="medicationsModalLabel"><i class="fas fa-pills me-2"></i>Recommended Medications</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 class="text-center mb-3 text-primary">{{ predicted_disease }}</h4>
+                    <ul class="list-group list-group-flush">
+                        {% for medication in my_medications %}
+                        <li class="list-group-item">{{ medication }}</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Important:</strong> Always consult with a doctor before taking any medications.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="/medicine-delivery" class="btn btn-primary">
+                        <i class="fas fa-pills me-2"></i> Order Medicines
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Diet Modal -->
+    <div class="modal fade" id="dietModal" tabindex="-1" aria-labelledby="dietModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dietModalLabel"><i class="fas fa-utensils me-2"></i>Recommended Diet</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4 class="text-center mb-3 text-primary">{{ predicted_disease }}</h4>
+                    <ul class="list-group list-group-flush">
+                        {% for diet in my_diet %}
+                        <li class="list-group-item">{{ diet }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <script>
+        const startSpeechRecognitionButton = document.getElementById('startSpeechRecognition');
+        const transcriptionDiv = document.getElementById('transcription');
+
+        startSpeechRecognitionButton.addEventListener('click', startSpeechRecognition);
+
+        function startSpeechRecognition() {
+            // Change button appearance during recording
+            startSpeechRecognitionButton.innerHTML = '<i class="fas fa-microphone-slash me-2"></i>Listening...';
+            startSpeechRecognitionButton.classList.remove('btn-primary');
+            startSpeechRecognitionButton.classList.add('btn-warning');
+
+            const recognition = new webkitSpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.onresult = function(event) {
+                const result = event.results[0][0].transcript;
+                transcriptionDiv.textContent = result;
+                document.getElementById('symptoms').value = result;
+
+                // Restore button appearance
+                startSpeechRecognitionButton.innerHTML = '<i class="fas fa-microphone me-2"></i>Voice Input';
+                startSpeechRecognitionButton.classList.remove('btn-warning');
+                startSpeechRecognitionButton.classList.add('btn-primary');
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event.error);
+                transcriptionDiv.textContent = 'Error occurred in recognition: ' + event.error;
+
+                // Restore button appearance
+                startSpeechRecognitionButton.innerHTML = '<i class="fas fa-microphone me-2"></i>Voice Input';
+                startSpeechRecognitionButton.classList.remove('btn-warning');
+                startSpeechRecognitionButton.classList.add('btn-primary');
+            };
+
+            recognition.start();
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

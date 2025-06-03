@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blog | Virtual Health Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary-color: #2a9d8f;
+        --secondary-color: #264653;
+        --accent-color: #e9c46a;
+        --light-color: #f8f9fa;
+        --dark-color: #212529;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f5f7fa;
+        color: var(--dark-color);
+      }
+
+      .navbar {
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)) !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+      }
+
+      .nav-link {
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: var(--accent-color) !important;
+        transform: translateY(-2px);
+      }
+
+      .logo {
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+      }
+
+      .myimg {
+        width: 50px;
+        height: 50px;
+        border: 2px solid white;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .hero-blog {
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 5rem 0;
+        margin-bottom: 3rem;
+        border-radius: 0 0 20px 20px;
+      }
+
+      .blog-container {
+        background: white;
+        border-radius: 15px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        margin-bottom: 3rem;
+        border: 1px solid rgba(0,0,0,0.05);
+      }
+
+      .blog-card {
+        background: white;
+        border-radius: 15px;
+        padding: 0;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        transition: all 0.3s;
+        overflow: hidden;
+      }
+
+      .blog-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      }
+
+      .blog-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+
+      .blog-content {
+        padding: 1.5rem;
+      }
+
+      .blog-category {
+        display: inline-block;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+      }
+
+      .blog-author {
+        display: flex;
+        align-items: center;
+        margin-top: 1rem;
+      }
+
+      .author-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 0.75rem;
+      }
+
+      .tag {
+        display: inline-block;
+        background-color: #f0f0f0;
+        color: var(--dark-color);
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .sidebar-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      }
+
+      .search-form {
+        position: relative;
+      }
+
+      .search-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--primary-color);
+      }
+
+      .category-list {
+        list-style: none;
+        padding: 0;
+      }
+
+      .category-list li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .category-list li:last-child {
+        border-bottom: none;
+      }
+
+      .category-list a {
+        color: var(--dark-color);
+        text-decoration: none;
+        transition: all 0.3s;
+      }
+
+      .category-list a:hover {
+        color: var(--primary-color);
+        padding-left: 5px;
+      }
+
+      footer {
+        background: var(--secondary-color);
+        color: white;
+        padding: 3rem 0;
+        margin-top: 3rem;
+      }
+
+      .pagination .page-item.active .page-link {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+      }
+
+      .pagination .page-link {
+        color: var(--primary-color);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <!-- Logo at the top-left corner -->
+        <div class="logo">
+          <img class="myimg" src="{{ url_for('static', filename='VirtualHealthAssistant.png') }}" alt="Virtual Health Assistant Logo">
+        </div>
+
+        <a class="navbar-brand" href="/">
+          <i class="fas fa-heartbeat me-2"></i>Virtual Health Assistant
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="fas fa-home me-1"></i> Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/about">
+                <i class="fas fa-info-circle me-1"></i> About
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact">
+                <i class="fas fa-envelope me-1"></i> Contact
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/developer">
+                <i class="fas fa-code me-1"></i> Developer
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/blog" aria-current="page">
+                <i class="fas fa-blog me-1"></i> Blog
+              </a>
+            </li>
+          </ul>
+          <form class="d-flex" role="search">
+            <div class="input-group">
+              <input class="form-control" type="search" placeholder="Search health topics..." aria-label="Search">
+              <button class="btn btn-outline-light" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-blog text-center">
+      <div class="container">
+        <h1 class="display-4 fw-bold mb-4">Health & Wellness Blog</h1>
+        <p class="lead mb-5">Expert insights, tips, and the latest in healthcare technology</p>
+      </div>
+    </section>
+
+    <!-- Blog Content -->
+    <section class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <!-- Featured Post -->
+          <div class="blog-container">
+            <h2 class="fw-bold mb-4" style="color: var(--primary-color);">
+              <i class="fas fa-star me-2"></i>Featured Post
+            </h2>
+            <div class="blog-card">
+              <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="AI in Healthcare">
+              <div class="blog-content">
+                <span class="blog-category">AI Technology</span>
+                <h3>How AI is Revolutionizing Personal Healthcare</h3>
+                <p>Artificial Intelligence is transforming how we approach personal health management. Our latest article explores the breakthroughs in AI diagnostics and what it means for your health journey...</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="blog-author">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="author-img" alt="Author">
+                    <div>
+                      <h6 class="mb-0">Michael Chen</h6>
+                      <small class="text-muted">June 15, 2023 • 8 min read</small>
+                    </div>
+                  </div>
+                  <a href="#" class="btn btn-outline-primary">Read More</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Posts -->
+          <div class="blog-container">
+            <h2 class="fw-bold mb-4" style="color: var(--primary-color);">
+              <i class="fas fa-newspaper me-2"></i>Recent Articles
+            </h2>
+            <div class="row">
+              <div class="col-md-6 mb-4">
+                <div class="blog-card h-100">
+                  <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="Nutrition">
+                  <div class="blog-content">
+                    <span class="blog-category">Nutrition</span>
+                    <h4>Superfoods You Should Incorporate Today</h4>
+                    <p>Discover the top 10 superfoods that can boost your immunity and energy levels naturally...</p>
+                    <div class="blog-author">
+                      <img src="https://randomuser.me/api/portraits/women/43.jpg" class="author-img" alt="Author">
+                      <div>
+                        <h6 class="mb-0">Dr. Sarah Johnson</h6>
+                        <small class="text-muted">June 10, 2023 • 5 min read</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-4">
+                <div class="blog-card h-100">
+                  <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="Fitness">
+                  <div class="blog-content">
+                    <span class="blog-category">Fitness</span>
+                    <h4>Home Workouts for Busy Professionals</h4>
+                    <p>Effective 20-minute workouts you can do at home with no equipment for maximum results...</p>
+                    <div class="blog-author">
+                      <img src="https://randomuser.me/api/portraits/men/45.jpg" class="author-img" alt="Author">
+                      <div>
+                        <h6 class="mb-0">James Wilson</h6>
+                        <small class="text-muted">June 5, 2023 • 6 min read</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-4">
+                <div class="blog-card h-100">
+                  <img src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="Mental Health">
+                  <div class="blog-content">
+                    <span class="blog-category">Mental Health</span>
+                    <h4>Mindfulness Techniques for Stress Relief</h4>
+                    <p>Learn simple mindfulness exercises that can help reduce stress and improve mental clarity...</p>
+                    <div class="blog-author">
+                      <img src="https://randomuser.me/api/portraits/women/65.jpg" class="author-img" alt="Author">
+                      <div>
+                        <h6 class="mb-0">Priya Patel</h6>
+                        <small class="text-muted">May 28, 2023 • 7 min read</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 mb-4">
+                <div class="blog-card h-100">
+                  <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="Technology">
+                  <div class="blog-content">
+                    <span class="blog-category">Technology</span>
+                    <h4>The Future of Telemedicine</h4>
+                    <p>How virtual healthcare is changing patient-doctor interactions and improving access to care...</p>
+                    <div class="blog-author">
+                      <img src="https://randomuser.me/api/portraits/men/32.jpg" class="author-img" alt="Author">
+                      <div>
+                        <h6 class="mb-0">Michael Chen</h6>
+                        <small class="text-muted">May 20, 2023 • 9 min read</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Blog pagination">
+              <ul class="pagination justify-content-center">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="#">Next</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+          <div class="sidebar-card">
+            <h4 class="fw-bold mb-4"><i class="fas fa-search me-2"></i>Search Blog</h4>
+            <form class="search-form">
+              <input type="text" class="form-control" placeholder="Search articles...">
+              <button class="search-btn" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+          </div>
+
+          <div class="sidebar-card">
+            <h4 class="fw-bold mb-4"><i class="fas fa-folder me-2"></i>Categories</h4>
+            <ul class="category-list">
+              <li><a href="#">AI Technology <span class="float-end">(12)</span></a></li>
+              <li><a href="#">Nutrition <span class="float-end">(8)</span></a></li>
+              <li><a href="#">Fitness <span class="float-end">(15)</span></a></li>
+              <li><a href="#">Mental Health <span class="float-end">(7)</span></a></li>
+              <li><a href="#">Preventive Care <span class="float-end">(9)</span></a></li>
+              <li><a href="#">Medical Research <span class="float-end">(5)</span></a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-card">
+            <h4 class="fw-bold mb-4"><i class="fas fa-tags me-2"></i>Popular Tags</h4>
+            <div class="tags-container">
+              <span class="tag">#AI</span>
+              <span class="tag">#Wellness</span>
+              <span class="tag">#Diet</span>
+              <span class="tag">#Exercise</span>
+              <span class="tag">#Meditation</span>
+              <span class="tag">#Technology</span>
+              <span class="tag">#Recipes</span>
+              <span class="tag">#Sleep</span>
+              <span class="tag">#Immunity</span>
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <h4 class="fw-bold mb-4"><i class="fas fa-newspaper me-2"></i>Subscribe</h4>
+            <p>Get the latest health tips and articles delivered to your inbox</p>
+            <form>
+              <div class="mb-3">
+                <input type="text" class="form-control" placeholder="Your Name">
+              </div>
+              <div class="mb-3">
+                <input type="email" class="form-control" placeholder="Email Address">
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 mb-4 mb-md-0">
+            <h5><i class="fas fa-heartbeat me-2"></i>Virtual Health Assistant</h5>
+            <p>Empowering individuals with AI-driven health insights for better wellness decisions.</p>
+            <div class="social-icons">
+              <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+              <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+              <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </div>
+          <div class="col-md-2 mb-4 mb-md-0">
+            <h5>Quick Links</h5>
+            <ul class="list-unstyled">
+              <li><a href="/" class="text-white">Home</a></li>
+              <li><a href="/about" class="text-white">About</a></li>
+              <li><a href="/contact" class="text-white">Contact</a></li>
+              <li><a href="/blog" class="text-white">Blog</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 mb-4 mb-md-0">
+            <h5>Services</h5>
+            <ul class="list-unstyled">
+              <li><a href="/" class="text-white">Symptom Checker</a></li>
+              <li><a href="#" class="text-white">Health Tips</a></li>
+              <li><a href="#" class="text-white">Wellness Plans</a></li>
+              <li><a href="#" class="text-white">Preventive Care</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <h5>Contact Us</h5>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-map-marker-alt me-2"></i> 123 Health St, MedCity</li>
+              <li><i class="fas fa-phone me-2"></i> (123) 456-7890</li>
+              <li><i class="fas fa-envelope me-2"></i> info@virtualhealth.com</li>
+            </ul>
+          </div>
+        </div>
+        <hr class="my-4 bg-light">
+        <div class="row">
+          <div class="col-md-6 text-center text-md-start">
+            <p class="mb-0">&copy; 2023 Virtual Health Assistant. All rights reserved.</p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <p class="mb-0">
+              <a href="#" class="text-white me-3">Privacy Policy</a>
+              <a href="#" class="text-white">Terms of Service</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>

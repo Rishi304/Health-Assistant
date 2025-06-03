@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Appointment System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .appointment-card {
+            transition: transform 0.2s;
+        }
+        .appointment-card:hover {
+            transform: translateY(-2px);
+        }
+        .action-buttons .btn {
+            min-width: 80px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <header class="mb-5">
+            <h1 class="text-primary mb-3">Medical Appointment System</h1>
+            <p class="lead">Book and manage your doctor appointments</p>
+        </header>
+
+        <section class="card shadow-sm mb-5">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h5 mb-0">New Appointment</h2>
+            </div>
+            <div class="card-body">
+                <form id="appointmentForm" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="name" class="form-label">Patient Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Your full name" required>
+                    </div>
+                    <div class="col-md-4">
+    <label for="doctor" class="form-label">Doctor</label>
+    <select id="doctor" class="form-select" required>
+        <option value="" disabled selected>Select doctor</option>
+    </select>
+</div>
+<script>
+fetch('/api/doctors')
+  .then(res => res.json())
+  .then(doctors => {
+    const sel = document.getElementById('doctor');
+    sel.innerHTML = '<option value="" disabled selected>Select doctor</option>' +
+      doctors.map(doc => `<option value="${doc.name}">${doc.name} (${doc.specialty})</option>`).join('');
+  });
+</script>
+                    <div class="col-md-2">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="time" class="form-label">Time</label>
+                        <input type="time" class="form-control" id="time" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="type" class="form-label">Appointment Type</label>
+                        <select class="form-select" id="type" required>
+                            <option value="" disabled selected>Select type</option>
+                            <option value="Video">Video Consultation</option>
+                            <option value="In-Person">In-Person Visit</option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-calendar-plus me-2"></i>Book Appointment
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h2 class="h5 mb-0">Your Appointments</h2>
+            </div>
+            <div class="card-body">
+                <div id="appointments" class="table-responsive">
+                    <p class="text-muted text-center py-3">Loading appointments...</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Edit Appointment Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Appointment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editForm">
+                    <div class="modal-body">
+                        <input type="hidden" id="edit_id">
+                        <div class="mb-3">
+                            <label for="edit_name" class="form-label">Patient Name</label>
+                            <input type="text" class="form-control" id="edit_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_doctor" class="form-label">Doctor</label>
+                            <input type="text" class="form-control" id="edit_doctor" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <label for="edit_date" class="form-label">Date</label>
+                                <input type="date" class="form-control" id="edit_date" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit_time" class="form-label">Time</label>
+                                <input type="time" class="form-control" id="edit_time" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_type" class="form-label">Appointment Type</label>
+                            <select class="form-select" id="edit_type" required>
+                                <option value="Video">Video Consultation</option>
+                                <option value="In-Person">In-Person Visit</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_URL = 'http://localhost:5000/api/appointments';
+        const appointmentsContainer = document.getElementById('appointments');
+
+        // Render appointments in a responsive table
+        function renderAppointments() {
+            fetch(API_URL)
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.length === 0) {
+                        appointmentsContainer.innerHTML = `
+                            <div class="alert alert-info">
+                                No appointments found. Book your first appointment above.
+                            </div>`;
+                        return;
+                    }
+
+                    let html = `
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Doctor</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Type</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+                    data.forEach(appointment => {
+                        html += `
+                            <tr class="appointment-card">
+                                <td>${appointment.name}</td>
+                                <td>${appointment.doctor}</td>
+                                <td>${appointment.date}</td>
+                                <td>${appointment.time}</td>
+                                <td>
+                                    <span class="badge ${appointment.type === 'Video' ? 'bg-info' : 'bg-success'}">
+                                        ${appointment.type}
+                                    </span>
+                                </td>
+                                <td class="text-end action-buttons">
+                                    <button class="btn btn-sm btn-outline-warning me-2"
+                                        onclick="editAppointment(
+                                            '${appointment._id}',
+                                            '${appointment.name}',
+                                            '${appointment.doctor}',
+                                            '${appointment.date}',
+                                            '${appointment.time}',
+                                            '${appointment.type}'
+                                        )">
+                                        Edit
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger"
+                                        onclick="confirmDelete('${appointment._id}')">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>`;
+                    });
+
+                    html += `</tbody></table>`;
+                    appointmentsContainer.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error fetching appointments:', error);
+                    appointmentsContainer.innerHTML = `
+                        <div class="alert alert-danger">
+                            Failed to load appointments. Please try again later.
+                        </div>`;
+                });
+        }
+
+        // Handle new appointment submission
+        document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const payload = {
+                name: document.getElementById('name').value.trim(),
+                doctor: document.getElementById('doctor').value.trim(),
+                date: document.getElementById('date').value,
+                time: document.getElementById('time').value,
+                type: document.getElementById('type').value
+            };
+
+            fetch(API_URL, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to create appointment');
+                return response.json();
+            })
+            .then(() => {
+                this.reset();
+                renderAppointments();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to book appointment. Please try again.');
+            });
+        });
+
+        // Confirm before deleting an appointment
+        function confirmDelete(id) {
+            if (confirm("Are you sure you want to delete this appointment?")) {
+                deleteAppointment(id);
+            }
+        }
+
+        // Delete appointment
+        function deleteAppointment(id) {
+            fetch(`${API_URL}/${id}`, {method: "DELETE"})
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to delete appointment');
+                    renderAppointments();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to delete appointment. Please try again.');
+                });
+        }
+
+        // Edit appointment - open modal with current values
+        function editAppointment(id, name, doctor, date, time, type) {
+            document.getElementById('edit_id').value = id;
+            document.getElementById('edit_name').value = name;
+            document.getElementById('edit_doctor').value = doctor;
+            document.getElementById('edit_date').value = date;
+            document.getElementById('edit_time').value = time;
+            document.getElementById('edit_type').value = type;
+
+            const modal = new bootstrap.Modal(document.getElementById('editModal'));
+            modal.show();
+        }
+
+        // Handle edit form submission
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('edit_id').value;
+            const payload = {
+                name: document.getElementById('edit_name').value.trim(),
+                doctor: document.getElementById('edit_doctor').value.trim(),
+                date: document.getElementById('edit_date').value,
+                time: document.getElementById('edit_time').value,
+                type: document.getElementById('edit_type').value
+            };
+
+            fetch(`${API_URL}/${id}`, {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to update appointment');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+                modal.hide();
+                renderAppointments();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to update appointment. Please try again.');
+            });
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', renderAppointments);
+    </script>
+</body>
+</html>
