@@ -6,209 +6,390 @@
     <title>Blog | Virtual Health Assistant</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
       :root {
-        --primary-color: #2a9d8f;
-        --secondary-color: #264653;
-        --accent-color: #e9c46a;
-        --light-color: #f8f9fa;
-        --dark-color: #212529;
+        /* Modern Dark Theme Variables */
+        --primary-bg: #0f0f23;
+        --secondary-bg: #1a1a2e;
+        --tertiary-bg: #16213e;
+        --surface-dark: #252545;
+        --surface-light: #2d2d44;
+        --surface-hover: #343454;
+
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        --warning-gradient: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+
+        --neon-blue: #00d4ff;
+        --neon-purple: #a855f7;
+        --neon-pink: #ec4899;
+        --neon-green: #10b981;
+        --neon-yellow: #f59e0b;
+
+        --text-primary: #ffffff;
+        --text-secondary: #b8bcc8;
+        --text-muted: #8b8fa3;
+        --text-accent: #667eea;
+
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --glass-strong: rgba(255, 255, 255, 0.15);
+
+        --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.15);
+        --shadow-strong: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        --shadow-card: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        --radius-2xl: 32px;
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
       }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
 
       body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f5f7fa;
-        color: var(--dark-color);
-      }
-
-      .navbar {
-        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)) !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      }
-
-      .navbar-brand {
-        font-weight: 700;
-        font-size: 1.5rem;
-      }
-
-      .nav-link {
-        font-weight: 500;
-        padding: 0.5rem 1rem;
-        transition: all 0.3s ease;
-      }
-
-      .nav-link:hover {
-        color: var(--accent-color) !important;
-        transform: translateY(-2px);
-      }
-
-      .logo {
-        width: 50px;
-        height: 50px;
-        margin-right: 15px;
-      }
-
-      .myimg {
-        width: 50px;
-        height: 50px;
-        border: 2px solid white;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
-      .hero-blog {
-        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-        background-size: cover;
-        background-position: center;
-        color: white;
-        padding: 5rem 0;
-        margin-bottom: 3rem;
-        border-radius: 0 0 20px 20px;
-      }
-
-      .blog-container {
-        background: white;
-        border-radius: 15px;
-        padding: 2.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        margin-bottom: 3rem;
-        border: 1px solid rgba(0,0,0,0.05);
-      }
-
-      .blog-card {
-        background: white;
-        border-radius: 15px;
-        padding: 0;
-        margin-bottom: 2rem;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        transition: all 0.3s;
-        overflow: hidden;
-      }
-
-      .blog-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-      }
-
-      .blog-img {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-      }
-
-      .blog-content {
-        padding: 1.5rem;
-      }
-
-      .blog-category {
-        display: inline-block;
-        background-color: var(--primary-color);
-        color: white;
-        padding: 0.25rem 0.75rem;
-        border-radius: 50px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        margin-bottom: 0.75rem;
-      }
-
-      .blog-author {
-        display: flex;
-        align-items: center;
-        margin-top: 1rem;
-      }
-
-      .author-img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-right: 0.75rem;
-      }
-
-      .tag {
-        display: inline-block;
-        background-color: #f0f0f0;
-        color: var(--dark-color);
-        padding: 0.25rem 0.75rem;
-        border-radius: 50px;
-        font-size: 0.8rem;
-        margin-right: 0.5rem;
-        margin-bottom: 0.5rem;
-      }
-
-      .sidebar-card {
-        background: white;
-        border-radius: 15px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-      }
-
-      .search-form {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--primary-bg);
+        color: var(--text-primary);
+        line-height: 1.7;
+        font-weight: 400;
+        overflow-x: hidden;
         position: relative;
       }
 
+      body::before { /* Animated Background for body */
+        content: '';
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background:
+          radial-gradient(circle at 10% 85%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+          radial-gradient(circle at 85% 10%, rgba(168, 85, 247, 0.07) 0%, transparent 50%),
+          radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%);
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      /* Navbar Styling */
+      .navbar {
+        background: rgba(15, 15, 35, 0.9) !important;
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--glass-border);
+        padding: 1.2rem 0; position: sticky; top: 0; z-index: 1030;
+        transition: var(--transition);
+      }
+      .navbar-brand {
+        font-family: 'Manrope', sans-serif; font-weight: 800;
+        font-size: 1.5rem; color: var(--text-primary) !important;
+        display: flex; align-items: center;
+        text-shadow: 0 0 15px rgba(102, 126, 234, 0.25);
+      }
+      .navbar-brand .fa-heartbeat { color: var(--neon-blue); animation: pulse 2s infinite; }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.1); }
+      }
+      .logo { /* Navbar logo image container */
+        width: 45px; height: 45px; margin-right: 15px;
+        border-radius: 50%; background: var(--primary-gradient); padding: 2px;
+        transition: transform 0.3s ease;
+      }
+       .myimg { /* Image inside logo container */
+        width: 100%; height: 100%; border-radius: 50%;
+        object-fit: cover; background-color: var(--surface-dark); border: none;
+      }
+      .logo:hover { transform: scale(1.1) rotate(10deg); }
+
+      .nav-link {
+        font-weight: 500; padding: 0.8rem 1.2rem !important;
+        color: var(--text-secondary) !important; border-radius: var(--radius-lg);
+        transition: var(--transition); position: relative; overflow: hidden; margin: 0 0.2rem;
+      }
+      .nav-link::before {
+        content: ''; position: absolute; top: 0; left: -100%;
+        width: 100%; height: 100%; background: var(--primary-gradient);
+        transition: left 0.35s ease; z-index: -1; opacity: 0.1;
+      }
+      .nav-link:hover::before, .nav-link.active::before { left: 0; opacity: 0.15; }
+      .nav-link:hover, .nav-link.active {
+        color: var(--text-primary) !important; transform: translateY(-2px);
+        text-shadow: 0 0 10px rgba(102, 126, 234, 0.4);
+      }
+      .nav-link.active {
+        font-weight: 600; background: var(--glass-bg);
+        border: 1px solid var(--glass-border); box-shadow: var(--shadow-glow);
+      }
+      .navbar-toggler { border-color: var(--glass-border); }
+      .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.7%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+      }
+      .navbar .form-control {
+        background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary);
+        border-radius: var(--radius-lg) 0 0 var(--radius-lg); padding-left: 1.2rem; font-size: 0.95rem;
+      }
+      .navbar .form-control::placeholder { color: var(--text-muted); }
+      .navbar .form-control:focus {
+        background: var(--glass-strong); border-color: var(--neon-blue);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      .navbar .btn-outline-light {
+        color: var(--text-secondary); border-color: var(--glass-border); background: var(--glass-bg);
+        border-radius: 0 var(--radius-lg) var(--radius-lg) 0; transition: var(--transition);
+      }
+      .navbar .btn-outline-light:hover {
+        background: var(--primary-gradient); color: var(--text-primary); border-color: transparent;
+      }
+
+      /* Hero Section for Blog Page */
+      .hero-blog {
+        background: var(--secondary-bg); color: var(--text-primary);
+        padding: 6rem 0; margin-bottom: 4rem;
+        border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+        position: relative; overflow: hidden; text-align: center;
+      }
+      .hero-blog::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background:
+          radial-gradient(circle at 15% 75%, rgba(102, 126, 234, 0.12) 0%, transparent 60%),
+          radial-gradient(circle at 85% 25%, rgba(168, 85, 247, 0.1) 0%, transparent 60%);
+        z-index: 0;
+      }
+      .hero-blog .container { position: relative; z-index: 1; }
+      .hero-blog h1 {
+        font-family: 'Manrope', sans-serif; font-weight: 800;
+        font-size: clamp(2.8rem, 7vw, 4.5rem);
+        background: linear-gradient(135deg, var(--text-primary) 65%, var(--neon-blue) 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      }
+      .hero-blog p.lead { color: var(--text-secondary); font-size: 1.3rem; max-width: 700px; margin: 0 auto; }
+
+      /* Main Content Wrapper (Blog Posts & Sidebar Sections) */
+      .content-section-wrapper { /* Replaces .blog-container and .sidebar-card */
+        background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        border: 1px solid var(--glass-border); border-radius: var(--radius-2xl);
+        padding: 3rem; box-shadow: var(--shadow-card);
+        margin-bottom: 3rem; position: relative; overflow: hidden;
+      }
+      .content-section-wrapper::before { /* Top accent bar */
+        content: ''; position: absolute; top: 0; left: 0; right: 0;
+        height: 3px; background: var(--primary-gradient); /* Or var(--accent-gradient) for variety */
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+      }
+      .content-section-wrapper h2, .content-section-wrapper h4 { /* Section titles */
+        font-family: 'Manrope', sans-serif; font-weight: 700;
+        color: var(--text-primary); margin-bottom: 2rem;
+      }
+       .content-section-wrapper h2 .fas, .content-section-wrapper h4 .fas { /* Icons in headings */
+        color: var(--neon-blue); margin-right: 0.8rem;
+      }
+
+      /* Blog Card Styling */
+      .blog-card {
+        background: var(--surface-dark); /* Darker background for nested cards */
+        border-radius: var(--radius-xl);
+        margin-bottom: 2.5rem; /* Increased margin */
+        box-shadow: var(--shadow-card);
+        transition: var(--transition);
+        overflow: hidden;
+        border: 1px solid var(--glass-strong); /* Slightly stronger border for definition */
+      }
+      .blog-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: var(--shadow-strong);
+        border-color: rgba(102,126,234,0.3);
+      }
+      .blog-img {
+        width: 100%; height: 220px; /* Slightly taller */
+        object-fit: cover; transition: transform 0.4s ease;
+      }
+      .blog-card:hover .blog-img { transform: scale(1.05); }
+      .blog-content { padding: 2rem; }
+      .blog-category {
+        display: inline-block; background: var(--neon-blue); /* Brighter accent */
+        color: var(--primary-bg); /* Dark text on bright bg */
+        padding: 0.35rem 1rem; border-radius: var(--radius-2xl); /* Pill shape */
+        font-size: 0.8rem; font-weight: 700; text-transform: uppercase;
+        margin-bottom: 1rem; letter-spacing: 0.5px;
+      }
+      .blog-content h3 { color: var(--text-primary); font-size: 1.5rem; margin-bottom:0.75rem;}
+      .blog-content h3 a { color: inherit; text-decoration:none; transition: color 0.3s ease; }
+      .blog-content h3 a:hover { color: var(--neon-blue); }
+      .blog-content p { color: var(--text-secondary); font-size: 0.95rem; }
+
+      .blog-author { display: flex; align-items: center; margin-top: 1.5rem; }
+      .author-img {
+        width: 45px; height: 45px; border-radius: 50%;
+        object-fit: cover; margin-right: 1rem;
+        border: 2px solid var(--neon-purple); /* Accent border for author img */
+      }
+       .blog-author h6 { color: var(--text-primary); font-weight:600; margin-bottom:0.1rem;}
+       .blog-author small { color: var(--text-muted); font-size:0.8rem;}
+
+      .btn-read-more { /* Custom class for read more button */
+          background: var(--primary-gradient); border: none; padding: 0.7rem 1.5rem;
+          border-radius: var(--radius-xl); font-weight: 600; color: white;
+          transition: var(--transition); text-transform: uppercase; font-size: 0.85rem; letter-spacing:0.5px;
+      }
+      .btn-read-more:hover {
+          transform: translateY(-2px) scale(1.03);
+          box-shadow: 0 8px 15px rgba(102, 126, 234, 0.2), var(--shadow-glow);
+          filter: brightness(1.1);
+      }
+
+      /* Sidebar Elements */
+      /* Using .content-section-wrapper for sidebar main blocks now */
+      .sidebar-form-control { /* Specific styling for search/subscribe inputs in sidebar */
+        background: var(--glass-strong); border: 1px solid var(--glass-border);
+        color: var(--text-primary); border-radius: var(--radius-lg);
+        padding: 0.8rem 1rem; font-size: 0.9rem;
+      }
+      .sidebar-form-control::placeholder { color: var(--text-muted); }
+      .sidebar-form-control:focus {
+        background: var(--surface-hover); border-color: var(--neon-blue);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
+      }
+      .search-form { position: relative; }
       .search-btn {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        color: var(--primary-color);
+        position: absolute; right: 0px; top: 0px; height:100%;
+        background: var(--neon-blue); border: none; color: var(--primary-bg);
+        border-radius: 0 var(--radius-lg) var(--radius-lg) 0; width: 50px;
+        transition: background-color 0.3s ease;
       }
+      .search-btn:hover { background-color: #00b8d9; } /* Slightly darker neon blue */
 
-      .category-list {
-        list-style: none;
-        padding: 0;
-      }
-
+      .category-list { list-style: none; padding: 0; }
       .category-list li {
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #eee;
+        padding: 0.75rem 0.25rem; border-bottom: 1px solid var(--glass-border);
+        transition: background-color 0.2s ease; border-radius:var(--radius-sm);
       }
-
-      .category-list li:last-child {
-        border-bottom: none;
-      }
-
+      .category-list li:last-child { border-bottom: none; }
+      .category-list li:hover { background-color: var(--glass-strong); }
       .category-list a {
-        color: var(--dark-color);
-        text-decoration: none;
-        transition: all 0.3s;
+        color: var(--text-secondary); text-decoration: none;
+        transition: var(--transition); display: block;
+        font-weight: 500;
+      }
+      .category-list a:hover { color: var(--neon-blue); padding-left: 8px; font-weight:600;}
+      .category-list span { color: var(--text-muted); font-size:0.85rem; }
+
+      .tags-container .tag {
+        display: inline-block; background-color: var(--glass-strong);
+        border: 1px solid var(--glass-border);
+        color: var(--text-secondary); padding: 0.4rem 0.9rem;
+        border-radius: var(--radius-2xl); font-size: 0.85rem;
+        margin-right: 0.5rem; margin-bottom: 0.75rem;
+        transition: var(--transition); cursor:pointer;
+      }
+      .tags-container .tag:hover {
+        background-color: var(--neon-purple); color: white;
+        border-color: var(--neon-purple); transform: scale(1.05);
       }
 
-      .category-list a:hover {
-        color: var(--primary-color);
-        padding-left: 5px;
+      /* Pagination */
+      .pagination .page-item .page-link {
+        background-color: var(--glass-strong);
+        border: 1px solid var(--glass-border);
+        color: var(--text-secondary);
+        border-radius: var(--radius-md); margin: 0 0.25rem;
+        transition: var(--transition);
+      }
+      .pagination .page-item.active .page-link,
+      .pagination .page-item .page-link:hover {
+        background: var(--primary-gradient);
+        border-color: transparent; /* Or a slightly lighter shade of gradient border */
+        color: var(--text-primary);
+        box-shadow: var(--shadow-glow);
+        transform: translateY(-2px);
+      }
+      .pagination .page-item.disabled .page-link {
+        background-color: var(--surface-dark); color: var(--text-muted);
+        border-color: var(--glass-border);
       }
 
+      /* Footer (consistent with other pages) */
       footer {
-        background: var(--secondary-color);
-        color: white;
-        padding: 3rem 0;
-        margin-top: 3rem;
+        background: var(--secondary-bg); position: relative;
+        padding: 5rem 0 3rem; margin-top: 5rem;
+        overflow: hidden; border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+      }
+      footer::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0;
+        height: 3px; background: var(--primary-gradient);
+      }
+      footer::after {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background:
+          radial-gradient(circle at 20% 90%, rgba(168, 85, 247, 0.07) 0%, transparent 50%),
+          radial-gradient(circle at 80% 10%, rgba(79, 172, 254, 0.07) 0%, transparent 50%);
+        z-index: -1;
+      }
+      footer h5 {
+        color: var(--text-primary); font-family: 'Manrope', sans-serif;
+        font-weight: 700; margin-bottom: 1.5rem; font-size: 1.2rem;
+      }
+      footer p, footer ul li a, footer ul li {
+        color: var(--text-secondary); text-decoration: none;
+        transition: var(--transition); font-size: 0.95rem; line-height: 1.8;
+      }
+      footer ul.list-unstyled li { margin-bottom: 0.7rem; }
+      footer ul li a:hover {
+        color: var(--neon-blue); transform: translateX(5px);
+        text-shadow: 0 0 8px rgba(0, 212, 255, 0.3); display: inline-block;
+      }
+      footer .social-icons a {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 45px; height: 45px;
+        background: var(--glass-bg); border: 1px solid var(--glass-border);
+        border-radius: 50%; color: var(--text-secondary) !important;
+        font-size: 1.2rem; transition: var(--transition);
+        margin-right: 0.75rem; box-shadow: var(--shadow-sm);
+      }
+      footer .social-icons a:last-child { margin-right: 0; }
+      footer .social-icons a:hover {
+        background: var(--primary-gradient); color: white !important;
+        transform: translateY(-4px) scale(1.1); box-shadow: var(--shadow-glow);
+      }
+      footer hr { border-color: var(--glass-border); opacity: 0.5; }
+      footer .text-md-start p, footer .text-md-end p { color: var(--text-muted); font-size: 0.9rem; }
+      footer .text-md-end a { color: var(--text-muted); }
+      footer .text-md-end a:hover { color: var(--neon-blue); text-decoration: underline; }
+
+      /* Responsive Adjustments */
+      @media (max-width: 991px) {
+        .navbar-nav { margin-top: 1rem; }
+        .navbar .d-flex[role="search"] { margin-top: 1rem; width: 100%; }
+        .navbar .d-flex[role="search"] .input-group { width: 100%; }
+        .content-section-wrapper { padding: 2rem; }
+      }
+      @media (max-width: 768px) {
+        .hero-blog { padding: 4rem 0; }
+        .hero-blog h1 { font-size: clamp(2.2rem, 6vw, 3.5rem); }
+        .hero-blog p.lead { font-size: 1.1rem; }
+        .content-section-wrapper h2, .content-section-wrapper h4 { font-size: 1.6rem; margin-bottom: 1.5rem;}
+        .blog-content { padding: 1.5rem; }
+        .sidebar-card { /* Converted from original, using content-section-wrapper for general block */
+          margin-bottom:2rem; /* Ensure sidebar sections also have consistent margin */
+        }
+        footer { text-align: center; }
+        footer .social-icons { justify-content: center; }
+        footer .text-md-start, footer .text-md-end { text-align: center !important; }
       }
 
-      .pagination .page-item.active .page-link {
-        background-color: var(--primary-color);
-        border-color: var(--primary-color);
-      }
-
-      .pagination .page-link {
-        color: var(--primary-color);
-      }
     </style>
   </head>
   <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg">
       <div class="container">
-        <!-- Logo at the top-left corner -->
         <div class="logo">
           <img class="myimg" src="{{ url_for('static', filename='VirtualHealthAssistant.png') }}" alt="Virtual Health Assistant Logo">
         </div>
-
         <a class="navbar-brand" href="/">
           <i class="fas fa-heartbeat me-2"></i>Virtual Health Assistant
         </a>
@@ -216,39 +397,17 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link" href="/">
-                <i class="fas fa-home me-1"></i> Home
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/about">
-                <i class="fas fa-info-circle me-1"></i> About
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/contact">
-                <i class="fas fa-envelope me-1"></i> Contact
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/developer">
-                <i class="fas fa-code me-1"></i> Developer
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="/blog" aria-current="page">
-                <i class="fas fa-blog me-1"></i> Blog
-              </a>
-            </li>
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item"> <a class="nav-link" href="/"> <i class="fas fa-home me-1"></i> Home </a> </li>
+            <li class="nav-item"> <a class="nav-link" href="/about"> <i class="fas fa-info-circle me-1"></i> About </a> </li>
+            <li class="nav-item"> <a class="nav-link" href="/contact"> <i class="fas fa-envelope me-1"></i> Contact </a> </li>
+            <li class="nav-item"> <a class="nav-link" href="/developer"> <i class="fas fa-code me-1"></i> Developer </a> </li>
+            <li class="nav-item"> <a class="nav-link active" href="/blog" aria-current="page"> <i class="fas fa-blog me-1"></i> Blog </a> </li>
           </ul>
-          <form class="d-flex" role="search">
+          <form class="d-flex ms-lg-3" role="search">
             <div class="input-group">
-              <input class="form-control" type="search" placeholder="Search health topics..." aria-label="Search">
-              <button class="btn btn-outline-light" type="submit">
-                <i class="fas fa-search"></i>
-              </button>
+              <input class="form-control" type="search" placeholder="Search..." aria-label="Search">
+              <button class="btn btn-outline-light" type="submit"> <i class="fas fa-search"></i> </button>
             </div>
           </form>
         </div>
@@ -256,112 +415,100 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-blog text-center">
+    <section class="hero-blog">
       <div class="container">
-        <h1 class="display-4 fw-bold mb-4">Health & Wellness Blog</h1>
-        <p class="lead mb-5">Expert insights, tips, and the latest in healthcare technology</p>
+        <h1 class="display-4 fw-bold mb-3">Insights for a Healthier You</h1>
+        <p class="lead mb-0">Explore expert articles, tips, and the latest in AI healthcare innovation.</p>
       </div>
     </section>
 
     <!-- Blog Content -->
-    <section class="container">
-      <div class="row">
+    <main class="container mt-4">
+      <div class="row g-4">
         <div class="col-lg-8">
-          <!-- Featured Post -->
-          <div class="blog-container">
-            <h2 class="fw-bold mb-4" style="color: var(--primary-color);">
-              <i class="fas fa-star me-2"></i>Featured Post
+          <!-- Featured Post Section -->
+          <section class="content-section-wrapper">
+            <h2 class="text-center text-lg-start">
+              <i class="fas fa-star"></i>Featured Publication
             </h2>
             <div class="blog-card">
               <img src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="AI in Healthcare">
               <div class="blog-content">
-                <span class="blog-category">AI Technology</span>
-                <h3>How AI is Revolutionizing Personal Healthcare</h3>
-                <p>Artificial Intelligence is transforming how we approach personal health management. Our latest article explores the breakthroughs in AI diagnostics and what it means for your health journey...</p>
+                <span class="blog-category">AI & Healthcare</span>
+                <h3><a href="#">The AI Revolution: Transforming Personal Healthcare Paradigms</a></h3>
+                <p>Delve into the breakthroughs in AI diagnostics, personalized treatment plans, and how intelligent systems are empowering individuals on their health journey. This is where the future of wellness begins...</p>
                 <div class="d-flex justify-content-between align-items-center">
                   <div class="blog-author">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="author-img" alt="Author">
+                    <img src="https://randomuser.me/api/portraits/men/32.jpg" class="author-img" alt="Michael Chen">
                     <div>
-                      <h6 class="mb-0">Michael Chen</h6>
-                      <small class="text-muted">June 15, 2023 • 8 min read</small>
+                      <h6>Michael Chen</h6>
+                      <small class="text-muted">Published: June 15, 2023 • 8 min read</small>
                     </div>
                   </div>
-                  <a href="#" class="btn btn-outline-primary">Read More</a>
+                  <a href="#" class="btn btn-read-more">Read Full Article</a>
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          <!-- Recent Posts -->
-          <div class="blog-container">
-            <h2 class="fw-bold mb-4" style="color: var(--primary-color);">
-              <i class="fas fa-newspaper me-2"></i>Recent Articles
+          <!-- Recent Posts Section -->
+          <section class="content-section-wrapper">
+            <h2 class="text-center text-lg-start">
+              <i class="fas fa-stream"></i>Latest Articles
             </h2>
             <div class="row">
               <div class="col-md-6 mb-4">
                 <div class="blog-card h-100">
-                  <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="Nutrition">
+                  <img src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="Superfoods">
                   <div class="blog-content">
-                    <span class="blog-category">Nutrition</span>
-                    <h4>Superfoods You Should Incorporate Today</h4>
-                    <p>Discover the top 10 superfoods that can boost your immunity and energy levels naturally...</p>
+                    <span class="blog-category">Nutrition & Diet</span>
+                    <h3><a href="#">Top 10 Superfoods to Boost Your Vitality</a></h3>
+                    <p class="mb-3">Uncover nature's powerhouses that can elevate your immunity and energy levels effortlessly.</p>
                     <div class="blog-author">
-                      <img src="https://randomuser.me/api/portraits/women/43.jpg" class="author-img" alt="Author">
-                      <div>
-                        <h6 class="mb-0">Dr. Sarah Johnson</h6>
-                        <small class="text-muted">June 10, 2023 • 5 min read</small>
-                      </div>
+                      <img src="https://randomuser.me/api/portraits/women/43.jpg" class="author-img" alt="Dr. Sarah Johnson">
+                      <div><h6>Dr. Sarah Johnson</h6><small class="text-muted">June 10, 2023 • 5 min</small></div>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="col-md-6 mb-4">
                 <div class="blog-card h-100">
-                  <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="Fitness">
+                  <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="Home Fitness">
                   <div class="blog-content">
-                    <span class="blog-category">Fitness</span>
-                    <h4>Home Workouts for Busy Professionals</h4>
-                    <p>Effective 20-minute workouts you can do at home with no equipment for maximum results...</p>
+                    <span class="blog-category">Fitness & Exercise</span>
+                    <h3><a href="#">Effective Home Workouts for the Busy Bee</a></h3>
+                    <p class="mb-3">Maximize your fitness with efficient 20-minute routines, no equipment needed.</p>
                     <div class="blog-author">
-                      <img src="https://randomuser.me/api/portraits/men/45.jpg" class="author-img" alt="Author">
-                      <div>
-                        <h6 class="mb-0">James Wilson</h6>
-                        <small class="text-muted">June 5, 2023 • 6 min read</small>
-                      </div>
+                      <img src="https://randomuser.me/api/portraits/men/45.jpg" class="author-img" alt="James Wilson">
+                      <div><h6>James Wilson</h6><small class="text-muted">June 5, 2023 • 6 min</small></div>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="col-md-6 mb-4">
                 <div class="blog-card h-100">
-                  <img src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="Mental Health">
+                  <img src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="Mindfulness">
                   <div class="blog-content">
-                    <span class="blog-category">Mental Health</span>
-                    <h4>Mindfulness Techniques for Stress Relief</h4>
-                    <p>Learn simple mindfulness exercises that can help reduce stress and improve mental clarity...</p>
+                    <span class="blog-category">Mental Wellness</span>
+                    <h3><a href="#">Simple Mindfulness for Daily Stress Reduction</a></h3>
+                    <p class="mb-3">Master easy techniques to enhance mental clarity and navigate daily stressors with calm.</p>
                     <div class="blog-author">
-                      <img src="https://randomuser.me/api/portraits/women/65.jpg" class="author-img" alt="Author">
-                      <div>
-                        <h6 class="mb-0">Priya Patel</h6>
-                        <small class="text-muted">May 28, 2023 • 7 min read</small>
-                      </div>
+                      <img src="https://randomuser.me/api/portraits/women/65.jpg" class="author-img" alt="Priya Patel">
+                      <div><h6>Priya Patel</h6><small class="text-muted">May 28, 2023 • 7 min</small></div>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="col-md-6 mb-4">
                 <div class="blog-card h-100">
-                  <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="Technology">
+                  <img src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" class="blog-img" alt="Telemedicine">
                   <div class="blog-content">
-                    <span class="blog-category">Technology</span>
-                    <h4>The Future of Telemedicine</h4>
-                    <p>How virtual healthcare is changing patient-doctor interactions and improving access to care...</p>
+                    <span class="blog-category">Health Technology</span>
+                    <h3><a href="#">Telemedicine: The Evolving Face of Healthcare</a></h3>
+                    <p class="mb-3">Exploring how virtual care is reshaping patient-doctor dynamics and improving accessibility.</p>
                     <div class="blog-author">
-                      <img src="https://randomuser.me/api/portraits/men/32.jpg" class="author-img" alt="Author">
-                      <div>
-                        <h6 class="mb-0">Michael Chen</h6>
-                        <small class="text-muted">May 20, 2023 • 9 min read</small>
-                      </div>
+                      <img src="https://randomuser.me/api/portraits/men/32.jpg" class="author-img" alt="Michael Chen">
+                      <div><h6>Michael Chen</h6><small class="text-muted">May 20, 2023 • 9 min</small></div>
                     </div>
                   </div>
                 </div>
@@ -369,126 +516,116 @@
             </div>
 
             <!-- Pagination -->
-            <nav aria-label="Blog pagination">
+            <nav aria-label="Blog pagination" class="mt-4 pt-3">
               <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                </li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true"><i class="fas fa-chevron-left"></i></a></li>
+                <li class="page-item active" aria-current="page"><a class="page-link" href="#">1</a></li>
                 <li class="page-item"><a class="page-link" href="#">2</a></li>
                 <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                  <a class="page-link" href="#">Next</a>
-                </li>
+                <li class="page-item"><a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a></li>
               </ul>
             </nav>
-          </div>
+          </section>
         </div>
 
         <!-- Sidebar -->
-        <div class="col-lg-4">
-          <div class="sidebar-card">
-            <h4 class="fw-bold mb-4"><i class="fas fa-search me-2"></i>Search Blog</h4>
+        <aside class="col-lg-4">
+          <section class="content-section-wrapper">
+            <h4 class="text-center text-lg-start"><i class="fas fa-search"></i>Search Our Blog</h4>
             <form class="search-form">
-              <input type="text" class="form-control" placeholder="Search articles...">
-              <button class="search-btn" type="submit"><i class="fas fa-search"></i></button>
+              <input type="text" class="sidebar-form-control" placeholder="Keywords (e.g., AI, Nutrition)">
+              <button class="search-btn" type="submit"><i class="fas fa-arrow-right"></i></button>
             </form>
-          </div>
+          </section>
 
-          <div class="sidebar-card">
-            <h4 class="fw-bold mb-4"><i class="fas fa-folder me-2"></i>Categories</h4>
+          <section class="content-section-wrapper">
+            <h4 class="text-center text-lg-start"><i class="fas fa-folder-open"></i>Article Categories</h4>
             <ul class="category-list">
-              <li><a href="#">AI Technology <span class="float-end">(12)</span></a></li>
-              <li><a href="#">Nutrition <span class="float-end">(8)</span></a></li>
-              <li><a href="#">Fitness <span class="float-end">(15)</span></a></li>
-              <li><a href="#">Mental Health <span class="float-end">(7)</span></a></li>
+              <li><a href="#">AI & Technology <span class="float-end">(12)</span></a></li>
+              <li><a href="#">Nutrition & Diet <span class="float-end">(8)</span></a></li>
+              <li><a href="#">Fitness & Exercise <span class="float-end">(15)</span></a></li>
+              <li><a href="#">Mental Wellness <span class="float-end">(7)</span></a></li>
               <li><a href="#">Preventive Care <span class="float-end">(9)</span></a></li>
-              <li><a href="#">Medical Research <span class="float-end">(5)</span></a></li>
+              <li><a href="#">Medical Breakthroughs <span class="float-end">(5)</span></a></li>
             </ul>
-          </div>
+          </section>
 
-          <div class="sidebar-card">
-            <h4 class="fw-bold mb-4"><i class="fas fa-tags me-2"></i>Popular Tags</h4>
-            <div class="tags-container">
-              <span class="tag">#AI</span>
-              <span class="tag">#Wellness</span>
-              <span class="tag">#Diet</span>
-              <span class="tag">#Exercise</span>
-              <span class="tag">#Meditation</span>
-              <span class="tag">#Technology</span>
-              <span class="tag">#Recipes</span>
-              <span class="tag">#Sleep</span>
-              <span class="tag">#Immunity</span>
+          <section class="content-section-wrapper">
+            <h4 class="text-center text-lg-start"><i class="fas fa-tags"></i>Trending Tags</h4>
+            <div class="tags-container mt-3">
+              <span class="tag">#AIinHealthcare</span> <span class="tag">#WellnessJourney</span> <span class="tag">#HealthyEating</span>
+              <span class="tag">#MindBodyBalance</span> <span class="tag">#TechInnovation</span> <span class="tag">#FitnessMotivation</span>
+              <span class="tag">#PreventiveHealth</span> <span class="tag">#DigitalHealth</span> <span class="tag">#MentalClarity</span>
             </div>
-          </div>
+          </section>
 
-          <div class="sidebar-card">
-            <h4 class="fw-bold mb-4"><i class="fas fa-newspaper me-2"></i>Subscribe</h4>
-            <p>Get the latest health tips and articles delivered to your inbox</p>
+          <section class="content-section-wrapper">
+            <h4 class="text-center text-lg-start"><i class="fas fa-envelope-open-text"></i>Stay Updated</h4>
+            <p class="text-secondary small">Subscribe for the latest health insights, tips, and AI advancements directly to your inbox.</p>
             <form>
               <div class="mb-3">
-                <input type="text" class="form-control" placeholder="Your Name">
+                <input type="text" class="sidebar-form-control" placeholder="Your Name">
               </div>
               <div class="mb-3">
-                <input type="email" class="form-control" placeholder="Email Address">
+                <input type="email" class="sidebar-form-control" placeholder="Email Address">
               </div>
-              <button type="submit" class="btn btn-primary w-100">Subscribe</button>
+              <button type="submit" class="btn btn-read-more w-100">Subscribe Now</button>
             </form>
-          </div>
-        </div>
+          </section>
+        </aside>
       </div>
-    </section>
+    </main>
 
     <!-- Footer -->
     <footer>
       <div class="container">
         <div class="row">
-          <div class="col-md-4 mb-4 mb-md-0">
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
             <h5><i class="fas fa-heartbeat me-2"></i>Virtual Health Assistant</h5>
-            <p>Empowering individuals with AI-driven health insights for better wellness decisions.</p>
-            <div class="social-icons">
-              <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-              <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
-              <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-              <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+            <p>Pioneering accessible and intelligent healthcare solutions for a healthier tomorrow. Your wellness, augmented by AI.</p>
+            <div class="social-icons mt-3">
+              <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+              <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             </div>
           </div>
-          <div class="col-md-2 mb-4 mb-md-0">
+          <div class="col-lg-2 col-md-3 col-6 mb-4 mb-lg-0">
             <h5>Quick Links</h5>
             <ul class="list-unstyled">
-              <li><a href="/" class="text-white">Home</a></li>
-              <li><a href="/about" class="text-white">About</a></li>
-              <li><a href="/contact" class="text-white">Contact</a></li>
-              <li><a href="/blog" class="text-white">Blog</a></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="/about">About Us</a></li>
+              <li><a href="/contact">Contact</a></li>
+              <li><a href="/developer">Developer</a></li>
             </ul>
           </div>
-          <div class="col-md-3 mb-4 mb-md-0">
-            <h5>Services</h5>
+          <div class="col-lg-3 col-md-3 col-6 mb-4 mb-lg-0">
+            <h5>Our Platform</h5>
             <ul class="list-unstyled">
-              <li><a href="/" class="text-white">Symptom Checker</a></li>
-              <li><a href="#" class="text-white">Health Tips</a></li>
-              <li><a href="#" class="text-white">Wellness Plans</a></li>
-              <li><a href="#" class="text-white">Preventive Care</a></li>
+              <li><a href="/">Symptom Analysis</a></li>
+              <li><a href="#">AI Health Chatbot</a></li>
+              <li><a href="#">Wellness Insights</a></li>
+              <li><a href="/blog">Health Articles</a></li>
             </ul>
           </div>
-          <div class="col-md-3">
-            <h5>Contact Us</h5>
+          <div class="col-lg-3 col-md-12">
+            <h5>Get In Touch</h5>
             <ul class="list-unstyled">
-              <li><i class="fas fa-map-marker-alt me-2"></i> 123 Health St, MedCity</li>
-              <li><i class="fas fa-phone me-2"></i> (123) 456-7890</li>
-              <li><i class="fas fa-envelope me-2"></i> info@virtualhealth.com</li>
+              <li><i class="fas fa-map-marker-alt me-2 opacity-75"></i> Graphic Era University, Dehradun</li>
+              <li><i class="fas fa-phone me-2 opacity-75"></i> +91 (123) 456-7890</li>
+              <li><i class="fas fa-envelope me-2 opacity-75"></i> support@virtualhealth.ai</li>
             </ul>
           </div>
         </div>
-        <hr class="my-4 bg-light">
+        <hr class="my-4">
         <div class="row">
-          <div class="col-md-6 text-center text-md-start">
-            <p class="mb-0">&copy; 2023 Virtual Health Assistant. All rights reserved.</p>
+          <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+            <p class="mb-0">© 2024 Virtual Health Assistant. All rights reserved.</p>
           </div>
           <div class="col-md-6 text-center text-md-end">
             <p class="mb-0">
-              <a href="#" class="text-white me-3">Privacy Policy</a>
-              <a href="#" class="text-white">Terms of Service</a>
+              <a href="#" class="me-3">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
             </p>
           </div>
         </div>

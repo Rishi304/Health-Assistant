@@ -6,148 +6,591 @@
     <title>Contact | Virtual Health Assistant</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
       :root {
-        --primary-color: #2a9d8f;
-        --secondary-color: #264653;
-        --accent-color: #e9c46a;
-        --light-color: #f8f9fa;
-        --dark-color: #212529;
+        /* Modern Dark Theme Variables (Copied from previous theme) */
+        --primary-bg: #0f0f23;
+        --secondary-bg: #1a1a2e;
+        --tertiary-bg: #16213e;
+        --surface-dark: #252545;
+        --surface-light: #2d2d44;
+        --surface-hover: #343454;
+
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        --warning-gradient: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+
+        --neon-blue: #00d4ff;
+        --neon-purple: #a855f7;
+        --neon-pink: #ec4899;
+        --neon-green: #10b981;
+        --neon-yellow: #f59e0b;
+
+        --text-primary: #ffffff;
+        --text-secondary: #b8bcc8;
+        --text-muted: #8b8fa3;
+        --text-accent: #667eea;
+
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --glass-strong: rgba(255, 255, 255, 0.15);
+
+        --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.15);
+        --shadow-strong: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        --shadow-card: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        --radius-2xl: 32px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
       }
 
       body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f5f7fa;
-        color: var(--dark-color);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--primary-bg);
+        color: var(--text-primary);
+        line-height: 1.7;
+        font-weight: 400;
+        overflow-x: hidden;
+        position: relative;
       }
 
+      body::before { /* Animated Background for body */
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+          radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      /* Navbar Styling */
       .navbar {
-        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)) !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        background: rgba(15, 15, 35, 0.9) !important;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--glass-border);
+        padding: 1.2rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .navbar-brand {
-        font-weight: 700;
-        font-size: 1.5rem;
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        font-size: 1.5rem; /* Adjusted for consistency */
+        color: var(--text-primary) !important;
+        transition: all 0.3s ease;
+        text-shadow: 0 0 15px rgba(102, 126, 234, 0.25);
+      }
+      .navbar-brand .fa-heartbeat {
+        color: var(--neon-blue);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.1); }
+      }
+
+      .navbar-brand:hover {
+        transform: scale(1.03);
+        filter: drop-shadow(0 0 8px var(--neon-blue));
+      }
+
+      .logo { /* Navbar logo container */
+        width: 45px;
+        height: 45px;
+        margin-right: 15px;
+        border-radius: 50%;
+        background: var(--primary-gradient);
+        padding: 2px;
+        transition: transform 0.3s ease;
+      }
+      .logo:hover {
+        transform: scale(1.1) rotate(15deg);
+      }
+      .myimg { /* Image inside logo container */
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        background-color: var(--surface-dark); /* Fallback bg for image */
+        border: none; /* Removed old border */
       }
 
       .nav-link {
         font-weight: 500;
-        padding: 0.5rem 1rem;
+        padding: 0.8rem 1.2rem !important; /* Adjusted padding */
+        color: var(--text-secondary) !important;
+        border-radius: var(--radius-lg);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        margin: 0 0.2rem;
+      }
+
+      .nav-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: var(--primary-gradient);
+        transition: left 0.3s ease;
+        z-index: -1;
+        opacity: 0.1;
+      }
+
+      .nav-link:hover::before,
+      .nav-link.active::before {
+        left: 0;
+        opacity: 0.15;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--text-primary) !important;
+        transform: translateY(-2px);
+        text-shadow: 0 0 10px rgba(102, 126, 234, 0.4);
+      }
+
+      .nav-link.active {
+        font-weight: 600;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-glow);
+      }
+
+      .navbar-toggler {
+        border-color: var(--glass-border);
+      }
+      .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.7%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+      }
+
+      /* Navbar Search Form */
+      .navbar .form-control {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        color: var(--text-primary);
+        border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+        padding-left: 1.2rem;
+      }
+      .navbar .form-control::placeholder { color: var(--text-muted); }
+      .navbar .form-control:focus {
+        background: var(--glass-strong);
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+      }
+      .navbar .btn-outline-light { /* For search button */
+        color: var(--text-secondary);
+        border-color: var(--glass-border);
+        background: var(--glass-bg);
+        border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
         transition: all 0.3s ease;
       }
-
-      .nav-link:hover {
-        color: var(--accent-color) !important;
-        transform: translateY(-2px);
+      .navbar .btn-outline-light:hover {
+        background: var(--primary-gradient);
+        color: var(--text-primary);
+        border-color: transparent;
+        transform: scale(1.05);
       }
 
-      .logo {
-        width: 50px;
-        height: 50px;
-        margin-right: 15px;
-      }
 
-      .myimg {
-        width: 50px;
-        height: 50px;
-        border: 2px solid white;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
+      /* Hero Section for Contact Page */
       .hero-contact {
-        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-        background-size: cover;
-        background-position: center;
-        color: white;
-        padding: 5rem 0;
-        margin-bottom: 3rem;
-        border-radius: 0 0 20px 20px;
+        background: var(--secondary-bg); /* Dark theme background */
+        color: var(--text-primary);
+        padding: 6rem 0; /* Adjusted padding */
+        margin-bottom: 4rem; /* Adjusted margin */
+        border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-contact::before { /* Subtle background gradients for hero */
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background:
+          radial-gradient(circle at 10% 20%, rgba(102, 126, 234, 0.15) 0%, transparent 60%),
+          radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 60%);
+        z-index: 0;
+      }
+      .hero-contact .container {
+        position: relative; z-index: 1;
+      }
+      .hero-contact h1 {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        color: var(--text-primary);
+      }
+      .hero-contact p.lead {
+        color: var(--text-secondary);
+        font-size: 1.25rem;
       }
 
-      .contact-container {
-        background: white;
-        border-radius: 15px;
-        padding: 2.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      /* Main Content Containers (Form, Info, FAQ) */
+      .content-section-wrapper {
+        background: var(--glass-bg);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-2xl);
+        padding: 3rem; /* Adjusted padding */
+        box-shadow: var(--shadow-card);
         margin-bottom: 3rem;
-        border: 1px solid rgba(0,0,0,0.05);
+        position: relative;
+        overflow: hidden;
       }
-
-      .contact-card {
-        background: white;
-        border-radius: 15px;
-        padding: 2rem;
+      .content-section-wrapper::before { /* Top accent bar */
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: var(--primary-gradient);
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+      }
+      .content-section-wrapper h2 {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        color: var(--text-primary);
         margin-bottom: 2rem;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        transition: all 0.3s;
+      }
+      .content-section-wrapper h2 .fas { /* Icon in heading */
+        color: var(--neon-blue);
+        margin-right: 0.75rem;
+      }
+
+      /* Contact Info Cards */
+      .contact-card {
+        background: var(--surface-dark);
+        border-radius: var(--radius-xl);
+        padding: 2rem 1.5rem; /* Adjusted padding */
+        margin-bottom: 1.5rem; /* Adjusted margin */
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s ease-in-out;
         height: 100%;
-        border: 1px solid rgba(0,0,0,0.05);
+        border: 1px solid var(--glass-strong);
         text-align: center;
       }
 
       .contact-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: var(--shadow-glow);
+        background: var(--surface-hover);
       }
 
       .contact-icon {
-        font-size: 2.5rem;
-        color: var(--primary-color);
+        font-size: 2.2rem; /* Adjusted size */
+        color: var(--neon-blue);
         margin-bottom: 1rem;
+        display: inline-block; /* For potential transform on icon itself */
+        transition: transform 0.3s ease;
       }
-
-      .form-control {
-        padding: 1rem;
-        border-radius: 10px;
-        border: 1px solid #e0e0e0;
-        transition: all 0.3s;
+      .contact-card:hover .contact-icon {
+        transform: scale(1.1);
       }
-
-      .form-control:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 0.25rem rgba(42, 157, 143, 0.25);
-      }
-
-      .btn-primary {
-        background-color: var(--primary-color);
-        border: none;
-        padding: 0.75rem 1.5rem;
-        border-radius: 50px;
+      .contact-card h4 {
+        color: var(--text-primary);
         font-weight: 600;
+        font-size: 1.15rem; /* Adjusted size */
+        margin-bottom: 0.5rem;
+      }
+      .contact-card p {
+        color: var(--text-secondary);
+        font-size: 0.95rem; /* Adjusted size */
+        line-height: 1.6;
+      }
+
+      /* Form Styling */
+      .form-label {
+        color: var(--text-secondary);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+      .form-control, .form-select {
+        padding: 0.9rem 1rem; /* Adjusted padding */
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--glass-border);
+        background: var(--glass-bg);
+        color: var(--text-primary);
         transition: all 0.3s;
       }
-
-      .btn-primary:hover {
-        background-color: #21867a;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(42, 157, 143, 0.3);
+      .form-control::placeholder, .form-select option {
+        color: var(--text-muted);
+      }
+      .form-select option {
+        background-color: var(--surface-dark); /* For dropdown options background */
+      }
+      .form-control:focus, .form-select:focus {
+        border-color: var(--neon-blue);
+        background: var(--glass-strong);
+        box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.2); /* Neon blue glow */
+        color: var(--text-primary);
       }
 
-      footer {
-        background: var(--secondary-color);
+      .btn-submit-custom { /* Custom class for submit button */
+        background: var(--primary-gradient);
+        border: none;
+        padding: 0.9rem 1.8rem; /* Adjusted padding */
+        border-radius: var(--radius-xl); /* Larger radius */
+        font-weight: 600;
         color: white;
-        padding: 3rem 0;
-        margin-top: 3rem;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: var(--shadow-sm);
       }
 
-      .map-container {
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      .btn-submit-custom:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2), var(--shadow-glow);
+        filter: brightness(1.1);
       }
+      .btn-submit-custom .fas {
+        margin-right: 0.5rem;
+      }
+
+      /* Map Container */
+      .map-container {
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        box-shadow: var(--shadow-card);
+        border: 1px solid var(--glass-border);
+      }
+      .map-container iframe {
+         filter: grayscale(30%) invert(90%) contrast(90%); /* Dark theme for map if possible */
+      }
+
+
+      /* FAQ Accordion Styling */
+      .accordion-item {
+        background-color: transparent; /* Main item background transparent */
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg) !important; /* Force radius */
+        margin-bottom: 1rem;
+        overflow: hidden; /* Ensure rounded corners on children */
+      }
+      .accordion-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .accordion-header .accordion-button {
+        background-color: var(--glass-strong); /* Header background */
+        color: var(--text-primary);
+        font-weight: 600;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0 !important; /* Top corners only if not collapsed */
+        box-shadow: none; /* Remove default bootstrap shadow */
+        padding: 1.25rem 1.5rem;
+      }
+      .accordion-header .accordion-button:not(.collapsed) {
+         background: var(--primary-gradient);
+         color: white;
+         box-shadow: inset 0 -3px 5px rgba(0,0,0,0.1);
+      }
+
+      .accordion-button::after { /* Custom accordion icon */
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23a855f7'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+        transition: transform .3s ease-in-out;
+      }
+      .accordion-button:not(.collapsed)::after {
+         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+        transform: rotate(-180deg);
+      }
+
+      .accordion-button:focus {
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.2);
+      }
+
+      .accordion-collapse {
+        background-color: var(--glass-bg); /* Body background */
+        border-top: 1px solid var(--glass-border); /* Separator if header isn't gradient */
+      }
+      .accordion-body {
+        color: var(--text-secondary);
+        padding: 1.5rem;
+        line-height: 1.8;
+      }
+
+
+      /* Footer Styling */
+      footer {
+        background: var(--secondary-bg);
+        position: relative;
+        padding: 5rem 0 3rem;
+        margin-top: 5rem;
+        overflow: hidden;
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+      }
+
+      footer::before { /* Top accent bar for footer */
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: var(--primary-gradient);
+      }
+      footer::after { /* Subtle radial gradients for footer */
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background:
+          radial-gradient(circle at 20% 90%, rgba(168, 85, 247, 0.07) 0%, transparent 50%),
+          radial-gradient(circle at 80% 10%, rgba(79, 172, 254, 0.07) 0%, transparent 50%);
+        z-index: -1;
+      }
+
+      footer h5 {
+        color: var(--text-primary);
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+      }
+      footer p, footer ul li a, footer ul li {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        line-height: 1.8;
+      }
+      footer ul.list-unstyled li {
+        margin-bottom: 0.7rem;
+      }
+      footer ul li a:hover {
+        color: var(--neon-blue);
+        transform: translateX(5px);
+        text-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+        display: inline-block; /* For transform */
+      }
+      footer .social-icons a { /* Social Icons in footer */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px; /* Adjusted size */
+        height: 45px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 50%;
+        color: var(--text-secondary) !important;
+        font-size: 1.2rem; /* Adjusted size */
+        transition: all 0.4s ease;
+        margin-right: 0.75rem; /* Adjusted spacing */
+        box-shadow: var(--shadow-sm);
+      }
+      footer .social-icons a:last-child { margin-right: 0; }
+      footer .social-icons a:hover {
+        background: var(--primary-gradient);
+        color: white !important;
+        transform: translateY(-4px) scale(1.1);
+        box-shadow: var(--shadow-glow);
+      }
+      footer hr {
+        border-color: var(--glass-border);
+        opacity: 0.5;
+      }
+      footer .text-md-start p, footer .text-md-end p {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+      footer .text-md-end a {
+        color: var(--text-muted);
+      }
+      footer .text-md-end a:hover {
+        color: var(--neon-blue);
+        text-decoration: underline;
+      }
+
+      /* Responsive Adjustments */
+        @media (max-width: 991px) {
+            .navbar-nav {
+            margin-top: 1rem;
+            }
+            .navbar .d-flex[role="search"] {
+            margin-top: 1rem;
+            width: 100%;
+            }
+            .navbar .d-flex[role="search"] .input-group {
+                width: 100%;
+            }
+        }
+        @media (max-width: 768px) {
+            .hero-contact {
+                padding: 4rem 0;
+            }
+            .content-section-wrapper {
+                padding: 2rem;
+            }
+            .content-section-wrapper h2 {
+                font-size: 1.75rem;
+            }
+            .contact-card {
+                margin-bottom: 1.5rem;
+            }
+            .map-container iframe {
+                height: 250px;
+            }
+            footer {
+                padding: 3rem 0 2rem;
+                text-align: center;
+            }
+            footer .social-icons {
+                justify-content: center;
+                margin-top: 1rem;
+            }
+             footer .col-md-4, footer .col-md-2, footer .col-md-3 {
+                 margin-bottom: 2rem;
+            }
+            footer .text-md-start, footer .text-md-end {
+                 text-align: center !important;
+            }
+            .accordion-button {
+                font-size: 0.9rem;
+                padding: 1rem 1.25rem;
+            }
+            .accordion-body {
+                padding: 1.25rem;
+                font-size: 0.9rem;
+            }
+        }
+
     </style>
   </head>
   <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg"> <!-- Removed navbar-dark -->
       <div class="container">
-        <!-- Logo at the top-left corner -->
         <div class="logo">
+          <!-- Ensure you have a 'VirtualHealthAssistant.png' in a 'static' folder or replace the src -->
           <img class="myimg" src="{{ url_for('static', filename='VirtualHealthAssistant.png') }}" alt="Virtual Health Assistant Logo">
         </div>
-
         <a class="navbar-brand" href="/">
           <i class="fas fa-heartbeat me-2"></i>Virtual Health Assistant
         </a>
@@ -155,7 +598,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0"> <!-- Pushed nav to right -->
             <li class="nav-item">
               <a class="nav-link" href="/">
                 <i class="fas fa-home me-1"></i> Home
@@ -182,10 +625,10 @@
               </a>
             </li>
           </ul>
-          <form class="d-flex" role="search">
+          <form class="d-flex ms-lg-3" role="search"> <!-- Added margin for spacing -->
             <div class="input-group">
-              <input class="form-control" type="search" placeholder="Search health topics..." aria-label="Search">
-              <button class="btn btn-outline-light" type="submit">
+              <input class="form-control" type="search" placeholder="Search..." aria-label="Search">
+              <button class="btn btn-outline-light" type="submit"> <!-- Styled search button -->
                 <i class="fas fa-search"></i>
               </button>
             </div>
@@ -197,149 +640,137 @@
     <!-- Hero Section -->
     <section class="hero-contact text-center">
       <div class="container">
-        <h1 class="display-4 fw-bold mb-4">Contact Us</h1>
-        <p class="lead mb-5">We're here to help and answer any questions you might have</p>
+        <h1 class="display-4 fw-bold mb-3">Get in Touch</h1>
+        <p class="lead mb-0">We're here to assist you. Reach out with any questions or inquiries.</p>
       </div>
     </section>
 
     <!-- Contact Content -->
     <section class="container">
-      <div class="row">
-        <div class="col-lg-6">
-          <div class="contact-container">
-            <h2 class="fw-bold mb-4" style="color: var(--primary-color);">
-              <i class="fas fa-paper-plane me-2"></i>Send Us a Message
+      <div class="row g-4">
+        <div class="col-lg-7">
+          <div class="content-section-wrapper contact-form-container">
+            <h2 class="fw-bold">
+              <i class="fas fa-paper-plane"></i>Send Us a Message
             </h2>
             <form>
-              <div class="mb-3">
-                <label for="name" class="form-label">Your Name</label>
-                <input type="text" class="form-control" id="name" placeholder="John Doe">
-              </div>
-              <div class="mb-3">
-                <label for="email" class="form-label">Email Address</label>
-                <input type="email" class="form-control" id="email" placeholder="john@example.com">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="name" class="form-label">Your Name</label>
+                  <input type="text" class="form-control" id="name" placeholder="John Doe">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="email" class="form-label">Email Address</label>
+                  <input type="email" class="form-control" id="email" placeholder="john.doe@example.com">
+                </div>
               </div>
               <div class="mb-3">
                 <label for="subject" class="form-label">Subject</label>
                 <select class="form-select" id="subject">
-                  <option selected>Select a subject</option>
+                  <option selected disabled>Select a subject...</option>
                   <option>General Inquiry</option>
                   <option>Technical Support</option>
-                  <option>Feedback</option>
-                  <option>Partnership</option>
+                  <option>Feedback & Suggestions</option>
+                  <option>Partnership Opportunities</option>
+                  <option>Media Inquiry</option>
                 </select>
               </div>
-              <div class="mb-3">
+              <div class="mb-4">
                 <label for="message" class="form-label">Your Message</label>
-                <textarea class="form-control" id="message" rows="5" placeholder="Type your message here..."></textarea>
+                <textarea class="form-control" id="message" rows="6" placeholder="Type your message here..."></textarea>
               </div>
-              <button type="submit" class="btn btn-primary w-100">
-                <i class="fas fa-paper-plane me-2"></i>Send Message
+              <button type="submit" class="btn btn-submit-custom w-100">
+                <i class="fas fa-satellite-dish me-1"></i>Transmit Message
               </button>
             </form>
           </div>
         </div>
-        <div class="col-lg-6">
-          <div class="contact-container">
-            <h2 class="fw-bold mb-4" style="color: var(--primary-color);">
-              <i class="fas fa-map-marker-alt me-2"></i>Contact Information
+        <div class="col-lg-5">
+          <div class="content-section-wrapper contact-info-container">
+            <h2 class="fw-bold">
+              <i class="fas fa-headset"></i>Contact Information
             </h2>
+            <div class="mb-4">
+                <div class="contact-card">
+                  <div class="contact-icon"><i class="fas fa-map-marked-alt"></i></div>
+                  <h4>Our Office</h4>
+                  <p>Graphic Era University<br>Bell Road, Clement Town, Dehradun, Uttarakhand 248002</p>
+                </div>
+            </div>
             <div class="row">
-              <div class="col-md-6 mb-4">
+              <div class="col-md-6 mb-sm-4 mb-md-0">
                 <div class="contact-card">
-                  <div class="contact-icon">
-                    <i class="fas fa-map-marker-alt"></i>
-                  </div>
-                  <h4>Our Location</h4>
-                  <p>Graphic Era University<br>Dehradun, Uttarakhand</p>
-                </div>
-              </div>
-              <div class="col-md-6 mb-4">
-                <div class="contact-card">
-                  <div class="contact-icon">
-                    <i class="fas fa-phone-alt"></i>
-                  </div>
+                  <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
                   <h4>Call Us</h4>
-                  <p>+91 (123) 456-7890<br>Mon-Fri, 9am-5pm</p>
+                  <p>+91 (123) 456-7890<br><small>(Mon-Fri, 9am-6pm IST)</small></p>
                 </div>
               </div>
-              <div class="col-md-6 mb-4">
+              <div class="col-md-6">
                 <div class="contact-card">
-                  <div class="contact-icon">
-                    <i class="fas fa-envelope"></i>
-                  </div>
+                  <div class="contact-icon"><i class="fas fa-envelope-open-text"></i></div>
                   <h4>Email Us</h4>
-                  <p>info@virtualhealth.com<br>support@virtualhealth.com</p>
-                </div>
-              </div>
-              <div class="col-md-6 mb-4">
-                <div class="contact-card">
-                  <div class="contact-icon">
-                    <i class="fas fa-headset"></i>
-                  </div>
-                  <h4>Live Chat</h4>
-                  <p>Available 24/7<br>via our mobile app</p>
+                  <p>info@virtualhealth.ai<br>support@virtualhealth.ai</p>
                 </div>
               </div>
             </div>
-            <div class="map-container mt-4">
-              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3442.722367752918!2d78.0436823151267!3d30.36790198177146!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390929c356c888af%3A0x4c3562c032518799!2sGraphic%20Era%20University!5e0!3m2!1sen!2sin!4v1689877985183!5m2!1sen!2sin" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+             <div class="map-container mt-4">
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3442.722367752918!2d78.0436823151267!3d30.36790198177146!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390929c356c888af%3A0x4c3562c032518799!2sGraphic%20Era%20University!5e0!3m2!1sen!2sin!4v1689877985183!5m2!1sen!2sin" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
           </div>
         </div>
       </div>
 
       <!-- FAQ Section -->
-      <div class="contact-container mt-4">
-        <h2 class="text-center fw-bold mb-5" style="color: var(--primary-color);">
-          <i class="fas fa-question-circle me-2"></i>Frequently Asked Questions
+      <div class="content-section-wrapper faq-container mt-0 mt-lg-4"> <!-- Adjusted margin for FAQ -->
+        <h2 class="text-center fw-bold">
+          <i class="fas fa-question-circle"></i>Frequently Asked Questions
         </h2>
         <div class="accordion" id="faqAccordion">
           <div class="accordion-item">
-            <h2 class="accordion-header">
+            <h2 class="accordion-header" id="headingOne">
               <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqOne" aria-expanded="true" aria-controls="faqOne">
-                How accurate is the Virtual Health Assistant?
+                How reliable is the Virtual Health Assistant's advice?
               </button>
             </h2>
-            <div id="faqOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+            <div id="faqOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
               <div class="accordion-body">
-                Our AI system has a 95% accuracy rate for common conditions, but it's important to remember it provides preliminary assessments only. Always consult with a healthcare professional for definitive diagnoses.
+                Our AI aims for high accuracy (around 95% for common scenarios) based on current medical knowledge. However, it is designed for informational and preliminary guidance only. Always consult a qualified healthcare professional for medical advice, diagnosis, or treatment.
               </div>
             </div>
           </div>
           <div class="accordion-item">
-            <h2 class="accordion-header">
+            <h2 class="accordion-header" id="headingTwo">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwo" aria-expanded="false" aria-controls="faqTwo">
-                Is my personal health information secure?
+                Is my personal and health information kept confidential?
               </button>
             </h2>
-            <div id="faqTwo" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div id="faqTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
               <div class="accordion-body">
-                Absolutely. We use industry-standard encryption and comply with all healthcare privacy regulations. Your data is never shared without your consent.
+                Absolutely. We prioritize your privacy and data security. All information is encrypted using industry-best practices, and we adhere strictly to healthcare privacy regulations (e.g., HIPAA, GDPR where applicable). Your identifiable data is never sold or shared without your explicit consent.
               </div>
             </div>
           </div>
           <div class="accordion-item">
-            <h2 class="accordion-header">
+            <h2 class="accordion-header" id="headingThree">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqThree" aria-expanded="false" aria-controls="faqThree">
-                Can I use this service in an emergency?
+                Can the Virtual Health Assistant be used for emergency situations?
               </button>
             </h2>
-            <div id="faqThree" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div id="faqThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
               <div class="accordion-body">
-                No, this service is not for emergencies. In case of a medical emergency, please call your local emergency number immediately.
+                <strong>No, this service is NOT for emergencies.</strong> In case of a medical emergency, critical situation, or if you require urgent medical attention, please dial your local emergency number (e.g., 911, 112, 999) or go to the nearest emergency department immediately.
               </div>
             </div>
           </div>
           <div class="accordion-item">
-            <h2 class="accordion-header">
+            <h2 class="accordion-header" id="headingFour">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqFour" aria-expanded="false" aria-controls="faqFour">
-                How can I provide feedback about the service?
+                How can I offer feedback or report an issue with the service?
               </button>
             </h2>
-            <div id="faqFour" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+            <div id="faqFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
               <div class="accordion-body">
-                We welcome all feedback! You can use the contact form on this page, email us at feedback@virtualhealth.com, or leave a review in our app store listing.
+                We highly value your input! You can provide feedback or report issues using the contact form on this page, by emailing us directly at <a href="mailto:feedback@virtualhealth.ai" style="color:var(--neon-blue)">feedback@virtualhealth.ai</a>, or through the feedback section within our mobile application.
               </div>
             </div>
           </div>
@@ -351,52 +782,54 @@
     <footer>
       <div class="container">
         <div class="row">
-          <div class="col-md-4 mb-4 mb-md-0">
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
             <h5><i class="fas fa-heartbeat me-2"></i>Virtual Health Assistant</h5>
-            <p>Empowering individuals with AI-driven health insights for better wellness decisions.</p>
-            <div class="social-icons">
-              <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-              <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
-              <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-              <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+            <p>Pioneering accessible and intelligent healthcare solutions for a healthier tomorrow. Your wellness, augmented by AI.</p>
+            <div class="social-icons mt-3">
+              <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+              <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             </div>
           </div>
-          <div class="col-md-2 mb-4 mb-md-0">
+          <div class="col-lg-2 col-md-3 col-6 mb-4 mb-lg-0">
             <h5>Quick Links</h5>
             <ul class="list-unstyled">
-              <li><a href="/" class="text-white">Home</a></li>
-              <li><a href="/about" class="text-white">About</a></li>
-              <li><a href="/contact" class="text-white">Contact</a></li>
-              <li><a href="/blog" class="text-white">Blog</a></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="/about">About Us</a></li>
+              <li><a href="/contact">Contact</a></li>
+              <li><a href="/blog">Blog</a></li>
+              <li><a href="/developer">Developers</a></li>
             </ul>
           </div>
-          <div class="col-md-3 mb-4 mb-md-0">
-            <h5>Services</h5>
+          <div class="col-lg-3 col-md-3 col-6 mb-4 mb-lg-0">
+            <h5>Our Platform</h5>
             <ul class="list-unstyled">
-              <li><a href="/" class="text-white">Symptom Checker</a></li>
-              <li><a href="#" class="text-white">Health Tips</a></li>
-              <li><a href="#" class="text-white">Wellness Plans</a></li>
-              <li><a href="#" class="text-white">Preventive Care</a></li>
+              <li><a href="/">Symptom Analysis</a></li>
+              <li><a href="#">AI Health Chatbot</a></li>
+              <li><a href="#">Wellness Insights</a></li>
+              <li><a href="#">Health Articles</a></li>
+              <li><a href="#">API Access</a></li>
             </ul>
           </div>
-          <div class="col-md-3">
-            <h5>Contact Us</h5>
+          <div class="col-lg-3 col-md-12">
+            <h5>Get In Touch</h5>
             <ul class="list-unstyled">
-              <li><i class="fas fa-map-marker-alt me-2"></i> Graphic Era University, Dehradun, Uttarakhand</li>
-              <li><i class="fas fa-phone me-2"></i> (123) 456-7890</li>
-              <li><i class="fas fa-envelope me-2"></i> info@virtualhealth.com</li>
+              <li><i class="fas fa-map-marker-alt me-2 opacity-75"></i> Graphic Era University, Dehradun</li>
+              <li><i class="fas fa-phone me-2 opacity-75"></i> +91 (123) 456-7890</li>
+              <li><i class="fas fa-envelope me-2 opacity-75"></i> support@virtualhealth.ai</li>
             </ul>
           </div>
         </div>
-        <hr class="my-4 bg-light">
+        <hr class="my-4">
         <div class="row">
-          <div class="col-md-6 text-center text-md-start">
-            <p class="mb-0">&copy; 2025 Virtual Health Assistant. All rights reserved.</p>
+          <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+            <p class="mb-0">© 2024 Virtual Health Assistant. All rights reserved.</p>
           </div>
           <div class="col-md-6 text-center text-md-end">
             <p class="mb-0">
-              <a href="#" class="text-white me-3">Privacy Policy</a>
-              <a href="#" class="text-white">Terms of Service</a>
+              <a href="#" class="me-3">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
             </p>
           </div>
         </div>

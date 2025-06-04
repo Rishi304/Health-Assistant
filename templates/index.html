@@ -6,414 +6,538 @@
     <title>Virtual Health Assistant | AI-Powered Healthcare</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2a9d8f;
-            --primary-dark: #1d7a6e;
-            --secondary-color: #264653;
-            --secondary-dark: #1a3340;
-            --accent-color: #e9c46a;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --gray-medium: #6c757d;
-            --gray-light: #e9ecef;
-            --danger-color: #e76f51;
-            --success-color: #2a9d8f;
-            --box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            /* Modern Dark Theme Variables */
+            --primary-bg: #0f0f23;
+            --secondary-bg: #1a1a2e;
+            --tertiary-bg: #16213e;
+            --surface-dark: #252545;
+            --surface-light: #2d2d44;
+            --surface-hover: #343454;
+
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --warning-gradient: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+
+            --neon-blue: #00d4ff;
+            --neon-purple: #a855f7;
+            --neon-pink: #ec4899;
+            --neon-green: #10b981;
+            --neon-yellow: #f59e0b;
+
+            --text-primary: #ffffff;
+            --text-secondary: #b8bcc8;
+            --text-muted: #8b8fa3;
+            --text-accent: #667eea;
+
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-strong: rgba(255, 255, 255, 0.15);
+
+            --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.15);
+            --shadow-strong: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+            --shadow-card: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-2xl: 32px;
             --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f8fafc;
-            color: var(--dark-color);
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.7;
+            font-weight: 400;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 1140px;
-            }
+        body::before { /* Animated Background for body */
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background:
+              radial-gradient(circle at 15% 25%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 85% 75%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: subtleShine 20s infinite alternate ease-in-out;
         }
+        @keyframes subtleShine {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+
+        @media (min-width: 1200px) { .container { max-width: 1180px; } }
 
         /* Typography */
         h1, h2, h3, h4, h5, h6 {
-            font-weight: 600;
-            line-height: 1.3;
-        }
-
-        .display-4 {
+            font-family: 'Manrope', sans-serif;
             font-weight: 700;
-            letter-spacing: -0.5px;
+            line-height: 1.3;
+            color: var(--text-primary);
         }
+        .display-4 { font-weight: 800; letter-spacing: -0.5px; }
+        p, .form-label, .text-muted { color: var(--text-secondary); }
+        .text-muted { color: var(--text-muted) !important; }
+
 
         /* Navbar */
         .navbar {
-            background: var(--secondary-color) !important;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            padding: 0.75rem 0;
+            background: rgba(15, 15, 35, 0.85) !important; /* Slightly more transparent */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 1rem 0; /* Adjusted padding */
+            position: sticky; top: 0; z-index: 1030;
+            transition: var(--transition);
         }
-
         .navbar-brand {
-            font-weight: 700;
+            font-family: 'Manrope', sans-serif;
+            font-weight: 800;
             font-size: 1.35rem;
-            display: flex;
-            align-items: center;
+            color: var(--text-primary) !important;
+            display: flex; align-items: center;
+            text-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
         }
+        .navbar-brand:hover { filter: drop-shadow(0 0 5px var(--neon-blue)); }
+
+        .logo { /* Navbar logo image container */
+            width: 40px; height: 40px;
+            margin-right: 12px;
+            border-radius: var(--radius-md); /* Updated */
+            background: var(--primary-gradient);
+            padding: 2px;
+            transition: transform 0.3s ease;
+        }
+        .logo img { /* The actual image */
+             width: 100%; height: 100%;
+             object-fit: cover;
+             border-radius: calc(var(--radius-md) - 2px);
+             background-color: var(--surface-dark); /* Fallback */
+        }
+        .logo:hover { transform: scale(1.1) rotate(10deg); }
+
 
         .nav-link {
             font-weight: 500;
-            padding: 0.5rem 1rem;
+            padding: 0.7rem 1.1rem !important; /* Bootstrap override */
+            color: var(--text-secondary) !important;
+            border-radius: var(--radius-lg);
             transition: var(--transition);
-            font-size: 0.95rem;
+            position: relative; overflow: hidden;
+            margin: 0 0.15rem; font-size: 0.95rem;
+        }
+        .nav-link::before {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: var(--primary-gradient);
+            transition: left 0.35s ease; z-index: -1; opacity: 0.1;
+        }
+        .nav-link:hover::before, .nav-link.active::before { left: 0; opacity: 0.15; }
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-primary) !important;
+            transform: translateY(-2px);
+            text-shadow: 0 0 8px rgba(102, 126, 234, 0.4);
+        }
+        .nav-link.active {
+            font-weight: 600;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-glow);
+        }
+        .navbar-toggler { border-color: var(--glass-border); }
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.7%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+         /* Navbar Search Form */
+        .navbar .form-control {
+            background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary);
+            border-radius: var(--radius-lg) 0 0 var(--radius-lg); padding-left: 1rem; font-size: 0.9rem;
+        }
+        .navbar .form-control::placeholder { color: var(--text-muted); }
+        .navbar .form-control:focus {
+            background: var(--glass-strong); border-color: var(--neon-blue);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+        .navbar .btn-outline-light { /* For search button */
+            color: var(--text-secondary); border-color: var(--glass-border); background: var(--glass-bg);
+            border-radius: 0 var(--radius-lg) var(--radius-lg) 0; transition: var(--transition); font-size: 0.9rem;
+        }
+        .navbar .btn-outline-light:hover {
+            background: var(--primary-gradient); color: var(--text-primary); border-color: transparent;
         }
 
-        .nav-link:hover {
-            color: var(--accent-color) !important;
-        }
-
-        .logo {
-            width: 40px;
-            height: 40px;
-            margin-right: 12px;
-            border-radius: 8px;
-        }
 
         /* Hero Section */
         .hero-section {
-            background: linear-gradient(135deg, rgba(38,70,83,0.9), rgba(42,157,143,0.9)),
-                        url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
-            color: white;
-            padding: 6rem 0 5rem;
-            margin-bottom: 3rem;
-            position: relative;
-            overflow: hidden;
+            background: var(--secondary-bg); /* Dark theme background */
+            color: var(--text-primary);
+            padding: 7rem 0 6rem; /* Adjusted padding */
+            margin-bottom: 4rem; /* Adjusted margin */
+            border-radius: 0 0 var(--radius-2xl) var(--radius-2xl); /* Bottom rounding */
+            position: relative; overflow: hidden;
         }
-
-        .hero-section::after {
-            content: '';
-            position: absolute;
-            bottom: -50px;
-            left: 0;
-            right: 0;
-            height: 100px;
-            background: #f8fafc;
-            transform: skewY(-2deg);
-            z-index: 1;
+        .hero-section::before { /* Subtle background gradients for hero */
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background:
+              radial-gradient(ellipse at 20% 30%, rgba(102, 126, 234, 0.12) 0%, transparent 65%),
+              radial-gradient(ellipse at 80% 70%, rgba(168, 85, 247, 0.1) 0%, transparent 65%),
+              radial-gradient(ellipse at 50% 90%, rgba(0, 212, 255, 0.08) 0%, transparent 60%);
+            z-index: 0;
+            animation: heroGlow 15s infinite alternate ease-in-out;
         }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
+        @keyframes heroGlow {
+            0% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.02); }
         }
-
-        /* Main Content */
-        .main-form-container {
-            background: white;
-            border-radius: 12px;
-            padding: 2.5rem;
-            box-shadow: var(--box-shadow);
-            margin-bottom: 3rem;
-            border: none;
-            transition: var(--transition);
+        .hero-content { position: relative; z-index: 1; }
+        .hero-section .display-4 {
+             background: linear-gradient(120deg, var(--text-primary) 60%, var(--neon-blue) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
+        .hero-section .lead { color: var(--text-secondary); max-width: 600px; margin-left:auto; margin-right:auto; }
 
-        .main-form-container:hover {
-            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-        }
-
-        .form-control {
-            padding: 0.875rem 1rem;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-            transition: var(--transition);
-            font-size: 0.95rem;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(42, 157, 143, 0.15);
-        }
-
-        /* Buttons */
+        /* Buttons (General and Hero) */
         .btn {
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            transition: var(--transition);
-            letter-spacing: 0.3px;
-            font-size: 0.95rem;
+            font-weight: 600; padding: 0.85rem 1.75rem; /* Slightly larger */
+            border-radius: var(--radius-xl); /* More rounded */
+            transition: var(--transition); letter-spacing: 0.4px;
+            font-size: 0.95rem; text-transform: uppercase;
+            box-shadow: var(--shadow-sm);
         }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            border: none;
+        .btn-primary-gradient { /* New class for gradient buttons */
+            background: var(--primary-gradient); border: none; color: white;
         }
-
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(42, 157, 143, 0.3);
+        .btn-primary-gradient:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2), var(--shadow-glow);
+            filter: brightness(1.15); color: white;
         }
-
-        .btn-outline-primary {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
+        .btn-outline-themed { /* New class for themed outline buttons */
+            border: 2px solid var(--neon-blue); color: var(--neon-blue);
+            background-color: transparent;
         }
-
-        .btn-outline-primary:hover {
-            background-color: var(--primary-color);
-        }
-
-        .btn-danger {
-            background-color: var(--danger-color);
-            border: none;
-        }
-
-        .btn-danger:hover {
-            background-color: #d45a3d;
-        }
-
-        /* Cards */
-        .feature-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            height: 100%;
-            border: none;
-            text-align: center;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 1.25rem;
-            background: rgba(42, 157, 143, 0.1);
-            width: 80px;
-            height: 80px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-
-        /* Results Section */
-        .result-container {
-            background: white;
-            border-radius: 12px;
-            padding: 2.5rem;
-            box-shadow: var(--box-shadow);
-            margin-bottom: 3rem;
-            border: none;
-        }
-
-        .toggle-button {
-            padding: 0.75rem 1.5rem;
-            margin: 0.5rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: var(--transition);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .toggle-button:hover {
+        .btn-outline-themed:hover {
+            background-color: var(--neon-blue); color: var(--primary-bg);
             transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2);
         }
+        /* Overriding Bootstrap .btn-primary (used in JS) if needed or use specific class like btn-action */
+        .btn-primary {
+             background: var(--primary-gradient); border: none; color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2), var(--shadow-glow);
+            filter: brightness(1.15); color: white;
+            background: var(--primary-gradient); /* Keep gradient on hover */
+        }
+        .btn-danger { /* For Analyze button */
+            background: var(--warning-gradient); border:none; color: white;
+        }
+         .btn-danger:hover {
+            filter: brightness(1.15); transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(252, 70, 107, 0.2); color:white;
+             background: var(--warning-gradient);
+        }
+         .btn-warning { /* For Listening button, if using btn-warning */
+            background: linear-gradient(135deg, #f59e0b 0%, #facc15 100%); border: none; color: var(--surface-dark);
+        }
+        .btn-warning:hover {
+            filter: brightness(1.1); color: var(--surface-dark);
+        }
+
+        /* Feature Cards */
+        .feature-card {
+            background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 2.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-card);
+            transition: var(--transition);
+            height: 100%; text-align: center; position: relative; overflow: hidden;
+        }
+        .feature-card::before { /* Top accent bar for cards */
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 3px; background: var(--accent-gradient);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        }
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-strong), 0 0 50px rgba(79,172,254,0.15);
+            border-color: rgba(79,172,254,0.2);
+        }
+        .feature-icon {
+            font-size: 2.5rem; color: white;
+            margin-bottom: 1.5rem;
+            background: var(--accent-gradient); /* Gradient background */
+            width: 80px; height: 80px;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 8px 15px rgba(79,172,254,0.2);
+            transition: var(--transition);
+        }
+        .feature-card:hover .feature-icon { transform: scale(1.1) rotate(10deg); }
+        .feature-card h4 { margin-bottom: 0.75rem; font-size: 1.35rem; }
+        .feature-card p { font-size: 0.95rem; margin-bottom: 1.5rem; }
+        .feature-card .btn { margin-top: auto; } /* Push button to bottom if card is flex column */
+        /* Specific button styling for features */
+        .appointment-btn, .delivery-btn {
+             border: 2px solid var(--neon-purple); color: var(--neon-purple); background: transparent;
+        }
+        .appointment-btn:hover, .delivery-btn:hover {
+            background: var(--neon-purple); color: white;
+        }
+
+
+        /* Main Form & Results Containers */
+        .content-section-wrapper { /* General wrapper for main form and results */
+            background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border); border-radius: var(--radius-2xl);
+            padding: 3rem; box-shadow: var(--shadow-card);
+            margin-bottom: 3rem; position: relative; overflow: hidden;
+        }
+        .content-section-wrapper::before { /* Top accent bar */
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 4px; background: var(--primary-gradient);
+            border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+        }
+        .content-section-wrapper h2 {
+            font-family: 'Manrope', sans-serif; font-weight: 700; color: var(--text-primary);
+            margin-bottom: 2rem; text-align: center;
+        }
+        .content-section-wrapper h2 .fas { /* Icon in heading */
+            background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-right: 0.75rem;
+        }
+
+        .form-label { color: var(--text-secondary); font-weight: 500; margin-bottom: 0.5rem; }
+        .form-control {
+            padding: 1rem 1.2rem; border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border); background: var(--glass-strong); /* Darker glass for inputs */
+            color: var(--text-primary); transition: var(--transition); font-size: 1rem;
+        }
+        .form-control::placeholder { color: var(--text-muted); opacity: 0.8; }
+        .form-control:focus {
+            border-color: var(--neon-blue); background: var(--glass-strong);
+            box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.2); color: var(--text-primary);
+        }
+
+        #transcription {
+            background: var(--surface-dark); /* Darker background */
+            padding: 1.25rem; border-radius: var(--radius-lg);
+            margin-top: 1rem; border: 1px solid var(--glass-border);
+            font-size: 1rem; color: var(--text-secondary); min-height: 50px;
+            font-style: italic;
+        }
+
+        /* Toggle Buttons for Results */
+        .toggle-button {
+            padding: 0.8rem 1.6rem; margin: 0.5rem;
+            border: 2px solid; /* Keep border for structure */
+            border-radius: var(--radius-xl); font-weight: 600;
+            transition: var(--transition);
+            background: var(--glass-bg);
+            color: var(--text-secondary); /* Default color */
+            font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+        .toggle-button:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            color: var(--text-primary);
+        }
+        .toggle-button i { margin-right: 0.6rem; }
+
+        /* Specific colors for toggle buttons, using neon accents for border and hover text */
+        .toggle-button[data-bs-target="#diseaseModal"]    { border-color: var(--neon-blue); }
+        .toggle-button[data-bs-target="#diseaseModal"]:hover { background-color: rgba(0, 212, 255,0.1); border-color: var(--neon-blue); color:var(--neon-blue);}
+
+        .toggle-button[data-bs-target="#descriptionModal"] { border-color: var(--neon-purple); }
+        .toggle-button[data-bs-target="#descriptionModal"]:hover { background-color: rgba(168, 85, 247,0.1); border-color:var(--neon-purple); color:var(--neon-purple); }
+
+        .toggle-button[data-bs-target="#precautionModal"]  { border-color: var(--neon-pink); }
+        .toggle-button[data-bs-target="#precautionModal"]:hover { background-color: rgba(236, 72, 153,0.1); border-color:var(--neon-pink); color:var(--neon-pink); }
+
+        .toggle-button[data-bs-target="#medicationsModal"] { border-color: var(--neon-yellow); }
+        .toggle-button[data-bs-target="#medicationsModal"]:hover { background-color: rgba(245, 158, 11,0.1); border-color:var(--neon-yellow); color:var(--neon-yellow); }
+
+        .toggle-button[data-bs-target="#dietModal"]        { border-color: var(--neon-green); }
+        .toggle-button[data-bs-target="#dietModal"]:hover { background-color: rgba(16, 185, 129,0.1); border-color:var(--neon-green); color:var(--neon-green); }
+
+        .result-container .alert { /* Themed alert in results */
+            background-color: var(--glass-strong);
+            color: var(--text-secondary);
+            border: 1px solid var(--neon-blue);
+            border-left-width: 5px;
+            border-radius: var(--radius-md);
+        }
+        .result-container .alert .fas { color: var(--neon-blue); }
+
 
         /* Modals */
-        .modal-header {
-            background: var(--secondary-color);
-            color: white;
-            border-bottom: none;
-            padding: 1.5rem;
-        }
-
-        .modal-title {
-            font-weight: 600;
-        }
-
         .modal-content {
-            border-radius: 12px;
-            overflow: hidden;
-            border: none;
-            box-shadow: 0 12px 36px rgba(0,0,0,0.15);
+            background: var(--secondary-bg); /* Dark modal background */
+            border-radius: var(--radius-xl); overflow: hidden;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-strong);
         }
+        .modal-header {
+            background: var(--surface-dark); color: var(--text-primary);
+            border-bottom: 1px solid var(--glass-border); padding: 1.25rem 1.5rem;
+        }
+        .modal-title { font-weight: 600; font-family: 'Manrope', sans-serif; font-size: 1.25rem; }
+        .btn-close-white { filter: invert(1) grayscale(100%) brightness(200%); } /* Ensure close button is visible */
+        .modal-body { padding: 1.5rem 2rem; }
+        .modal-body h4 { color: var(--neon-blue); } /* Predicted disease in modal */
+        .modal-body p { color: var(--text-secondary); }
+        .modal-footer {
+            background: var(--surface-dark);
+            border-top: 1px solid var(--glass-border);
+            padding: 1rem 1.5rem;
+        }
+        .modal-footer .btn-secondary {
+            background-color: var(--surface-hover); color: var(--text-secondary); border: none;
+        }
+        .modal-footer .btn-secondary:hover { background-color: var(--glass-strong); color: var(--text-primary); }
+        /* Styling for list groups within modals */
+        .list-group-item {
+            background-color: transparent;
+            border-color: var(--glass-border);
+            color: var(--text-secondary);
+            padding: 0.85rem 1.25rem;
+        }
+         .list-group-item:first-child { border-top-left-radius:var(--radius-md); border-top-right-radius: var(--radius-md); }
+         .list-group-item:last-child { border-bottom-left-radius:var(--radius-md); border-bottom-right-radius: var(--radius-md); }
 
-        .modal-body {
-            padding: 1.5rem;
+        .modal-body .alert { /* Themed alert in modal */
+            background-color: var(--glass-strong); color: var(--text-secondary);
+            border: 1px solid var(--neon-yellow); border-left-width: 4px;
+            border-radius: var(--radius-md); font-size: 0.9rem;
         }
+         .modal-body .alert .fas { color: var(--neon-yellow); }
+
 
         /* Footer */
         footer {
-            background: var(--secondary-dark);
-            color: white;
-            padding: 4rem 0 2rem;
-            margin-top: 4rem;
+            background: var(--secondary-bg); position: relative;
+            padding: 5rem 0 3rem; margin-top: 5rem;
+            overflow: hidden; border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
         }
-
+        footer::before { /* Top accent bar for footer */
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 3px; background: var(--primary-gradient);
+        }
+        footer::after { /* Subtle radial gradients for footer */
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background:
+              radial-gradient(circle at 20% 90%, rgba(168, 85, 247, 0.07) 0%, transparent 50%),
+              radial-gradient(circle at 80% 10%, rgba(79, 172, 254, 0.07) 0%, transparent 50%);
+            z-index: -1;
+        }
         footer h5 {
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
+            color: var(--text-primary); font-family: 'Manrope', sans-serif;
+            font-weight: 700; margin-bottom: 1.5rem; font-size: 1.2rem;
         }
-
-        footer ul li {
-            margin-bottom: 0.75rem;
+        footer p, footer ul li a, footer ul li {
+            color: var(--text-secondary); text-decoration: none;
+            transition: var(--transition); font-size: 0.95rem; line-height: 1.8;
         }
-
-        footer a {
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            transition: var(--transition);
+        footer ul.list-unstyled li { margin-bottom: 0.7rem; }
+        footer ul li a:hover {
+            color: var(--neon-blue); transform: translateX(5px);
+            text-shadow: 0 0 8px rgba(0, 212, 255, 0.3); display: inline-block; /* For transform */
         }
-
-        footer a:hover {
-            color: white;
-            text-decoration: underline;
+        footer .social-icons a { /* Social Icons in footer */
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 45px; height: 45px;
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            border-radius: 50%; color: var(--text-secondary) !important;
+            font-size: 1.2rem; transition: var(--transition);
+            margin-right: 0.75rem; box-shadow: var(--shadow-sm);
         }
-
-        .social-icons a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            margin-right: 0.75rem;
-            transition: var(--transition);
+        footer .social-icons a:last-child { margin-right: 0; }
+        footer .social-icons a:hover {
+            background: var(--primary-gradient); color: white !important;
+            transform: translateY(-4px) scale(1.1); box-shadow: var(--shadow-glow);
         }
-
-        .social-icons a:hover {
-            background: var(--primary-color);
-            transform: translateY(-2px);
+        footer hr { border-color: var(--glass-border); opacity: 0.5; }
+        footer .text-md-start p, footer .text-md-end p {
+            color: var(--text-muted); font-size: 0.9rem;
         }
+        footer .text-md-end a { color: var(--text-muted); }
+        footer .text-md-end a:hover { color: var(--neon-blue); text-decoration: underline; }
 
-        /* Utility Classes */
-        .text-muted {
-            color: var(--gray-medium) !important;
-        }
-
-        .bg-light {
-            background-color: var(--gray-light) !important;
-        }
-
-        /* Specific Components */
-        #transcription {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
-            border: 1px dashed #ddd;
-            font-size: 0.95rem;
-        }
-
-        .speech-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .delivery-btn {
-            margin-top: 1rem;
-            width: 100%;
-        }
-
-        .appointment-btn {
-            margin-top: 1rem;
-            width: 100%;
-            background-color: #3a86ff;
-            border: none;
-        }
-
-        .appointment-btn:hover {
-            background-color: #2667cc;
-        }
-
+        /* Section Title Styling */
         .section-title {
-            position: relative;
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
+            position: relative; padding-bottom: 1rem; margin-bottom: 3rem !important; /* BS override */
+            text-align: center; font-family: 'Manrope', sans-serif;
+        }
+        .section-title::after {
+            content: ''; position: absolute; bottom: 0;
+            left: 50%; transform: translateX(-50%);
+            width: 100px; height: 4px; /* Thicker, wider line */
+            background: var(--primary-gradient); /* Gradient underline */
+            border-radius: 2px;
         }
 
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: var(--primary-color);
-            border-radius: 3px;
-        }
 
         /* Responsive Adjustments */
         @media (max-width: 992px) {
-            .hero-section {
-                padding: 4rem 0 3rem;
-            }
-
-            .hero-section::after {
-                bottom: -30px;
-                height: 60px;
-            }
+            .hero-section { padding: 5rem 0 4rem; }
+            .content-section-wrapper { padding: 2rem; }
+             .navbar-nav { margin-top: 1rem; }
+             .navbar .d-flex[role="search"] { margin-top: 1rem; width: 100%; }
+             .navbar .d-flex[role="search"] .input-group { width: 100%; }
         }
-
         @media (max-width: 768px) {
-            .hero-section {
-                padding: 3rem 0 2rem;
-            }
-
-            .main-form-container {
-                padding: 1.75rem;
-            }
-
-            .toggle-button {
-                width: 100%;
-                margin: 0.5rem 0;
-            }
-
-            .navbar-brand {
-                font-size: 1.2rem;
-            }
+            .hero-section { padding: 4rem 0 3rem; }
+            .hero-section .display-4 { font-size: 2.5rem; }
+            .hero-section .lead { font-size: 1.1rem; }
+            .feature-card { padding: 2rem 1.5rem; }
+            .content-section-wrapper { padding: 1.5rem; }
+            .content-section-wrapper h2 { font-size: 1.8rem; margin-bottom: 1.5rem;}
+            .toggle-button { width: calc(50% - 1rem); /* Two per row approx */ font-size: 0.85rem; padding: 0.7rem 1rem;}
+            .section-title { margin-bottom: 2rem !important; }
+            footer { padding: 3rem 0 2rem; text-align: center; }
+            footer .social-icons { justify-content: center; margin-bottom:1.5rem }
+            footer .text-md-start, footer .text-md-end { text-align: center !important; }
         }
-
-        @media (max-width: 576px) {
-            .hero-section {
-                padding: 2.5rem 0 1.5rem;
-            }
-
-            .main-form-container {
-                padding: 1.5rem;
-            }
-
-            .feature-card {
-                padding: 1.5rem;
-            }
-        }
+         @media (max-width: 576px) {
+            .hero-section { padding: 3rem 0 2.5rem; }
+             .hero-section .display-4 { font-size: 2rem; }
+             .hero-section .lead { font-size: 1rem; }
+             .hero-section .btn { font-size: 0.85rem; padding: 0.7rem 1.2rem; }
+            .feature-card { padding: 1.5rem 1rem; }
+            .content-section-wrapper h2 .fas { display: none; } /* Hide icon in heading on small screens */
+            .toggle-button { width: 100%; margin: 0.3rem 0; }
+         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <img class="logo" src="{{ url_for('static', filename='VirtualHealthAssistant.png') }}" alt="Virtual Health Assistant Logo">
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='VirtualHealthAssistant.png') }}" alt="Virtual Health Assistant Logo">
+                </div>
                 Virtual Health Assistant
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
@@ -447,19 +571,30 @@
                         </a>
                     </li>
                 </ul>
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center"> <!-- ms-auto to push login/search to right -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('login') }}">
                             <i class="fas fa-sign-in-alt me-1"></i> Login
                         </a>
                     </li>
+                     <li class="nav-item d-none d-lg-block"> <!-- Search form for larger screens -->
+                        <form class="d-flex ms-2" role="search">
+                            <div class="input-group">
+                                <input class="form-control form-control-sm" type="search" placeholder="Search..." aria-label="Search">
+                                <button class="btn btn-outline-light btn-sm" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </li>
                 </ul>
-                <form class="d-flex ms-3" role="search">
+                 <!-- Search form for smaller screens (outside ms-auto to stack correctly) -->
+                <form class="d-flex d-lg-none mt-2" role="search">
                     <div class="input-group">
-                        <input class="form-control" type="search" placeholder="Search health topics...">
-                        <button class="btn btn-outline-light" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
+                         <input class="form-control form-control-sm" type="search" placeholder="Search health topics..." aria-label="Search">
+                         <button class="btn btn-outline-light btn-sm" type="submit">
+                             <i class="fas fa-search"></i>
+                         </button>
                     </div>
                 </form>
             </div>
@@ -469,14 +604,14 @@
     <!-- Hero Section -->
     <section class="hero-section text-center">
         <div class="container hero-content">
-            <h1 class="display-4 fw-bold mb-4">AI-Powered Health Diagnosis</h1>
-            <p class="lead mb-5">Get accurate health insights and connect with healthcare professionals in minutes</p>
+            <h1 class="display-4 fw-bold mb-4">Your Intelligent Health Companion</h1>
+            <p class="lead mb-5">Access AI-powered symptom analysis, connect with healthcare professionals, and manage your wellness journey seamlessly.</p>
             <div class="d-flex justify-content-center gap-3 flex-wrap">
-                <a href="#diagnosis-section" class="btn btn-primary btn-lg px-4">
-                    <i class="fas fa-diagnoses me-2"></i>Try Symptom Checker
+                <a href="#diagnosis-section" class="btn btn-primary-gradient btn-lg px-4 py-3">
+                    <i class="fas fa-diagnoses me-2"></i>Start Symptom Check
                 </a>
-                <a href="/doctor-appointment" class="btn btn-outline-light btn-lg px-4">
-                    <i class="fas fa-user-md me-2"></i>Book Doctor
+                <a href="/doctor-appointment" class="btn btn-outline-themed btn-lg px-4 py-3">
+                    <i class="fas fa-user-md me-2"></i>Find a Doctor
                 </a>
             </div>
         </div>
@@ -484,49 +619,41 @@
 
     <!-- Features Section -->
     <section class="container mb-5">
-        <div class="row text-center mb-5">
-            <div class="col">
-                <h2 class="fw-bold section-title">Our Services</h2>
-                <p class="text-muted">Comprehensive healthcare solutions at your fingertips</p>
-            </div>
-        </div>
+        <h2 class="section-title">Core Services</h2>
         <div class="row g-4">
-            <div class="col-md-4">
-                <div class="feature-card">
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card d-flex flex-column">
                     <div class="feature-icon">
                         <i class="fas fa-brain"></i>
                     </div>
-                    <h4>AI Diagnosis</h4>
-                    <p class="text-muted">Our advanced machine learning model analyzes your symptoms to provide accurate health assessments.</p>
-                    <a href="#diagnosis-section" class="btn btn-outline-primary mt-3">
-                        <i class="fas fa-diagnoses me-2"></i> Try Now
+                    <h4>AI Diagnosis Engine</h4>
+                    <p class="text-secondary">Leverage our sophisticated AI to analyze your symptoms and receive potential health insights quickly and accurately.</p>
+                    <a href="#diagnosis-section" class="btn btn-primary-gradient mt-auto">
+                        <i class="fas fa-cogs me-2"></i> Try AI Diagnosis
                     </a>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="feature-card">
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card d-flex flex-column">
                     <div class="feature-icon">
                         <i class="fas fa-user-md"></i>
                     </div>
-                    <h4>Doctor Consultation</h4>
-                    <p class="text-muted">Connect with certified healthcare professionals for online or in-person consultations.</p>
-                    <a href="/doctor-appointment" class="btn appointment-btn mt-3">
+                    <h4>Expert Consultations</h4>
+                    <p class="text-secondary">Connect with board-certified doctors and specialists for virtual or in-person consultations tailored to your needs.</p>
+                    <a href="/doctor-appointment" class="btn appointment-btn mt-auto">
                         <i class="fas fa-calendar-check me-2"></i> Book Appointment
-                    </a>
-                    <a href="/manage-doctors" class="btn btn-warning btn-lg mt-2">
-                        <i class="fas fa-user-cog me-2"></i>Manage Doctors
                     </a>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="feature-card">
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card d-flex flex-column">
                     <div class="feature-icon">
-                        <i class="fas fa-pills"></i>
+                        <i class="fas fa-shipping-fast"></i>
                     </div>
                     <h4>Medicine Delivery</h4>
-                    <p class="text-muted">Get your prescribed medications delivered to your doorstep within hours.</p>
-                    <a href="/medicine-delivery" class="btn btn-outline-primary delivery-btn">
-                        <i class="fas fa-pills me-2"></i> Order Now
+                    <p class="text-secondary">Order prescribed medications and wellness products with convenient and fast delivery to your doorstep.</p>
+                    <a href="/medicine-delivery" class="btn delivery-btn mt-auto">
+                        <i class="fas fa-pills me-2"></i> Order Medicines
                     </a>
                 </div>
             </div>
@@ -535,31 +662,33 @@
 
     <!-- Main Form -->
     <section id="diagnosis-section" class="container">
-        <div class="main-form-container">
-            <h2 class="text-center mb-4 fw-bold" style="color: var(--primary-color);">
-                <i class="fas fa-diagnoses me-2"></i>Symptom Checker
+        <div class="content-section-wrapper">
+            <h2>
+                <i class="fas fa-notes-medical"></i>Symptom Checker
             </h2>
             <form action="/predict" method="post">
                 <div class="form-group mb-4">
-                    <label for="symptoms" class="form-label fw-bold mb-3">
-                        <i class="fas fa-notes-medical me-2"></i>Describe Your Symptoms:
+                    <label for="symptoms" class="form-label fw-bold mb-2 d-block">
+                       Describe Your Symptoms:
                     </label>
-                    <input type="text" class="form-control" id="symptoms" name="symptoms" placeholder="e.g., headache, fever, fatigue, etc." required>
-                    <small class="text-muted">Separate multiple symptoms with commas</small>
+                    <input type="text" class="form-control" id="symptoms" name="symptoms" placeholder="e.g., headache, persistent fever, muscle fatigue..." required>
+                    <small class="text-muted d-block mt-1">Enter symptoms separated by commas. Be as specific as possible.</small>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-                    <button type="button" id="startSpeechRecognition" class="btn btn-primary speech-btn flex-grow-1">
-                        <i class="fas fa-microphone me-2"></i>Voice Input
-                    </button>
-
-                    <button type="submit" class="btn btn-danger flex-grow-1">
-                        <i class="fas fa-search me-2"></i>Analyze Symptoms
-                    </button>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <button type="button" id="startSpeechRecognition" class="btn btn-primary w-100 speech-btn py-3">
+                            <i class="fas fa-microphone-alt me-2"></i>Use Voice Input
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-danger w-100 py-3">
+                            <i class="fas fa-search-plus me-2"></i>Analyze Symptoms
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Display the transcribed text here -->
-                <div name="mysysms" id="transcription"></div>
+                <div name="mysysms" id="transcription">Speak to transcribe symptoms here...</div>
 
                 {% if message %}
                 <div class="alert alert-warning mt-3">
@@ -573,40 +702,39 @@
     {% if predicted_disease %}
     <!-- Results Section -->
     <section class="container">
-        <div class="result-container">
-            <h2 class="text-center mb-4 fw-bold section-title" style="color: var(--primary-color);">
-                <i class="fas fa-clipboard-check me-2"></i>Diagnosis Results
+        <div class="content-section-wrapper result-container">
+            <h2 class="section-title">
+                <i class="fas fa-poll"></i>Diagnosis Insights
             </h2>
 
             <div class="d-flex flex-wrap justify-content-center mb-4 gap-2">
-                <!-- Buttons to toggle display -->
-                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#diseaseModal" style="background-color: var(--secondary-color); color: white;">
-                    <i class="fas fa-disease me-2"></i>Disease
+                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#diseaseModal">
+                    <i class="fas fa-stethoscope"></i>Disease
                 </button>
-                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#descriptionModal" style="background-color: #268AF3; color: white;">
-                    <i class="fas fa-file-alt me-2"></i>Description
+                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#descriptionModal">
+                    <i class="fas fa-file-medical-alt"></i>Description
                 </button>
-                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#precautionModal" style="background-color: #F371F9; color: white;">
-                    <i class="fas fa-shield-alt me-2"></i>Precaution
+                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#precautionModal">
+                    <i class="fas fa-shield-virus"></i>Precaution
                 </button>
-                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#medicationsModal" style="background-color: #F8576F; color: white;">
-                    <i class="fas fa-pills me-2"></i>Medications
+                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#medicationsModal">
+                    <i class="fas fa-tablets"></i>Medications
                 </button>
-                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#dietModal" style="background-color: #4CAF50; color: white;">
-                    <i class="fas fa-utensils me-2"></i>Diet
+                <button class="toggle-button" data-bs-toggle="modal" data-bs-target="#dietModal">
+                    <i class="fas fa-apple-alt"></i>Diet
                 </button>
             </div>
 
-            <div class="text-center mt-4">
-                <a href="/doctor-appointment" class="btn btn-primary btn-lg px-4">
-                    <i class="fas fa-user-md me-2"></i> Consult a Doctor About These Results
+            <div class="text-center mt-4 mb-3">
+                <a href="/doctor-appointment" class="btn btn-primary-gradient btn-lg px-5 py-3">
+                    <i class="fas fa-user-md me-2"></i> Consult a Doctor Regarding These Results
                 </a>
             </div>
 
-            <div class="alert alert-info mt-4">
+            <div class="alert mt-4 text-center">
                 <i class="fas fa-info-circle me-2"></i>
-                <strong>Disclaimer:</strong> This AI-powered health assistant is designed to provide preliminary health information only.
-                Always consult with a qualified healthcare provider for any health concerns.
+                <strong>Disclaimer:</strong> This AI-powered tool provides preliminary informational insights only.
+                Always consult a qualified healthcare professional for medical advice, diagnosis, or treatment.
             </div>
         </div>
     </section>
@@ -616,52 +744,52 @@
     <footer>
         <div class="container">
             <div class="row g-4">
-                <div class="col-lg-4 mb-4 mb-lg-0">
+                <div class="col-lg-4 col-md-12 mb-4 mb-lg-0"> <!-- Full width on md for brand/social -->
                     <h5><i class="fas fa-heartbeat me-2"></i>Virtual Health Assistant</h5>
-                    <p class="text-muted">Empowering individuals with AI-driven health insights for better wellness decisions.</p>
+                    <p>Pioneering accessible and intelligent healthcare solutions for a healthier tomorrow. Your wellness, augmented by AI.</p>
                     <div class="social-icons mt-3">
-                        <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                <div class="col-lg-2 col-md-4 col-6 mb-4 mb-md-0">
                     <h5>Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a href="/" class="text-muted">Home</a></li>
-                        <li><a href="/about" class="text-muted">About</a></li>
-                        <li><a href="/contact" class="text-muted">Contact</a></li>
-                        <li><a href="/blog" class="text-muted">Blog</a></li>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/about">About</a></li>
+                        <li><a href="/contact">Contact</a></li>
+                        <li><a href="#">Blog (soon)</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-3 col-md-4 mb-4 mb-md-0">
+                <div class="col-lg-3 col-md-4 col-6 mb-4 mb-md-0">
                     <h5>Services</h5>
                     <ul class="list-unstyled">
-                        <li><a href="#diagnosis-section" class="text-muted">Symptom Checker</a></li>
-                        <li><a href="/doctor-appointment" class="text-muted">Doctor Consultation</a></li>
-                        <li><a href="/medicine-delivery" class="text-muted">Medicine Delivery</a></li>
-                        <li><a href="#" class="text-muted">Health Records</a></li>
+                        <li><a href="#diagnosis-section">Symptom Checker</a></li>
+                        <li><a href="/doctor-appointment">Doctor Consultation</a></li>
+                        <li><a href="/medicine-delivery">Medicine Delivery</a></li>
+                        <li><a href="#">Health Records (soon)</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-3 col-md-4">
+                <div class="col-lg-3 col-md-4 col-12"> <!-- Full width on smallest for contact -->
                     <h5>Contact Us</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> Graphic Era University, MedCity</li>
-                        <li class="mb-2"><i class="fas fa-phone me-2"></i> (123) 456-7890</li>
-                        <li class="mb-2"><i class="fas fa-envelope me-2"></i> info@virtualhealth.com</li>
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2 opacity-75"></i> Graphic Era University, Dehradun</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2 opacity-75"></i> (123) 456-7890</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2 opacity-75"></i> support@virtualhealth.ai</li>
                     </ul>
                 </div>
             </div>
-            <hr class="my-4 bg-light opacity-25">
+            <hr class="my-4">
             <div class="row">
-                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    <p class="mb-0 text-muted">&copy; 2023 Virtual Health Assistant. All rights reserved.</p>
+                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                    <p class="mb-0">© 2024 Virtual Health Assistant. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
                     <p class="mb-0">
-                        <a href="#" class="text-muted me-3">Privacy Policy</a>
-                        <a href="#" class="text-muted">Terms of Service</a>
+                        <a href="#" class="me-3">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
                     </p>
                 </div>
             </div>
@@ -675,12 +803,12 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="diseaseModalLabel"><i class="fas fa-disease me-2"></i>Predicted Disease</h5>
+                    <h5 class="modal-title" id="diseaseModalLabel"><i class="fas fa-stethoscope me-2"></i>Predicted Disease</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h4 class="text-center mb-3 text-primary">{{ predicted_disease }}</h4>
-                    <p class="text-muted text-center">This is the most likely condition based on your symptoms.</p>
+                    <h4 class="text-center mb-3">{{ predicted_disease }}</h4>
+                    <p class="text-center">This is the most likely condition based on the symptoms you provided. Please consult a doctor for a professional diagnosis.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -691,14 +819,13 @@
 
     <!-- Description Modal -->
     <div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg"> <!-- Larger modal for description -->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="descriptionModalLabel"><i class="fas fa-file-alt me-2"></i>Disease Description</h5>
+                    <h5 class="modal-title" id="descriptionModalLabel"><i class="fas fa-file-medical-alt me-2"></i>{{ predicted_disease }} - Description</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h4 class="text-center mb-3 text-primary">{{ predicted_disease }}</h4>
                     <p>{{ dis_des }}</p>
                 </div>
                 <div class="modal-footer">
@@ -713,14 +840,13 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="precautionModalLabel"><i class="fas fa-shield-alt me-2"></i>Precautions</h5>
+                    <h5 class="modal-title" id="precautionModalLabel"><i class="fas fa-shield-virus me-2"></i>Precautions for {{ predicted_disease }}</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h4 class="text-center mb-3 text-primary">{{ predicted_disease }}</h4>
                     <ul class="list-group list-group-flush">
                         {% for precaution in my_precautions %}
-                        <li class="list-group-item">{{ precaution }}</li>
+                        <li class="list-group-item"><i class="fas fa-check-circle me-2 text-success"></i>{{ precaution }}</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -736,24 +862,23 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="medicationsModalLabel"><i class="fas fa-pills me-2"></i>Recommended Medications</h5>
+                    <h5 class="modal-title" id="medicationsModalLabel"><i class="fas fa-tablets me-2"></i>Medication Suggestions for {{ predicted_disease }}</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h4 class="text-center mb-3 text-primary">{{ predicted_disease }}</h4>
                     <ul class="list-group list-group-flush">
                         {% for medication in my_medications %}
-                        <li class="list-group-item">{{ medication }}</li>
+                        <li class="list-group-item"><i class="fas fa-capsules me-2" style="color:var(--neon-pink)"></i>{{ medication }}</li>
                         {% endfor %}
                     </ul>
-                    <div class="alert alert-warning mt-3">
+                    <div class="alert mt-3">
                         <i class="fas fa-exclamation-triangle me-2"></i>
-                        <strong>Important:</strong> Always consult with a doctor before taking any medications.
+                        <strong>Important:</strong> These are common suggestions. Always consult with a doctor or pharmacist before taking any new medications.
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <a href="/medicine-delivery" class="btn btn-primary">
+                    <a href="/medicine-delivery" class="btn btn-primary-gradient">
                         <i class="fas fa-pills me-2"></i> Order Medicines
                     </a>
                 </div>
@@ -766,14 +891,13 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="dietModalLabel"><i class="fas fa-utensils me-2"></i>Recommended Diet</h5>
+                    <h5 class="modal-title" id="dietModalLabel"><i class="fas fa-apple-alt me-2"></i>Dietary Recommendations for {{ predicted_disease }}</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h4 class="text-center mb-3 text-primary">{{ predicted_disease }}</h4>
                     <ul class="list-group list-group-flush">
-                        {% for diet in my_diet %}
-                        <li class="list-group-item">{{ diet }}</li>
+                        {% for diet_item in my_diet %}
+                        <li class="list-group-item"><i class="fas fa-leaf me-2" style="color:var(--neon-green)"></i>{{ diet_item }}</li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -788,42 +912,52 @@
     <script>
         const startSpeechRecognitionButton = document.getElementById('startSpeechRecognition');
         const transcriptionDiv = document.getElementById('transcription');
+        const symptomsInput = document.getElementById('symptoms');
 
-        startSpeechRecognitionButton.addEventListener('click', startSpeechRecognition);
+        if (startSpeechRecognitionButton && transcriptionDiv && symptomsInput && ('webkitSpeechRecognition' in window)) {
+            startSpeechRecognitionButton.addEventListener('click', startSpeechRecognition);
 
-        function startSpeechRecognition() {
-            // Change button appearance during recording
-            startSpeechRecognitionButton.innerHTML = '<i class="fas fa-microphone-slash me-2"></i>Listening...';
-            startSpeechRecognitionButton.classList.remove('btn-primary');
-            startSpeechRecognitionButton.classList.add('btn-warning');
+            function startSpeechRecognition() {
+                startSpeechRecognitionButton.innerHTML = '<i class="fas fa-microphone-slash me-2"></i>Listening...';
+                startSpeechRecognitionButton.classList.remove('btn-primary');
+                startSpeechRecognitionButton.classList.add('btn-warning'); // Using Bootstrap's btn-warning as a visual cue
 
-            const recognition = new webkitSpeechRecognition();
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
-            recognition.maxAlternatives = 1;
+                const recognition = new webkitSpeechRecognition();
+                recognition.lang = 'en-US';
+                recognition.interimResults = false;
+                recognition.maxAlternatives = 1;
 
-            recognition.onresult = function(event) {
-                const result = event.results[0][0].transcript;
-                transcriptionDiv.textContent = result;
-                document.getElementById('symptoms').value = result;
+                recognition.onresult = function(event) {
+                    const result = event.results[0][0].transcript;
+                    transcriptionDiv.textContent = result;
+                    symptomsInput.value = result; // Update the input field as well
 
-                // Restore button appearance
-                startSpeechRecognitionButton.innerHTML = '<i class="fas fa-microphone me-2"></i>Voice Input';
-                startSpeechRecognitionButton.classList.remove('btn-warning');
-                startSpeechRecognitionButton.classList.add('btn-primary');
-            };
+                    restoreButtonState();
+                };
 
-            recognition.onerror = function(event) {
-                console.error('Speech recognition error', event.error);
-                transcriptionDiv.textContent = 'Error occurred in recognition: ' + event.error;
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error', event.error);
+                    transcriptionDiv.textContent = 'Error: ' + event.error + ". Please type symptoms.";
+                    restoreButtonState();
+                };
 
-                // Restore button appearance
-                startSpeechRecognitionButton.innerHTML = '<i class="fas fa-microphone me-2"></i>Voice Input';
-                startSpeechRecognitionButton.classList.remove('btn-warning');
-                startSpeechRecognitionButton.classList.add('btn-primary');
-            };
+                recognition.onend = function() {
+                    // Ensure button is restored if recognition ends without a result (e.g., no speech)
+                    if (startSpeechRecognitionButton.classList.contains('btn-warning')) {
+                         restoreButtonState();
+                    }
+                };
+                recognition.start();
+            }
 
-            recognition.start();
+            function restoreButtonState() {
+                 startSpeechRecognitionButton.innerHTML = '<i class="fas fa-microphone-alt me-2"></i>Use Voice Input';
+                 startSpeechRecognitionButton.classList.remove('btn-warning');
+                 startSpeechRecognitionButton.classList.add('btn-primary');
+            }
+        } else {
+            if(startSpeechRecognitionButton) startSpeechRecognitionButton.style.display = 'none'; // Hide button if API not supported
+            if(transcriptionDiv) transcriptionDiv.textContent = 'Voice input not supported in your browser. Please type symptoms.';
         }
     </script>
 

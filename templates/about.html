@@ -6,126 +6,918 @@
     <title>About | Virtual Health Assistant</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
       :root {
-        --primary-color: #2a9d8f;
-        --secondary-color: #264653;
-        --accent-color: #e9c46a;
-        --light-color: #f8f9fa;
-        --dark-color: #212529;
+        /* Modern Dark Theme */
+        --primary-bg: #0f0f23;
+        --secondary-bg: #1a1a2e;
+        --tertiary-bg: #16213e;
+        --surface-dark: #252545;
+        --surface-light: #2d2d44;
+        --surface-hover: #343454;
+
+        /* Vibrant Gradients */
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        --warning-gradient: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+
+        /* Neon Colors */
+        --neon-blue: #00d4ff;
+        --neon-purple: #a855f7;
+        --neon-pink: #ec4899;
+        --neon-green: #10b981;
+        --neon-yellow: #f59e0b;
+
+        /* Text Colors */
+        --text-primary: #ffffff;
+        --text-secondary: #b8bcc8;
+        --text-muted: #8b8fa3;
+        --text-accent: #667eea;
+
+        /* Glass Effect */
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --glass-strong: rgba(255, 255, 255, 0.15);
+
+        /* Shadows */
+        --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.15);
+        --shadow-strong: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        --shadow-card: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        /* Border Radius */
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        --radius-2xl: 32px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
       }
 
       body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #f5f7fa;
-        color: var(--dark-color);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--primary-bg);
+        color: var(--text-primary);
+        line-height: 1.7;
+        font-weight: 400;
+        overflow-x: hidden;
+        position: relative;
       }
 
+      /* Animated Background */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background:
+          radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+          radial-gradient(circle at 40% 80%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      /* Modern Navbar */
       .navbar {
-        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)) !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        background: rgba(15, 15, 35, 0.9) !important;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--glass-border);
+        padding: 1.2rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .navbar-brand {
-        font-weight: 700;
-        font-size: 1.5rem;
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        font-size: 1.8rem;
+        color: var(--text-primary) !important;
+        transition: all 0.3s ease;
+        text-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+      }
+
+      .navbar-brand:hover {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 10px var(--neon-blue));
+      }
+
+      .navbar-brand .fas.fa-heartbeat { /* Specific selector for the brand icon */
+        color: var(--neon-blue);
+        margin-right: 0.8rem;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.1); }
+      }
+
+      .logo {
+        width: 45px;
+        height: 45px;
+        margin-right: 15px;
+        position: relative;
+        border-radius: 50%;
+        background: var(--primary-gradient);
+        padding: 2px;
+        transition: all 0.3s ease;
+        display: flex; /* Added to center icon in myimg */
+        align-items: center; /* Added */
+        justify-content: center; /* Added */
+      }
+
+      .logo:hover {
+        transform: rotate(360deg) scale(1.1);
+        box-shadow: 0 0 20px var(--neon-blue);
+      }
+
+      .myimg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        background: var(--surface-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--neon-blue);
+        font-size: 1.2rem;
+        /* Removed src="{{ url_for('static', filename='VirtualHealthAssistant.png') }}" from original HTML,
+           if it's an img tag, this CSS won't apply as intended for icon.
+           Assuming .myimg is a div container for an icon or placeholder. */
       }
 
       .nav-link {
         font-weight: 500;
-        padding: 0.5rem 1rem;
+        padding: 0.8rem 1.5rem !important; /* Bootstrap override */
+        color: var(--text-secondary) !important;
+        border-radius: var(--radius-lg);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        margin: 0 0.25rem;
+      }
+
+      .nav-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: var(--primary-gradient);
+        transition: left 0.3s ease;
+        z-index: -1;
+        opacity: 0.1;
+      }
+
+      .nav-link:hover::before,
+      .nav-link.active::before {
+        left: 0;
+        opacity: 0.2;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--text-primary) !important;
+        transform: translateY(-2px);
+        text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+      }
+
+      .nav-link.active {
+        font-weight: 600;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-glow);
+      }
+
+      /* Premium Search */
+      .search-container {
+        position: relative;
+        overflow: hidden; /* Keep this if you plan effects within this boundary */
+        border-radius: var(--radius-lg); /* Apply to container if input/button are not individually rounded */
+      }
+
+      .form-control {
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg) 0 0 var(--radius-lg); /* Rounded left corners */
+        padding: 0.9rem 1.2rem;
+        font-size: 0.95rem;
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+        border-right: none; /* Remove right border to merge with button */
+      }
+
+      .form-control::placeholder {
+        color: var(--text-muted);
+      }
+
+      .form-control:focus {
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1), var(--shadow-glow);
+        background: var(--glass-strong);
+        color: var(--text-primary);
+        z-index: 2; /* Ensure it's above the button visually */
+      }
+
+      .navbar-toggler {
+        border-color: var(--glass-border);
+      }
+      .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.7%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+      }
+
+
+      .btn-search { /* This is for the search button */
+        background: var(--primary-gradient);
+        border: none;
+        color: white;
+        padding: 0.9rem 1.5rem;
+        border-radius: 0 var(--radius-lg) var(--radius-lg) 0; /* Rounded right corners */
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .btn-search:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-glow);
+        filter: brightness(1.1);
+      }
+
+      /* Epic Hero Section */
+      .hero-about {
+        background: var(--secondary-bg);
+        position: relative;
+        padding: 10rem 0;
+        margin-bottom: 6rem;
+        overflow: hidden;
+        border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+      }
+
+      .hero-about::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(circle at 30% 40%, rgba(102, 126, 234, 0.3) 0%, transparent 70%),
+          radial-gradient(circle at 70% 60%, rgba(240, 147, 251, 0.2) 0%, transparent 70%),
+          radial-gradient(circle at 50% 80%, rgba(79, 172, 254, 0.1) 0%, transparent 70%);
+        z-index: 1;
+      }
+
+      .hero-about::after { /* SVG background pattern */
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20 L80 20 L50 80 Z' fill='rgba(255,255,255,0.02)'/%3E%3Ccircle cx='50' cy='50' r='10' fill='rgba(102,126,234,0.03)'/%3E%3C/svg%3E");
+        opacity: 0.3;
+        z-index: 1;
+      }
+
+      .hero-about .container {
+        position: relative;
+        z-index: 3;
+      }
+
+      .hero-about h1 {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 900;
+        font-size: clamp(3rem, 8vw, 5rem);
+        background: linear-gradient(135deg, #ffffff 0%, #b8bcc8 50%, #667eea 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 2rem;
+        line-height: 1.1;
+        text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
+      }
+
+      .hero-about .lead {
+        font-size: 1.4rem;
+        font-weight: 400;
+        color: var(--text-secondary);
+        max-width: 700px;
+        margin: 0 auto;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Floating 3D Elements */
+      .floating-element {
+        position: absolute;
+        animation: float3d 8s ease-in-out infinite;
+        z-index: 2;
+      }
+
+      .floating-element:nth-child(1) {
+        top: 15%;
+        left: 8%;
+        animation-delay: 0s;
+      }
+
+      .floating-element:nth-child(2) {
+        top: 70%;
+        right: 10%;
+        animation-delay: 2.5s;
+      }
+
+      .floating-element:nth-child(3) {
+        bottom: 15%;
+        left: 15%;
+        animation-delay: 5s;
+      }
+
+      @keyframes float3d {
+        0%, 100% {
+          transform: translateY(0px) rotateX(0deg) rotateY(0deg) scale(1);
+        }
+        33% {
+          transform: translateY(-30px) rotateX(15deg) rotateY(120deg) scale(1.05);
+        }
+        66% {
+          transform: translateY(-15px) rotateX(-10deg) rotateY(240deg) scale(0.95);
+        }
+      }
+
+      .floating-shape {
+        width: 80px;
+        height: 80px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--neon-blue);
+        font-size: 2rem;
+        box-shadow: var(--shadow-card);
         transition: all 0.3s ease;
       }
 
-      .nav-link:hover {
-        color: var(--accent-color) !important;
-        transform: translateY(-2px);
+      .floating-shape:hover {
+        transform: scale(1.2) !important; /* Override animation transform */
+        box-shadow: 0 0 30px var(--neon-blue);
       }
 
-      .logo {
-        width: 50px;
-        height: 50px;
-        margin-right: 15px;
-      }
-
-      .myimg {
-        width: 50px;
-        height: 50px;
-        border: 2px solid white;
-        border-radius: 50%;
-        object-fit: cover;
-      }
-
-      .hero-about {
-        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-        background-size: cover;
-        background-position: center;
-        color: white;
-        padding: 5rem 0;
-        margin-bottom: 3rem;
-        border-radius: 0 0 20px 20px;
-      }
-
+      /* Premium Cards */
       .about-content {
-        background: white;
-        border-radius: 15px;
-        padding: 2.5rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        margin-bottom: 3rem;
-        border: 1px solid rgba(0,0,0,0.05);
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-2xl);
+        padding: 4rem;
+        margin-bottom: 4rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow-card);
       }
 
-      .feature-icon {
+      .about-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--primary-gradient);
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+      }
+
+      .about-content:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-strong), 0 0 50px rgba(102,126,234,0.2); /* Added glow */
+        border-color: rgba(102, 126, 234, 0.3);
+      }
+
+      .about-content h2 {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
         font-size: 2.5rem;
-        color: var(--primary-color);
-        margin-bottom: 1rem;
+        margin-bottom: 2rem;
+        color: var(--text-primary);
       }
 
-      .team-card {
-        background: white;
-        border-radius: 15px;
-        padding: 2rem;
+      .about-content h2 i {
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-right: 1rem;
+      }
+
+      .about-content p {
+        color: var(--text-secondary);
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 1.5rem;
+      }
+
+      .about-content p.lead {
+        color: var(--text-primary);
+        font-size: 1.3rem;
+        font-weight: 500;
         margin-bottom: 2rem;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-        transition: all 0.3s;
+      }
+
+      /* Next-Gen Feature Icons for within .about-content sections */
+      .about-content .feature-icon-wrapper .feature-icon { /* More specific selector for icons in features */
+        width: 100px;
+        height: 100px;
+        background: var(--primary-gradient);
+        border-radius: var(--radius-xl);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-glow);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .about-content .feature-icon-wrapper .feature-icon::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
         height: 100%;
-        border: 1px solid rgba(0,0,0,0.05);
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.8s ease;
+      }
+
+      .about-content .feature-icon-wrapper:hover .feature-icon::before {
+        left: 100%;
+      }
+
+      .about-content .feature-icon-wrapper:hover .feature-icon {
+        transform: translateY(-10px) scale(1.1);
+        box-shadow: 0 0 50px rgba(102, 126, 234, 0.4);
+        filter: brightness(1.2);
+      }
+
+      /* AI Feature unique styling */
+      .ai-feature { /* This is the specific container for AI diagnostic */
+        background: var(--surface-light);
+        border-radius: var(--radius-xl);
+        padding: 2rem;
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-glow);
+        transition: all 0.3s ease;
+      }
+      .ai-feature:hover {
+        transform: scale(1.03);
+        box-shadow: 0 0 30px rgba(var(--neon-blue-rgb, 0, 212, 255), 0.3);
+      }
+      .ai-feature .feature-icon { /* The brain icon inside AI feature */
+        font-size: 3rem;
+        color: var(--neon-blue); /* Neon blue color for the icon */
+        margin-right: 1.5rem !important; /* Bootstrap override for spacing */
+        background: none; /* Remove gradient background if it was inherited */
+        -webkit-background-clip: unset;
+        -webkit-text-fill-color: unset;
+        animation: pulse 1.5s infinite ease-in-out;
+      }
+      .ai-feature h5 {
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+      .ai-feature p {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+        margin-bottom: 0;
+      }
+      :root { /* Add this inside the existing :root to define RGB for neon blue */
+         --neon-blue-rgb: 0, 212, 255;
+      }
+
+      /* Team Cards - Premium Design */
+      .team-card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-2xl);
+        padding: 3rem;
+        margin-bottom: 2rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        height: 100%;
         text-align: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-card);
+      }
+
+      .team-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--secondary-gradient);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+      }
+
+      .team-card:hover::before {
+        opacity: 0.05;
       }
 
       .team-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        transform: translateY(-15px);
+        box-shadow: var(--shadow-strong), 0 0 50px rgba(240,147,251,0.2); /* Added glow */
+        border-color: rgba(240, 147, 251, 0.3);
       }
 
       .team-img {
-        width: 150px;
-        height: 150px;
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
         object-fit: cover;
-        border: 3px solid var(--primary-color);
-        margin: 0 auto 1rem;
+        border: 4px solid transparent;
+        background: linear-gradient(var(--surface-dark), var(--surface-dark)) padding-box,
+                    var(--secondary-gradient) border-box; /* Gradient border */
+        padding: 4px;
+        margin: 0 auto 2rem;
+        transition: all 0.4s ease;
+        box-shadow: var(--shadow-glow);
+        position: relative;
       }
 
+      .team-card:hover .team-img {
+        transform: scale(1.15);
+        box-shadow: 0 0 40px rgba(240, 147, 251, 0.3);
+      }
+
+      .team-card h4 {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .team-card h6 {
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .team-card p {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+
+      /* Stats Section - Spectacular */
+      .stats-section { /* This is an .about-content card */
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: var(--radius-2xl);
+        position: relative;
+        overflow: hidden;
+        /* padding already handled by .about-content */
+      }
+
+      .stats-section::before { /* Override general .about-content::before */
+        background: none; /* Remove top bar if using internal pattern */
+      }
+      .stats-section::after { /* Internal pattern for stats */
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+          radial-gradient(circle at 75% 75%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+        z-index: 0; /* Behind content */
+      }
+
+      .stats-section .display-4 {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 900;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: clamp(2.5rem, 6vw, 4rem);
+        text-shadow: 0 0 30px rgba(102, 126, 234, 0.3);
+        position: relative; z-index: 1; /* Above pattern */
+      }
+
+      .stats-section p.lead {
+        color: var(--text-secondary);
+        font-weight: 600;
+        font-size: 1.2rem;
+        position: relative; z-index: 1; /* Above pattern */
+      }
+
+      .stat-item { /* Individual stat column styling */
+        padding: 2rem 1rem; /* Reduced padding for tighter look */
+        border-radius: var(--radius-xl);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        z-index: 1; /* Above pattern */
+      }
+
+      .stat-item::before { /* Hover background effect */
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--success-gradient);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1; /* Behind text */
+        border-radius: var(--radius-xl); /* Match parent radius */
+      }
+
+      .stat-item:hover::before {
+        opacity: 0.1;
+      }
+
+      .stat-item:hover {
+        transform: translateY(-10px) scale(1.05);
+        box-shadow: var(--shadow-strong), 0 0 30px rgba(17, 153, 142, 0.2); /* Glow from success gradient */
+      }
+      .stat-item:hover .display-4, .stat-item:hover p.lead {
+        /* If you want text color to change on hover too */
+        /* color: white !important;
+           -webkit-text-fill-color: white !important; */
+      }
+
+
+      /* Epic Footer */
       footer {
-        background: var(--secondary-color);
-        color: white;
-        padding: 3rem 0;
-        margin-top: 3rem;
+        background: var(--secondary-bg);
+        position: relative;
+        padding: 5rem 0 3rem;
+        margin-top: 6rem;
+        overflow: hidden;
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+      }
+
+      footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--primary-gradient);
+      }
+
+      footer::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background:
+          radial-gradient(circle at 20% 20%, rgba(168, 85, 247, 0.07) 0%, transparent 50%),
+          radial-gradient(circle at 80% 80%, rgba(79, 172, 254, 0.07) 0%, transparent 50%);
+        z-index: -1;
+      }
+
+      footer h5 {
+        color: var(--text-primary);
+        font-family: 'Manrope', sans-serif;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        font-size: 1.3rem;
+      }
+
+      footer p, footer ul li a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+        line-height: 1.8;
+      }
+      footer ul.list-unstyled li {
+        margin-bottom: 0.75rem;
+      }
+
+      footer ul li a:hover {
+        color: var(--text-primary);
+        transform: translateX(8px);
+        text-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+      }
+
+      .social-icons a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--glass-border);
+        border-radius: 50%;
+        color: var(--text-secondary) !important;
+        font-size: 1.3rem;
+        transition: all 0.4s ease;
+        margin-right: 1rem;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .social-icons a:hover {
+        background: var(--primary-gradient);
+        color: white !important;
+        transform: translateY(-5px) scale(1.1);
+        box-shadow: var(--shadow-glow);
+      }
+      footer hr {
+        border-color: var(--glass-border);
+      }
+
+
+      /* Animations (used by JS) */
+      .fade-in-up {
+        animation: fadeInUp 0.8s ease forwards;
+      }
+
+      .slide-in-left {
+        animation: slideInLeft 0.8s ease forwards;
+      }
+
+      .slide-in-right {
+        animation: slideInRight 0.8s ease forwards;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+
+      /* Responsive Design */
+      @media (max-width: 991px) {
+        .navbar-nav {
+          margin-top: 1rem; /* Space for mobile nav */
+        }
+         .navbar .d-flex[role="search"] {
+          margin-top: 1rem; /* Space for search on mobile */
+          width: 100%;
+        }
+        .navbar .d-flex[role="search"] .input-group {
+            width: 100%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hero-about {
+          padding: 6rem 0;
+        }
+        .hero-about h1 {
+            font-size: clamp(2.5rem, 7vw, 3.5rem);
+        }
+        .hero-about .lead {
+            font-size: 1.2rem;
+        }
+
+        .about-content {
+          padding: 2.5rem;
+        }
+        .about-content h2 {
+            font-size: 2rem;
+        }
+
+        .feature-icon-wrapper .feature-icon {
+          width: 80px;
+          height: 80px;
+          font-size: 2rem;
+        }
+        .ai-feature {
+            padding: 1.5rem;
+        }
+        .ai-feature .feature-icon {
+            font-size: 2.5rem;
+        }
+
+        .team-card {
+          padding: 2rem;
+        }
+        .team-img {
+            width: 120px;
+            height: 120px;
+        }
+
+        .stat-item {
+          padding: 2rem 1rem;
+        }
+        .stats-section .display-4 {
+             font-size: clamp(2rem, 5vw, 3rem);
+        }
+        .stats-section p.lead {
+            font-size: 1rem;
+        }
+        footer {
+            padding: 4rem 0 2rem;
+        }
+        footer .col-lg-4, footer .col-lg-3, footer .col-lg-2, .col-md-6, .col-md-3, .col-6 {
+             margin-bottom: 2rem;
+        }
+      }
+
+      /* Scroll Animations */
+      .scroll-reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease, transform 0.6s ease; /* Combined transition */
+      }
+
+      .scroll-reveal.revealed {
+        opacity: 1;
+        transform: translateY(0);
       }
     </style>
   </head>
   <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
+    <nav class="navbar navbar-expand-lg">
       <div class="container">
-        <!-- Logo at the top-left corner -->
-        <div class="logo">
-          <img class="myimg" src="{{ url_for('static', filename='VirtualHealthAssistant.png') }}" alt="Virtual Health Assistant Logo">
-        </div>
-
-        <a class="navbar-brand" href="/">
-          <i class="fas fa-heartbeat me-2"></i>Virtual Health Assistant
+        <a class="navbar-brand d-flex align-items-center" href="/">
+          <div class="logo">
+            <div class="myimg">
+              <i class="fas fa-microchip"></i> <!-- Changed icon for variety or use original -->
+            </div>
+          </div>
+          <span><i class="fas fa-heartbeat"></i>Virtual Health Assistant</span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -159,9 +951,9 @@
             </li>
           </ul>
           <form class="d-flex" role="search">
-            <div class="input-group">
+            <div class="input-group search-container">
               <input class="form-control" type="search" placeholder="Search health topics..." aria-label="Search">
-              <button class="btn btn-outline-light" type="submit">
+              <button class="btn btn-search" type="submit">
                 <i class="fas fa-search"></i>
               </button>
             </div>
@@ -170,37 +962,46 @@
       </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Epic Hero Section -->
     <section class="hero-about text-center">
-      <div class="container">
-        <h1 class="display-4 fw-bold mb-4">About Virtual Health Assistant</h1>
-        <p class="lead mb-5">Revolutionizing healthcare through AI-powered diagnostics and personalized wellness</p>
-      </div>
+        <!-- Floating 3D Geometric Shapes -->
+        <div class="floating-element">
+            <div class="floating-shape"><i class="fas fa-atom"></i></div>
+        </div>
+        <div class="floating-element">
+            <div class="floating-shape"><i class="fas fa-dna"></i></div>
+        </div>
+        <div class="floating-element">
+            <div class="floating-shape"><i class="fas fa-brain"></i></div>
+        </div>
+
+        <div class="container">
+            <h1 class="scroll-reveal">About Virtual Health Assistant</h1>
+            <p class="lead mb-5 scroll-reveal" style="transition-delay: 0.2s;">Revolutionizing healthcare through AI-powered diagnostics and personalized wellness for a brighter, healthier future.</p>
+        </div>
     </section>
 
     <!-- About Content -->
     <section class="container">
-      <div class="about-content">
-        <div class="row">
-          <div class="col-lg-6">
-            <h2 class="fw-bold mb-4" style="color: var(--primary-color);">
-              <i class="fas fa-rocket me-2"></i>Our Mission
-            </h2>
-            <p class="lead">To make quality healthcare accessible to everyone through innovative technology.</p>
-            <p>Virtual Health Assistant was founded with the vision of democratizing healthcare by leveraging artificial intelligence to provide accurate, instant health assessments to users worldwide. Our platform bridges the gap between patients and healthcare resources, offering preliminary diagnoses and wellness recommendations.</p>
+      <div class="about-content scroll-reveal">
+        <div class="row align-items-center">
+          <div class="col-lg-6 mb-4 mb-lg-0">
+            <h2 class="scroll-reveal"><i class="fas fa-rocket"></i>Our Mission</h2>
+            <p class="lead scroll-reveal" style="transition-delay: 0.1s;">To make quality healthcare accessible to everyone through innovative technology.</p>
+            <p class="scroll-reveal" style="transition-delay: 0.2s;">Virtual Health Assistant was founded with the vision of democratizing healthcare by leveraging artificial intelligence to provide accurate, instant health assessments to users worldwide. Our platform bridges the gap between patients and healthcare resources, offering preliminary diagnoses and wellness recommendations.</p>
           </div>
           <div class="col-lg-6">
-            <h2 class="fw-bold mb-4" style="color: var(--primary-color);">
-              <i class="fas fa-lightbulb me-2"></i>Our Technology
-            </h2>
-            <p>Our advanced machine learning algorithms analyze thousands of data points to provide reliable health insights. The system continuously learns from medical research and user interactions to improve its diagnostic accuracy.</p>
-            <div class="d-flex align-items-center mt-4">
-              <div class="feature-icon me-4">
-                <i class="fas fa-brain"></i>
-              </div>
-              <div>
-                <h5>AI-Powered Diagnostics</h5>
-                <p class="mb-0">Utilizing deep learning models trained on medical datasets</p>
+            <h2 class="scroll-reveal"><i class="fas fa-lightbulb"></i>Our Technology</h2>
+            <p class="scroll-reveal" style="transition-delay: 0.1s;">Our advanced machine learning algorithms analyze thousands of data points to provide reliable health insights. The system continuously learns from medical research and user interactions to improve its diagnostic accuracy.</p>
+            <div class="ai-feature mt-4 scroll-reveal" style="transition-delay: 0.2s;">
+              <div class="d-flex align-items-center">
+                <div class="feature-icon">
+                  <i class="fas fa-brain"></i>
+                </div>
+                <div>
+                  <h5>AI-Powered Diagnostics</h5>
+                  <p class="mb-0">Utilizing deep learning models trained on extensive medical datasets for unparalleled insights.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -208,95 +1009,103 @@
       </div>
 
       <!-- Features Section -->
-      <div class="about-content mt-4">
-        <h2 class="text-center fw-bold mb-5" style="color: var(--primary-color);">
-          <i class="fas fa-star me-2"></i>Key Features
-        </h2>
-        <div class="row">
-          <div class="col-md-4 mb-4">
-            <div class="text-center p-4">
-              <div class="feature-icon">
-                <i class="fas fa-diagnoses"></i>
+      <div class="about-content scroll-reveal">
+        <h2 class="text-center scroll-reveal"><i class="fas fa-star"></i>Key Features</h2>
+        <div class="row g-4 mt-4">
+          <div class="col-lg-4 col-md-6">
+            <div class="team-card text-center scroll-reveal" style="transition-delay: 0.1s;"> <!-- Reusing team-card style for consistency, can be feature-card too -->
+              <div class="feature-icon-wrapper"> <!-- Wrapper for hover effect if needed -->
+                 <div class="feature-icon">
+                    <i class="fas fa-diagnoses"></i>
+                 </div>
               </div>
               <h4>Symptom Analysis</h4>
-              <p>Comprehensive evaluation of your symptoms with potential condition matches</p>
+              <p>Comprehensive evaluation of your symptoms with potential condition matches using advanced AI algorithms.</p>
             </div>
           </div>
-          <div class="col-md-4 mb-4">
-            <div class="text-center p-4">
-              <div class="feature-icon">
-                <i class="fas fa-comment-medical"></i>
+          <div class="col-lg-4 col-md-6">
+            <div class="team-card text-center scroll-reveal" style="transition-delay: 0.2s;">
+              <div class="feature-icon-wrapper">
+                 <div class="feature-icon">
+                    <i class="fas fa-comment-medical"></i>
+                 </div>
               </div>
               <h4>Voice Recognition</h4>
-              <p>Describe your symptoms naturally using our voice input technology</p>
+              <p>Describe your symptoms naturally using our advanced voice input technology and natural language processing.</p>
             </div>
           </div>
-          <div class="col-md-4 mb-4">
-            <div class="text-center p-4">
-              <div class="feature-icon">
-                <i class="fas fa-heartbeat"></i>
+          <div class="col-lg-4 col-md-6">
+            <div class="team-card text-center scroll-reveal" style="transition-delay: 0.3s;">
+              <div class="feature-icon-wrapper">
+                 <div class="feature-icon">
+                    <i class="fas fa-heart-pulse"></i> <!-- Changed icon -->
+                 </div>
               </div>
               <h4>Wellness Plans</h4>
-              <p>Personalized recommendations for diet, exercise, and medications</p>
+              <p>Personalized recommendations for diet, exercise, and medications tailored to your specific health needs.</p>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Team Section -->
-      <div class="about-content mt-4">
-        <h2 class="text-center fw-bold mb-5" style="color: var(--primary-color);">
-          <i class="fas fa-users me-2"></i>Our Team
-        </h2>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="team-card">
+      <div class="about-content scroll-reveal">
+        <h2 class="text-center scroll-reveal"><i class="fas fa-users"></i>Our Team</h2>
+        <div class="row g-4 mt-4">
+          <div class="col-lg-4 col-md-6">
+            <div class="team-card scroll-reveal" style="transition-delay: 0.1s;">
               <img src="https://randomuser.me/api/portraits/women/43.jpg" class="team-img" alt="Dr. Sarah Johnson">
               <h4>Dr. Sarah Johnson</h4>
-              <h6 class="text-primary">Chief Medical Officer</h6>
-              <p>Board-certified physician with 15 years of clinical experience</p>
+              <h6>Chief Medical Officer</h6>
+              <p>Board-certified physician with 15 years of clinical experience in emergency medicine and digital health innovation.</p>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="team-card">
+          <div class="col-lg-4 col-md-6">
+            <div class="team-card scroll-reveal" style="transition-delay: 0.2s;">
               <img src="https://randomuser.me/api/portraits/men/32.jpg" class="team-img" alt="Michael Chen">
               <h4>Michael Chen</h4>
-              <h6 class="text-primary">AI Research Lead</h6>
-              <p>Machine learning expert specializing in healthcare applications</p>
+              <h6>AI Research Lead</h6>
+              <p>Machine learning expert specializing in healthcare applications with PhD from Stanford and 10+ years in AI research.</p>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="team-card">
+          <div class="col-lg-4 col-md-6">
+            <div class="team-card scroll-reveal" style="transition-delay: 0.3s;">
               <img src="https://randomuser.me/api/portraits/women/65.jpg" class="team-img" alt="Priya Patel">
               <h4>Priya Patel</h4>
-              <h6 class="text-primary">Product Director</h6>
-              <p>Healthcare technology specialist focused on user experience</p>
+              <h6>Product Director</h6>
+              <p>Healthcare technology specialist focused on user experience and product strategy with a passion for accessible tech.</p>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Stats Section -->
-      <div class="about-content mt-4 text-center">
-        <h2 class="fw-bold mb-5" style="color: var(--primary-color);">
-          <i class="fas fa-chart-line me-2"></i>Our Impact
-        </h2>
-        <div class="row">
-          <div class="col-md-3 mb-4">
-            <h1 class="display-4 fw-bold" style="color: var(--primary-color);">10K+</h1>
-            <p class="lead">Daily Users</p>
+      <div class="about-content stats-section text-center scroll-reveal">
+        <h2 class="scroll-reveal"><i class="fas fa-chart-line"></i>Our Impact</h2>
+        <div class="row g-0 mt-4"> <!-- g-0 to remove gutters between stat items if they touch -->
+          <div class="col-md-6 col-lg-3">
+            <div class="stat-item scroll-reveal" style="transition-delay: 0.1s;">
+              <h1 class="display-4">10K+</h1>
+              <p class="lead">Daily Users</p>
+            </div>
           </div>
-          <div class="col-md-3 mb-4">
-            <h1 class="display-4 fw-bold" style="color: var(--primary-color);">95%</h1>
-            <p class="lead">Accuracy Rate</p>
+          <div class="col-md-6 col-lg-3">
+            <div class="stat-item scroll-reveal" style="transition-delay: 0.2s;">
+              <h1 class="display-4">95%</h1>
+              <p class="lead">Accuracy Rate</p>
+            </div>
           </div>
-          <div class="col-md-3 mb-4">
-            <h1 class="display-4 fw-bold" style="color: var(--primary-color);">50+</h1>
-            <p class="lead">Conditions Detected</p>
+          <div class="col-md-6 col-lg-3">
+            <div class="stat-item scroll-reveal" style="transition-delay: 0.3s;">
+              <h1 class="display-4">50+</h1>
+              <p class="lead">Conditions Detected</p>
+            </div>
           </div>
-          <div class="col-md-3 mb-4">
-            <h1 class="display-4 fw-bold" style="color: var(--primary-color);">24/7</h1>
-            <p class="lead">Availability</p>
+          <div class="col-md-6 col-lg-3">
+            <div class="stat-item scroll-reveal" style="transition-delay: 0.4s;">
+              <h1 class="display-4">24/7</h1>
+              <p class="lead">Availability</p>
+            </div>
           </div>
         </div>
       </div>
@@ -306,35 +1115,35 @@
     <footer>
       <div class="container">
         <div class="row">
-          <div class="col-md-4 mb-4 mb-md-0">
+          <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
             <h5><i class="fas fa-heartbeat me-2"></i>Virtual Health Assistant</h5>
             <p>Empowering individuals with AI-driven health insights for better wellness decisions.</p>
-            <div class="social-icons">
-              <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-              <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
-              <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-              <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+            <div class="social-icons mt-4">
+              <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+              <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+              <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+              <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             </div>
           </div>
-          <div class="col-md-2 mb-4 mb-md-0">
+          <div class="col-lg-2 col-md-3 col-6 mb-4 mb-lg-0">
             <h5>Quick Links</h5>
             <ul class="list-unstyled">
-              <li><a href="/" class="text-white">Home</a></li>
-              <li><a href="/about" class="text-white">About</a></li>
-              <li><a href="/contact" class="text-white">Contact</a></li>
-              <li><a href="/blog" class="text-white">Blog</a></li>
+              <li><a href="/">Home</a></li>
+              <li><a href="/about">About</a></li>
+              <li><a href="/contact">Contact</a></li>
+              <li><a href="/blog">Blog</a></li>
             </ul>
           </div>
-          <div class="col-md-3 mb-4 mb-md-0">
+          <div class="col-lg-3 col-md-3 col-6 mb-4 mb-lg-0">
             <h5>Services</h5>
             <ul class="list-unstyled">
-              <li><a href="/" class="text-white">Symptom Checker</a></li>
-              <li><a href="#" class="text-white">Health Tips</a></li>
-              <li><a href="#" class="text-white">Wellness Plans</a></li>
-              <li><a href="#" class="text-white">Preventive Care</a></li>
+              <li><a href="/">Symptom Checker</a></li>
+              <li><a href="#">Health Tips</a></li>
+              <li><a href="#">Wellness Plans</a></li>
+              <li><a href="#">Preventive Care</a></li>
             </ul>
           </div>
-          <div class="col-md-3">
+          <div class="col-lg-3 col-md-12">
             <h5>Contact Us</h5>
             <ul class="list-unstyled">
               <li><i class="fas fa-map-marker-alt me-2"></i> Graphic Era University St, MedCity</li>
@@ -343,15 +1152,15 @@
             </ul>
           </div>
         </div>
-        <hr class="my-4 bg-light">
+        <hr class="my-4">
         <div class="row">
-          <div class="col-md-6 text-center text-md-start">
-            <p class="mb-0">&copy; 2023 Virtual Health Assistant. All rights reserved.</p>
+          <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+            <p class="mb-0">© 2023 Virtual Health Assistant. All rights reserved.</p>
           </div>
           <div class="col-md-6 text-center text-md-end">
             <p class="mb-0">
-              <a href="#" class="text-white me-3">Privacy Policy</a>
-              <a href="#" class="text-white">Terms of Service</a>
+              <a href="#" class="me-3">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
             </p>
           </div>
         </div>
@@ -359,5 +1168,49 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+      // Scroll Reveal Animations
+      const scrollElements = document.querySelectorAll(".scroll-reveal");
+
+      const elementInView = (el, dividend = 1) => {
+        const elementTop = el.getBoundingClientRect().top;
+        return (
+          elementTop <=
+          (window.innerHeight || document.documentElement.clientHeight) / dividend
+        );
+      };
+
+      const elementOutOfView = (el) => {
+        const elementTop = el.getBoundingClientRect().top;
+        return (
+          elementTop > (window.innerHeight || document.documentElement.clientHeight)
+        );
+      };
+
+      const displayScrollElement = (element) => {
+        element.classList.add("revealed");
+      };
+
+      const hideScrollElement = (element) => {
+        // Optional: remove class if you want elements to re-animate when scrolling back up
+        // element.classList.remove("revealed");
+      };
+
+      const handleScrollAnimation = () => {
+        scrollElements.forEach((el) => {
+          if (elementInView(el, 1.15)) { // Adjust dividend for earlier/later reveal
+            displayScrollElement(el);
+          } else if (elementOutOfView(el)) {
+            // hideScrollElement(el); // Optional
+          }
+        });
+      };
+
+      window.addEventListener("scroll", () => {
+        handleScrollAnimation();
+      });
+      // Initial check in case elements are already in view
+      handleScrollAnimation();
+    </script>
   </body>
 </html>
