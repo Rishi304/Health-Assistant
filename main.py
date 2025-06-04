@@ -1,38 +1,33 @@
 import pickle
-from urllib.parse import quote_plus
 
+import mysql.connector
 import numpy as np
 import pandas as pd
-from bson.objectid import ObjectId
 from flask import (Flask, flash, jsonify, redirect, render_template, request,
-                   session, url_for)
+                   url_for)
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_login import (LoginManager, UserMixin, current_user, login_required,
                          login_user, logout_user)
-from flask_pymongo import PyMongo
 
 app = Flask(__name__)
+app.secret_key = '1234'
 CORS(app)
 
-username = "rishabkumar"
-password = "pass@1234"
+# MySQL connection
 
-escaped_username = quote_plus(username)
-escaped_password = quote_plus(password)
 
-app.config["MONGO_URI"] = (
-    f"mongodb+srv://{escaped_username}:{escaped_password}@appointments.llruxte.mongodb.net/?retryWrites=true&w=majority&appName=Appointments"
-)
-app.secret_key = '1234'
+def get_db_conn():
+    return mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="root",
+        database="appointment"
+    )
 
-# MongoDB instance is created via PyMongo
-mongo = PyMongo(app)
-appointments = mongo.db["doctor appointment"]
-doctors = mongo.db["doctors"]
-users = mongo.db["users"]
 
-# Load datasets
+# Load model and datasets
+svc = pickle.load(open('models/svc.pkl', 'rb'))
 sys_des = pd.read_csv('datasets/symtoms_df.csv')
 precautions = pd.read_csv("datasets/precautions_df.csv")
 workout = pd.read_csv("datasets/workout_df.csv")
@@ -40,54 +35,30 @@ description = pd.read_csv("datasets/description.csv")
 medication = pd.read_csv("datasets/medications.csv")
 diets = pd.read_csv("datasets/diets.csv")
 
-# Load model
-svc = pickle.load(open('models/svc.pkl', 'rb'))
-
-# Bcrypt and LoginManager
+# Flask Login and Bcrypt
 bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 
-# --- Flask-Login User Loader ---
 class User(UserMixin):
     def __init__(self, user_dict):
-        self.id = str(user_dict["_id"])
+        self.id = str(user_dict["id"])
         self.username = user_dict["username"]
-        self.password_hash = user_dict.get("password_hash", "")
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    user = users.find_one({"_id": ObjectId(user_id)})
-    if user:
-        return User(user)
-    return None
+    conn = get_db_conn()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+    user = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return User(user) if user else None
 
 
-# Helper function
-def helper(dis):
-    desc = description[description['Disease'] == dis]['Description']
-    desc = " ".join([w for w in desc])
-
-    pre = precautions[precautions['Disease'] == dis][[
-        'Precaution_1', 'Precaution_2', 'Precaution_3', 'Precaution_4']]
-    pre = [col for col in pre.values[0]]  # Convert to list of strings
-
-    med = medication[medication['Disease'] == dis]['Medication']
-    med = med.tolist()  # Convert to list of strings
-
-    die = diets[diets['Disease'] == dis]['Diet']
-    die = die.tolist()  # Convert to list of strings
-
-    wrkout = workout[workout['disease'] == dis]['workout']
-    wrkout = wrkout.tolist()  # Convert to list of strings
-
-    return desc, pre, med, die, wrkout
-
-
-# Symptoms dictionary and diseases list (unchanged from your original code)
 symptoms_dict = {
     'itching': 0, 'skin_rash': 1, 'nodal_skin_eruptions': 2, 'continuous_sneezing': 3, 'shivering': 4,
     'chills': 5, 'joint_pain': 6, 'stomach_pain': 7, 'acidity': 8, 'ulcers_on_tongue': 9,
@@ -124,6 +95,7 @@ symptoms_dict = {
     'inflammatory_nails': 128, 'blister': 129, 'red_sore_around_nose': 130, 'yellow_crust_ooze': 131
 }
 
+# Diseases list
 diseases_list = {
     15: 'Fungal infection', 4: 'Allergy', 16: 'GERD', 9: 'Chronic cholestasis', 14: 'Drug Reaction',
     33: 'Peptic ulcer diseae', 1: 'AIDS', 12: 'Diabetes ', 17: 'Gastroenteritis', 6: 'Bronchial Asthma',
@@ -138,213 +110,27 @@ diseases_list = {
 }
 
 
-# Model prediction function (unchanged)
 def get_predicted_value(patient_symptoms):
     input_vector = np.zeros(len(symptoms_dict))
-    for item in patient_symptoms:
-        input_vector[symptoms_dict[item]] = 1
-    return diseases_list[svc.predict([input_vector])[0]]
+    for sym in patient_symptoms:
+        if sym in symptoms_dict:
+            input_vector[symptoms_dict[sym]] = 1
+    prediction = svc.predict([input_vector])[0]
+    return diseases_list[prediction]
 
+
+def helper(disease):
+    desc = " ".join(
+        description[description['Disease'] == disease]['Description'])
+    pre = precautions[precautions['Disease']
+                      == disease].iloc[:, 1:].values.tolist()
+    pre = pre[0] if pre else []
+    meds = medication[medication['Disease'] == disease]['Medication'].tolist()
+    diet = diets[diets['Disease'] == disease]['Diet'].tolist()
+    wrk = workout[workout['disease'] == disease]['workout'].tolist()
+    return desc, pre, meds, diet, wrk
 
 # Routes
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-
-        user_data = users.find_one({'username': username})
-
-        if user_data:
-            try:
-                # Check if password_hash exists and is valid
-                if 'password_hash' not in user_data or not user_data['password_hash']:
-                    flash('Invalid user configuration', 'danger')
-                elif bcrypt.check_password_hash(user_data['password_hash'], password):
-                    user_obj = User(user_data)
-                    login_user(user_obj)
-                    flash('Logged in successfully!', 'success')
-                    return redirect(url_for('index'))
-                else:
-                    flash('Invalid username or password', 'danger')
-            except ValueError as e:
-                flash('Invalid user configuration. Please contact support.', 'danger')
-                app.logger.error(f"Invalid hash for user {username}: {str(e)}")
-        else:
-            flash('Invalid username or password', 'danger')
-    return render_template('login.html')
-
-
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    flash('You have been logged out.', 'info')
-    return redirect(url_for('login'))
-
-
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-
-        if users.find_one({'username': username}):
-            flash('Username already exists.', 'danger')
-        else:
-            # Ensure password is hashed properly
-            password_hash = bcrypt.generate_password_hash(
-                password).decode('utf-8')
-            users.insert_one({
-                'username': username,
-                'password_hash': password_hash
-            })
-            flash('Registration successful. Please login.', 'success')
-            return redirect(url_for('login'))
-    return render_template('register.html')
-
-# --- Session Check (for auto-login) ---
-
-
-@app.route('/session')
-def check_session():
-    if current_user.is_authenticated:
-        return jsonify({'authenticated': True, 'username': current_user.username})
-    else:
-        return jsonify({'authenticated': False})
-
-# --- Example: Protect Doctors Management ---
-
-# --- MongoDB doctor CRUD ---
-
-
-@app.route("/api/doctors", methods=["GET"])
-@login_required
-def get_doctors():
-    try:
-        doctor_list = []
-        for doc in doctors.find():
-            doc["_id"] = str(doc["_id"])
-            doctor_list.append(doc)
-        return jsonify(doctor_list)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@app.route("/api/doctors", methods=["POST"])
-@login_required
-def add_doctor():
-    try:
-        data = request.get_json()
-        if not data:
-            return jsonify({"error": "No data provided"}), 400
-        required_fields = ["name", "specialty", "email"]
-        if not all(field in data for field in required_fields):
-            return jsonify({"error": "Missing required fields"}), 400
-        if doctors.find_one({"email": data["email"]}):
-            return jsonify({"error": "Doctor with this email already exists"}), 400
-        result = doctors.insert_one({
-            "name": data["name"],
-            "specialty": data["specialty"],
-            "email": data["email"]
-        })
-        return jsonify({
-            "_id": str(result.inserted_id),
-            "name": data["name"],
-            "specialty": data["specialty"],
-            "email": data["email"]
-        }), 201
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@app.route("/api/doctors/<id>", methods=["PUT"])
-@login_required
-def update_doctor(id):
-    try:
-        data = request.get_json()
-        if not data:
-            return jsonify({"error": "No data provided"}), 400
-        update_data = {}
-        if "name" in data:
-            update_data["name"] = data["name"]
-        if "specialty" in data:
-            update_data["specialty"] = data["specialty"]
-        if "email" in data:
-            update_data["email"] = data["email"]
-        if not update_data:
-            return jsonify({"error": "No valid fields to update"}), 400
-        result = doctors.update_one(
-            {"_id": ObjectId(id)},
-            {"$set": update_data}
-        )
-        if result.matched_count == 0:
-            return jsonify({"error": "Doctor not found"}), 404
-        return jsonify({"message": "Doctor updated successfully"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@app.route("/api/doctors/<id>", methods=["DELETE"])
-@login_required
-def delete_doctor(id):
-    try:
-        result = doctors.delete_one({"_id": ObjectId(id)})
-        if result.deleted_count == 0:
-            return jsonify({"error": "Doctor not found"}), 404
-        return jsonify({"message": "Doctor deleted successfully"}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
-@app.route("/api/appointments", methods=["POST"])
-def create_appointment():
-    data = request.json
-    result = appointments.insert_one({
-        "name": data.get("name"),
-        "doctor": data.get("doctor"),
-        "date": data.get("date"),
-        "time": data.get("time"),
-        "type": data.get("type")
-    })
-    return jsonify({"_id": str(result.inserted_id)}), 201
-
-# READ (all)
-
-
-@app.route("/api/appointments", methods=["GET"])
-def get_appointments():
-    appt_list = []
-    for appt in appointments.find():
-        appt["_id"] = str(appt["_id"])
-        appt_list.append(appt)
-    return jsonify(appt_list)
-
-# UPDATE
-
-
-@app.route("/api/appointments/<id>", methods=["PUT"])
-def update_appointment(id):
-    data = request.json
-    appointments.update_one(
-        {"_id": ObjectId(id)},
-        {"$set": {
-            "name": data.get("name"),
-            "doctor": data.get("doctor"),
-            "date": data.get("date"),
-            "time": data.get("time"),
-            "type": data.get("type")
-        }}
-    )
-    return jsonify({"msg": "updated"})
-
-# DELETE
-
-
-@app.route("/api/appointments/<id>", methods=["DELETE"])
-def delete_appointment(id):
-    appointments.delete_one({"_id": ObjectId(id)})
-    return jsonify({"msg": "deleted"})
 
 
 @app.route('/')
@@ -353,29 +139,183 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/predict', methods=['POST', 'GET'])
+@app.route('/predict', methods=['POST'])
+@login_required
 def predict():
+    symptoms = request.form.get('symptoms')
+    if not symptoms or symptoms.strip().lower() == "symptoms":
+        return render_template('index.html', message="Please write correct symptoms")
+    user_symptoms = [s.strip("[]' ") for s in symptoms.split(',')]
+    predicted_disease = get_predicted_value(user_symptoms)
+    dis_des, pre, meds, diet, wrk = helper(predicted_disease)
+    return render_template('index.html', predicted_disease=predicted_disease, dis_des=dis_des,
+                           my_precautions=pre, my_medications=meds, my_diet=diet, workout=wrk)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
     if request.method == 'POST':
-        symptoms = request.form.get('symptoms')
-        if symptoms == "Symptoms":
-            message = "Please write correct symptoms"
-            return render_template('index.html', message=message)
+        username = request.form['username']
+        password = request.form['password']
+        conn = get_db_conn()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+        if cursor.fetchone():
+            flash('User already exists', 'danger')
         else:
-            # Split the user's input into a list of symptoms (assuming they are comma-separated)
-            user_symptoms = [s.strip() for s in symptoms.split(',')]
-            # Remove any extra characters, if any
-            user_symptoms = [symptom.strip("[]' ")
-                             for symptom in user_symptoms]
-            predicted_disease = get_predicted_value(user_symptoms)
-            dis_des, precautions, medications, rec_diet, workout = helper(
-                predicted_disease)
+            hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
+            cursor.execute(
+                "INSERT INTO users (username, password_hash) VALUES (%s, %s)", (username, hashed_pw))
+            conn.commit()
+            flash('Registered successfully! Please login.', 'success')
+            return redirect(url_for('login'))
+        cursor.close()
+        conn.close()
+    return render_template('register.html')
 
-            # Pass the lists directly to the template
-            return render_template('index.html', predicted_disease=predicted_disease, dis_des=dis_des,
-                                   my_precautions=precautions, my_medications=medications, my_diet=rec_diet,
-                                   workout=workout)
 
-    return render_template('index.html')
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        conn = get_db_conn()
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+        user = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        if user and bcrypt.check_password_hash(user['password_hash'], password):
+            login_user(User(user))
+            return redirect(url_for('index'))
+        flash('Invalid credentials', 'danger')
+    return render_template('login.html')
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash("Logged out.", "info")
+    return redirect(url_for('login'))
+
+
+@app.route('/session')
+def check_session():
+    return jsonify({'authenticated': current_user.is_authenticated, 'username': current_user.username if current_user.is_authenticated else None})
+
+# Doctor APIs
+
+
+@app.route("/api/doctors", methods=["GET"])
+@login_required
+def get_doctors():
+    conn = get_db_conn()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM doctors")
+    doctors = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(doctors)
+
+
+@app.route("/api/doctors", methods=["POST"])
+@login_required
+def add_doctor():
+    data = request.json
+    if not all(k in data for k in ("name", "specialty", "email")):
+        return jsonify({"error": "Missing fields"}), 400
+    conn = get_db_conn()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM doctors WHERE email = %s", (data["email"],))
+    if cursor.fetchone():
+        return jsonify({"error": "Doctor already exists"}), 400
+    cursor.execute("INSERT INTO doctors (name, specialty, email) VALUES (%s, %s, %s)",
+                   (data["name"], data["specialty"], data["email"]))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify(data), 201
+
+
+@app.route("/api/doctors/<int:id>", methods=["PUT"])
+@login_required
+def update_doctor(id):
+    data = request.json
+    conn = get_db_conn()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE doctors SET name=%s, specialty=%s, email=%s WHERE id=%s",
+                   (data["name"], data["specialty"], data["email"], id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Doctor updated"})
+
+
+@app.route("/api/doctors/<int:id>", methods=["DELETE"])
+@login_required
+def delete_doctor(id):
+    conn = get_db_conn()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM doctors WHERE id = %s", (id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Doctor deleted"})
+
+# Appointment APIs
+
+
+@app.route("/api/appointments", methods=["GET"])
+def get_appointments():
+    conn = get_db_conn()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM doctor_appointment")
+    appointments = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(appointments)
+
+
+@app.route("/api/appointments", methods=["POST"])
+def create_appointment():
+    data = request.json
+    conn = get_db_conn()
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO doctor_appointment (name, doctor, date, time, type) VALUES (%s, %s, %s, %s, %s)",
+                   (data["name"], data["doctor"], data["date"], data["time"], data["type"]))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Appointment created"}), 201
+
+
+@app.route("/api/appointments/<int:id>", methods=["PUT"])
+def update_appointment(id):
+    data = request.json
+    conn = get_db_conn()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE doctor_appointment SET name=%s, doctor=%s, date=%s, time=%s, type=%s WHERE id=%s",
+                   (data["name"], data["doctor"], data["date"], data["time"], data["type"], id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Appointment updated"})
+
+
+@app.route("/api/appointments/<int:id>", methods=["DELETE"])
+def delete_appointment(id):
+    conn = get_db_conn()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM doctor_appointment WHERE id = %s", (id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return jsonify({"message": "Appointment deleted"})
+
+# Static Pages
 
 
 @app.route('/about')
@@ -402,10 +342,6 @@ def blog():
 def medicine_delivery():
     return render_template('delivery.html')
 
-# @app.route('/login')
-# def login():
-#     return render_template('login.html')
-
 
 @app.route('/doctor-appointment')
 def doctor_appointment():
@@ -418,6 +354,5 @@ def manage_doctors():
     return render_template('manage_doctors.html')
 
 
-# Python main
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=9000, debug=True)
