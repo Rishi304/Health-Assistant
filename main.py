@@ -1,5 +1,5 @@
 from urllib.parse import quote_plus
-from flask import Flask, request, render_template, jsonify, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 import numpy as np
 import pandas as pd
 import pickle
@@ -23,8 +23,9 @@ app.config["MONGO_URI"] = (
     f"mongodb+srv://{escaped_username}:{escaped_password}@appointments.llruxte.mongodb.net/appointment"
     "?retryWrites=true&w=majority&appName=Appointments"
 )
+app.secret_key = '1234'
 
-# Monodb instance is created via PyMongo
+# MongoDB instance is created via PyMongo
 mongo = PyMongo(app)
 appointments = mongo.db["doctor appointment"]
 doctors = mongo.db["doctors"]
@@ -41,18 +42,20 @@ diets = pd.read_csv("datasets/diets.csv")
 # Load model
 svc = pickle.load(open('models/svc.pkl', 'rb'))
 
-# Update the doctor routes in main.py
 # Bcrypt and LoginManager
 bcrypt = Bcrypt(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+
 # --- Flask-Login User Loader ---
 class User(UserMixin):
     def __init__(self, user_dict):
         self.id = str(user_dict["_id"])
         self.username = user_dict["username"]
+        self.password_hash = user_dict.get("password_hash", "")
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -81,7 +84,8 @@ def helper(dis):
 
     return desc, pre, med, die, wrkout
 
-# Symptoms dictionary
+
+# Symptoms dictionary and diseases list (unchanged from your original code)
 symptoms_dict = {
     'itching': 0, 'skin_rash': 1, 'nodal_skin_eruptions': 2, 'continuous_sneezing': 3, 'shivering': 4,
     'chills': 5, 'joint_pain': 6, 'stomach_pain': 7, 'acidity': 8, 'ulcers_on_tongue': 9,
@@ -118,7 +122,6 @@ symptoms_dict = {
     'inflammatory_nails': 128, 'blister': 129, 'red_sore_around_nose': 130, 'yellow_crust_ooze': 131
 }
 
-# Diseases list
 diseases_list = {
     15: 'Fungal infection', 4: 'Allergy', 16: 'GERD', 9: 'Chronic cholestasis', 14: 'Drug Reaction',
     33: 'Peptic ulcer diseae', 1: 'AIDS', 12: 'Diabetes ', 17: 'Gastroenteritis', 6: 'Bronchial Asthma',
@@ -132,48 +135,70 @@ diseases_list = {
     35: 'Psoriasis', 27: 'Impetigo'
 }
 
-# Model prediction function
+
+# Model prediction function (unchanged)
 def get_predicted_value(patient_symptoms):
     input_vector = np.zeros(len(symptoms_dict))
-
     for item in patient_symptoms:
         input_vector[symptoms_dict[item]] = 1
     return diseases_list[svc.predict([input_vector])[0]]
 
-# Routes
-# --- User Registration Route ---
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        existing_user = users.find_one({'username': username})
-        if existing_user:
-            return render_template('register.html', error='User already exists')
-        hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
-        users.insert_one({'username': username, 'password': hashed_pw})
-        return render_template('login.html', message='Registration successful! Please login.')
-    return render_template('register.html')
 
-# --- Login Route (AJAX POST) ---
+# Routes
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = users.find_one({'username': username})
-        if user and bcrypt.check_password_hash(user['password'], password):
-            login_user(User(user))
-            return jsonify({'success': True})
-        return jsonify({'success': False, 'error': 'Invalid credentials'})
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        user_data = users.find_one({'username': username})
+
+        if user_data:
+            try:
+                # Check if password_hash exists and is valid
+                if 'password_hash' not in user_data or not user_data['password_hash']:
+                    flash('Invalid user configuration', 'danger')
+                elif bcrypt.check_password_hash(user_data['password_hash'], password):
+                    user_obj = User(user_data)
+                    login_user(user_obj)
+                    flash('Logged in successfully!', 'success')
+                    return redirect(url_for('index'))
+                else:
+                    flash('Invalid username or password', 'danger')
+            except ValueError as e:
+                flash('Invalid user configuration. Please contact support.', 'danger')
+                app.logger.error(f"Invalid hash for user {username}: {str(e)}")
+        else:
+            flash('Invalid username or password', 'danger')
     return render_template('login.html')
 
-# --- Logout Route ---
+
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return jsonify({'success': True})
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('login'))
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        if users.find_one({'username': username}):
+            flash('Username already exists.', 'danger')
+        else:
+            # Ensure password is hashed properly
+            password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+            users.insert_one({
+                'username': username,
+                'password_hash': password_hash
+            })
+            flash('Registration successful. Please login.', 'success')
+            return redirect(url_for('login'))
+    return render_template('register.html')
 
 # --- Session Check (for auto-login) ---
 @app.route('/session')
@@ -304,6 +329,7 @@ def delete_appointment(id):
     appointments.delete_one({"_id": ObjectId(id)})
     return jsonify({"msg": "deleted"})
 @app.route('/')
+@login_required
 def index():
     return render_template('index.html')
 
