@@ -1,14 +1,16 @@
+import pickle
 from urllib.parse import quote_plus
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+
 import numpy as np
 import pandas as pd
-import pickle
-from flask_pymongo import PyMongo
-from flask_cors import CORS
 from bson.objectid import ObjectId
-
-from flask_login import LoginManager, login_user, login_required, logout_user, UserMixin, current_user
+from flask import (Flask, flash, jsonify, redirect, render_template, request,
+                   session, url_for)
 from flask_bcrypt import Bcrypt
+from flask_cors import CORS
+from flask_login import (LoginManager, UserMixin, current_user, login_required,
+                         login_user, logout_user)
+from flask_pymongo import PyMongo
 
 app = Flask(__name__)
 CORS(app)
@@ -20,8 +22,7 @@ escaped_username = quote_plus(username)
 escaped_password = quote_plus(password)
 
 app.config["MONGO_URI"] = (
-    f"mongodb+srv://{escaped_username}:{escaped_password}@appointments.llruxte.mongodb.net/appointment"
-    "?retryWrites=true&w=majority&appName=Appointments"
+    f"mongodb+srv://{escaped_username}:{escaped_password}@appointments.llruxte.mongodb.net/?retryWrites=true&w=majority&appName=Appointments"
 )
 app.secret_key = '1234'
 
@@ -70,7 +71,8 @@ def helper(dis):
     desc = description[description['Disease'] == dis]['Description']
     desc = " ".join([w for w in desc])
 
-    pre = precautions[precautions['Disease'] == dis][['Precaution_1', 'Precaution_2', 'Precaution_3', 'Precaution_4']]
+    pre = precautions[precautions['Disease'] == dis][[
+        'Precaution_1', 'Precaution_2', 'Precaution_3', 'Precaution_4']]
     pre = [col for col in pre.values[0]]  # Convert to list of strings
 
     med = medication[medication['Disease'] == dis]['Medication']
@@ -191,7 +193,8 @@ def register():
             flash('Username already exists.', 'danger')
         else:
             # Ensure password is hashed properly
-            password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+            password_hash = bcrypt.generate_password_hash(
+                password).decode('utf-8')
             users.insert_one({
                 'username': username,
                 'password_hash': password_hash
@@ -201,6 +204,8 @@ def register():
     return render_template('register.html')
 
 # --- Session Check (for auto-login) ---
+
+
 @app.route('/session')
 def check_session():
     if current_user.is_authenticated:
@@ -211,6 +216,8 @@ def check_session():
 # --- Example: Protect Doctors Management ---
 
 # --- MongoDB doctor CRUD ---
+
+
 @app.route("/api/doctors", methods=["GET"])
 @login_required
 def get_doctors():
@@ -222,6 +229,7 @@ def get_doctors():
         return jsonify(doctor_list)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @app.route("/api/doctors", methods=["POST"])
 @login_required
@@ -249,6 +257,7 @@ def add_doctor():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/api/doctors/<id>", methods=["PUT"])
 @login_required
 def update_doctor(id):
@@ -275,6 +284,7 @@ def update_doctor(id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+
 @app.route("/api/doctors/<id>", methods=["DELETE"])
 @login_required
 def delete_doctor(id):
@@ -285,6 +295,7 @@ def delete_doctor(id):
         return jsonify({"message": "Doctor deleted successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 @app.route("/api/appointments", methods=["POST"])
 def create_appointment():
@@ -299,6 +310,8 @@ def create_appointment():
     return jsonify({"_id": str(result.inserted_id)}), 201
 
 # READ (all)
+
+
 @app.route("/api/appointments", methods=["GET"])
 def get_appointments():
     appt_list = []
@@ -308,6 +321,8 @@ def get_appointments():
     return jsonify(appt_list)
 
 # UPDATE
+
+
 @app.route("/api/appointments/<id>", methods=["PUT"])
 def update_appointment(id):
     data = request.json
@@ -324,14 +339,19 @@ def update_appointment(id):
     return jsonify({"msg": "updated"})
 
 # DELETE
+
+
 @app.route("/api/appointments/<id>", methods=["DELETE"])
 def delete_appointment(id):
     appointments.delete_one({"_id": ObjectId(id)})
     return jsonify({"msg": "deleted"})
+
+
 @app.route('/')
 @login_required
 def index():
     return render_template('index.html')
+
 
 @app.route('/predict', methods=['POST', 'GET'])
 def predict():
@@ -344,9 +364,11 @@ def predict():
             # Split the user's input into a list of symptoms (assuming they are comma-separated)
             user_symptoms = [s.strip() for s in symptoms.split(',')]
             # Remove any extra characters, if any
-            user_symptoms = [symptom.strip("[]' ") for symptom in user_symptoms]
+            user_symptoms = [symptom.strip("[]' ")
+                             for symptom in user_symptoms]
             predicted_disease = get_predicted_value(user_symptoms)
-            dis_des, precautions, medications, rec_diet, workout = helper(predicted_disease)
+            dis_des, precautions, medications, rec_diet, workout = helper(
+                predicted_disease)
 
             # Pass the lists directly to the template
             return render_template('index.html', predicted_disease=predicted_disease, dis_des=dis_des,
@@ -355,21 +377,26 @@ def predict():
 
     return render_template('index.html')
 
+
 @app.route('/about')
 def about():
     return render_template('about.html')
+
 
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
 
+
 @app.route('/developer')
 def developer():
     return render_template('developer.html')
 
+
 @app.route('/blog')
 def blog():
     return render_template('blog.html')
+
 
 @app.route('/medicine-delivery')
 def medicine_delivery():
@@ -379,14 +406,17 @@ def medicine_delivery():
 # def login():
 #     return render_template('login.html')
 
+
 @app.route('/doctor-appointment')
 def doctor_appointment():
     return render_template('doctor_appointment.html')
+
 
 @app.route('/manage-doctors')
 @login_required
 def manage_doctors():
     return render_template('manage_doctors.html')
+
 
 # Python main
 if __name__ == "__main__":
