@@ -1,312 +1,927 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medical Appointment System</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .appointment-card {
-            transition: transform 0.2s;
-        }
-        .appointment-card:hover {
-            transform: translateY(-2px);
-        }
-        .action-buttons .btn {
-            min-width: 80px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medical Appointment System | Virtual Health Assistant</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+    :root {
+        /* Modern Dark Theme Variables */
+        --primary-bg: #0f0f23;
+        --secondary-bg: #1a1a2e;
+        --tertiary-bg: #16213e;
+        --surface-dark: #252545;
+        --surface-light: #2d2d44;
+        --surface-hover: #343454;
+
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        --warning-gradient: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+
+        --neon-blue: #00d4ff;
+        --neon-purple: #a855f7;
+        --neon-pink: #ec4899;
+        --neon-green: #10b981;
+        --neon-yellow: #f59e0b;
+
+        --text-primary: #ffffff;
+        --text-secondary: #b8bcc8;
+        --text-muted: #8b8fa3;
+        --text-accent: #667eea;
+
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --glass-strong: rgba(255, 255, 255, 0.15);
+
+        --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.15);
+        --shadow-strong: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        --shadow-card: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        --radius-2xl: 32px;
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--primary-bg);
+        color: var(--text-primary);
+        line-height: 1.7;
+        font-weight: 400;
+        overflow-x: hidden;
+        position: relative;
+    }
+    body::before { /* Animated Background for body */
+        content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background:
+            radial-gradient(circle at 10% 85%, rgba(102, 126, 234, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 85% 10%, rgba(168, 85, 247, 0.07) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.04) 0%, transparent 60%);
+        pointer-events: none; z-index: -1;
+    }
+
+    /* Navbar Styling */
+    .navbar {
+        background: rgba(15, 15, 35, 0.9) !important;
+        backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--glass-border);
+        padding: 1.2rem 0; position: sticky; top: 0; z-index: 1030;
+        transition: var(--transition);
+    }
+    .navbar-brand {
+        font-family: 'Manrope', sans-serif; font-weight: 800;
+        font-size: 1.5rem; color: var(--text-primary) !important;
+        display: flex; align-items: center;
+        text-shadow: 0 0 15px rgba(102, 126, 234, 0.25);
+    }
+    .navbar-brand .fa-heartbeat { color: var(--neon-blue); animation: pulse 2s infinite; }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.1); }
+    }
+    .logo {
+        width: 45px; height: 45px; margin-right: 15px;
+        border-radius: 50%; background: var(--primary-gradient); padding: 2px;
+        transition: transform 0.3s ease;
+    }
+    .myimg {
+        width: 100%; height: 100%; border-radius: 50%;
+        object-fit: cover; background-color: var(--surface-dark); border: none;
+    }
+    .nav-link {
+        font-weight: 500; padding: 0.8rem 1.2rem !important;
+        color: var(--text-secondary) !important; border-radius: var(--radius-lg);
+        transition: var(--transition); position: relative; overflow: hidden; margin: 0 0.2rem;
+    }
+    .nav-link::before {
+        content: ''; position: absolute; top: 0; left: -100%;
+        width: 100%; height: 100%; background: var(--primary-gradient);
+        transition: left 0.35s ease; z-index: -1; opacity: 0.1;
+    }
+    .nav-link:hover::before, .nav-link.active::before { left: 0; opacity: 0.15; }
+    .nav-link:hover, .nav-link.active {
+        color: var(--text-primary) !important; transform: translateY(-2px);
+        text-shadow: 0 0 10px rgba(102, 126, 234, 0.4);
+    }
+    .nav-link.active {
+        font-weight: 600; background: var(--glass-bg);
+        border: 1px solid var(--glass-border); box-shadow: var(--shadow-glow);
+    }
+    .navbar-toggler { border-color: var(--glass-border); }
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.7%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+    .navbar .form-control {
+        background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-primary);
+        border-radius: var(--radius-lg) 0 0 var(--radius-lg); padding-left: 1.2rem; font-size: 0.95rem;
+    }
+    .navbar .form-control::placeholder { color: var(--text-muted); }
+    .navbar .form-control:focus {
+        background: var(--glass-strong); border-color: var(--neon-blue);
+        box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+    }
+    .navbar .btn-outline-light {
+        color: var(--text-secondary); border-color: var(--glass-border); background: var(--glass-bg);
+        border-radius: 0 var(--radius-lg) var(--radius-lg) 0; transition: var(--transition);
+    }
+    .navbar .btn-outline-light:hover {
+        background: var(--primary-gradient); color: var(--text-primary); border-color: transparent;
+    }
+    .dropdown-menu {
+        background-color: var(--surface-dark); border: 1px solid var(--glass-border);
+        border-radius: var(--radius-md); box-shadow: var(--shadow-card);
+        padding: 0.5rem 0;
+    }
+    .dropdown-item { color: var(--text-secondary); padding: 0.5rem 1.2rem; font-size:0.95rem;}
+    .dropdown-item:hover, .dropdown-item:focus { color: var(--text-primary); background-color: var(--surface-hover); }
+    .dropdown-divider { border-top-color: var(--glass-border); opacity:0.5;}
+
+    /* Page Header */
+    .page-header h1 {
+        font-family: 'Manrope', sans-serif;
+        font-weight: 800;
+        color: var(--text-primary);
+        font-size: clamp(2.5rem, 5vw, 3.5rem);
+         background: linear-gradient(135deg, var(--text-primary) 70%, var(--neon-blue) 100%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .page-header .lead {
+        color: var(--text-secondary);
+        font-size: 1.25rem;
+        max-width: 600px; margin-left:auto; margin-right:auto;
+    }
+
+    /* Content Section Wrapper */
+    .content-section-wrapper {
+        background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        border: 1px solid var(--glass-border); border-radius: var(--radius-2xl);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-card);
+        margin-bottom: 3rem; position: relative; overflow: hidden;
+    }
+    .content-section-wrapper::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0;
+        height: 4px; background: var(--primary-gradient);
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+    }
+    .content-section-wrapper .section-header {
+        background-color: rgba(0,0,0,0.15);
+        margin: -2.5rem -2.5rem 2rem -2.5rem;
+        padding: 1.25rem 2.5rem;
+        border-bottom: 1px solid var(--glass-border);
+    }
+    .content-section-wrapper .section-header h2, .content-section-wrapper .section-header .h5 {
+        font-family: 'Manrope', sans-serif;
+        color: var(--text-primary);
+        font-weight: 700; margin-bottom: 0;
+    }
+
+    /* Form Elements */
+    .form-label { color: var(--text-secondary); font-weight: 500; margin-bottom: 0.6rem; font-size: 0.9rem; }
+    .form-control, .form-select {
+        padding: 0.9rem 1.1rem; border-radius: var(--radius-lg);
+        border: 1px solid var(--glass-border); background: var(--glass-strong);
+        color: var(--text-primary); transition: var(--transition); font-size: 0.95rem;
+    }
+    .form-control::placeholder { color: var(--text-muted); opacity: 0.8; }
+    .form-control:focus, .form-select:focus {
+        border-color: var(--neon-blue); background: var(--surface-hover);
+        box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.2); color: var(--text-primary);
+    }
+    .form-select option { background-color: var(--surface-dark); color: var(--text-primary); }
+    .btn-submit-form {
+        background: var(--primary-gradient); border: none; padding: 0.85rem 1.75rem;
+        border-radius: var(--radius-xl); font-weight: 600; color: white;
+        transition: var(--transition); text-transform: uppercase; font-size: 0.9rem; letter-spacing:0.5px;
+        box-shadow: var(--shadow-sm);
+    }
+    .btn-submit-form:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2), var(--shadow-glow);
+        filter: brightness(1.15);
+    }
+
+    /* Appointments Table */
+    .table-responsive { border-radius: var(--radius-lg); overflow:hidden; border:1px solid var(--glass-border); }
+    .table {
+        background-color: var(--glass-bg);
+        color: var(--text-secondary);
+        border-color: var(--glass-border);
+    }
+    .table th, .table td {
+        border-color: var(--glass-border) !important;
+        padding: 0.9rem 1rem;
+        vertical-align: middle;
+    }
+    .table thead {
+        background-color: var(--glass-strong);
+    }
+    .table thead th {
+        color: var(--text-primary);
+        font-weight: 600;
+        border-bottom-width: 2px !important;
+        text-transform: uppercase; font-size:0.85rem; letter-spacing:0.5px;
+    }
+    .table tbody tr:hover {
+        background-color: var(--glass-strong);
+        color: var(--text-primary);
+        transform: scale(1.005);
+        box-shadow: 0 0 20px rgba(0,212,255,0.05);
+    }
+
+    .badge { font-size: 0.8rem; padding: 0.4em 0.8em; border-radius: var(--radius-md); font-weight:600;}
+    .badge.bg-video { background-color: var(--neon-blue); color: var(--primary-bg); }
+    .badge.bg-in-person { background-color: var(--neon-green); color: var(--primary-bg); }
+
+    .action-buttons .btn {
+        min-width: 85px;
+        padding: 0.4rem 0.8rem; font-size:0.8rem;
+        border-width: 1px;
+        transition: var(--transition);
+    }
+    .btn-outline-edit {
+        border-color: var(--neon-yellow); color: var(--neon-yellow);
+    }
+    .btn-outline-edit:hover {
+        background-color: var(--neon-yellow); color: var(--primary-bg);
+        box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); transform: translateY(-1px);
+    }
+    .btn-outline-delete {
+        border-color: var(--neon-pink); color: var(--neon-pink);
+    }
+    .btn-outline-delete:hover {
+        background-color: var(--neon-pink); color: var(--text-primary);
+        box-shadow: 0 0 15px rgba(236, 72, 153, 0.3); transform: translateY(-1px);
+    }
+    .table-responsive .alert {
+        background-color: var(--glass-strong); color: var(--text-secondary);
+        border: 1px solid var(--neon-blue); border-left-width: 4px;
+        border-radius: var(--radius-md);
+    }
+
+    /* Modal Styling */
+    .modal-content {
+        background: var(--secondary-bg);
+        border-radius: var(--radius-xl); overflow: hidden;
+        border: 1px solid var(--glass-border);
+        box-shadow: var(--shadow-strong);
+        color: var(--text-primary);
+    }
+    .modal-header {
+        background: var(--surface-dark); color: var(--text-primary);
+        border-bottom: 1px solid var(--glass-border); padding: 1.25rem 1.5rem;
+    }
+    .modal-title { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 1.35rem;}
+    .btn-close { filter: invert(1) grayscale(100%) brightness(150%); }
+    .modal-body { padding: 1.5rem 2rem; }
+    .modal-footer {
+        background: var(--surface-dark);
+        border-top: 1px solid var(--glass-border);
+        padding: 1rem 1.5rem;
+    }
+    .modal-footer .btn-outline-secondary {
+        border-color: var(--glass-border); color: var(--text-secondary);
+    }
+    .modal-footer .btn-outline-secondary:hover {
+        background-color: var(--surface-hover); color: var(--text-primary);
+        border-color: var(--glass-strong);
+    }
+    .modal-footer .btn-primary {
+        background: var(--primary-gradient); border: none; color: white;
+        font-weight: 600; padding: 0.7rem 1.2rem; border-radius: var(--radius-lg);
+    }
+    .modal-footer .btn-primary:hover{
+         filter: brightness(1.15); box-shadow:var(--shadow-glow);
+    }
+
+    /* Footer Styling */
+    footer {
+        background: var(--secondary-bg); position: relative;
+        padding: 5rem 0 3rem; margin-top: 5rem;
+        overflow: hidden; border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+    }
+    footer::before {
+        content: ''; position: absolute; top: 0; left: 0; right: 0;
+        height: 3px; background: var(--primary-gradient);
+    }
+    footer::after {
+        content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background:
+            radial-gradient(circle at 20% 90%, rgba(168, 85, 247, 0.07) 0%, transparent 50%),
+            radial-gradient(circle at 80% 10%, rgba(79, 172, 254, 0.07) 0%, transparent 50%);
+        z-index: -1;
+    }
+    footer h5 {
+        color: var(--text-primary); font-family: 'Manrope', sans-serif;
+        font-weight: 700; margin-bottom: 1.5rem; font-size: 1.2rem;
+    }
+    footer p, footer ul li a, footer ul li {
+        color: var(--text-secondary); text-decoration: none;
+        transition: var(--transition); font-size: 0.95rem; line-height: 1.8;
+    }
+    footer ul.list-unstyled li { margin-bottom: 0.7rem; }
+    footer ul li a:hover {
+        color: var(--neon-blue); transform: translateX(5px);
+        text-shadow: 0 0 8px rgba(0, 212, 255, 0.3); display: inline-block;
+    }
+    footer .social-icons a {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 45px; height: 45px;
+        background: var(--glass-bg); border: 1px solid var(--glass-border);
+        border-radius: 50%; color: var(--text-secondary) !important;
+        font-size: 1.2rem; transition: var(--transition);
+        margin-right: 0.75rem; box-shadow: var(--shadow-sm);
+    }
+    footer .social-icons a:last-child { margin-right: 0; }
+    footer .social-icons a:hover {
+        background: var(--primary-gradient); color: white !important;
+        transform: translateY(-4px) scale(1.1); box-shadow: var(--shadow-glow);
+    }
+    footer hr { border-color: var(--glass-border); opacity: 0.5; }
+    footer .text-md-start p, footer .text-md-end p { color: var(--text-muted); font-size: 0.9rem; }
+    footer .text-md-end a { color: var(--text-muted); }
+    footer .text-md-end a:hover { color: var(--neon-blue); text-decoration: underline; }
+
+     @media (max-width: 768px) {
+        .content-section-wrapper { padding: 1.5rem; }
+        .content-section-wrapper .section-header { margin: -1.5rem -1.5rem 1.5rem -1.5rem; padding: 1rem 1.5rem;}
+        .page-header h1 { font-size: clamp(2rem, 4vw, 2.8rem); }
+        .page-header .lead { font-size: 1.1rem; }
+        .action-buttons .btn { margin-bottom: 0.5rem; display:block; width:100%;}
+        .action-buttons .btn:last-child { margin-bottom:0; }
+        .table th, .table td { padding: 0.7rem; font-size:0.9rem; }
+        footer { text-align:center;}
+        footer .social-icons { justify-content:center;}
+        footer .text-md-start, footer .text-md-end { text-align: center !important; }
+    }
+</style>
 </head>
-<body class="bg-light">
-    <div class="container py-5">
-        <header class="mb-5">
-            <h1 class="text-primary mb-3">Medical Appointment System</h1>
-            <p class="lead">Book and manage your doctor appointments</p>
-        </header>
+<body>
 
-        <section class="card shadow-sm mb-5">
-            <div class="card-header bg-primary text-white">
-                <h2 class="h5 mb-0">New Appointment</h2>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <div class="logo">
+          <img class="myimg" src="{{ url_for('static', filename='VirtualHealthAssistant.png') }}" alt="VHA Logo">
+      </div>
+      Virtual Health Assistant
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#themedNavbarSupportedContent" aria-controls="themedNavbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="themedNavbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"> <a class="nav-link" href="/"> <i class="fas fa-home me-1"></i> Home </a> </li>
+        <li class="nav-item"> <a class="nav-link" href="/about"> <i class="fas fa-info-circle me-1"></i> About </a> </li>
+        <li class="nav-item"> <a class="nav-link" href="/contact"> <i class="fas fa-envelope me-1"></i> Contact </a> </li>
+        <li class="nav-item"> <a class="nav-link active" href="/doctor-appointment"> <i class="fas fa-user-md me-1"></i> Doctors </a> </li>
+        <li class="nav-item"> <a class="nav-link" href="/medicine-delivery"> <i class="fas fa-pills me-1"></i> Medicine </a></li>
+        <li class="nav-item"> <a class="nav-link" href="/blog"> <i class="fas fa-blog me-1"></i> Blog </a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+         <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user-circle me-1"></i> Account
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
+                <li><a class="dropdown-item" href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt me-2"></i>Login</a></li>
+                <li><a class="dropdown-item" href="{{ url_for('register') }}"><i class="fas fa-user-plus me-2"></i>Register</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+        </li>
+        <li class="nav-item d-none d-lg-block">
+            <form class="d-flex ms-2" role="search">
+            <div class="input-group">
+                <input class="form-control form-control-sm" type="search" placeholder="Search..." aria-label="Search">
+                <button class="btn btn-outline-light btn-sm" type="submit">
+                <i class="fas fa-search"></i>
+                </button>
             </div>
-            <div class="card-body">
-                <form id="appointmentForm" class="row g-3">
-                    <div class="col-md-4">
-                        <label for="name" class="form-label">Patient Name</label>
-                        <input type="text" class="form-control" id="name" placeholder="Your full name" required>
-                    </div>
-                    <div class="col-md-4">
-    <label for="doctor" class="form-label">Doctor</label>
-    <select id="doctor" class="form-select" required>
-        <option value="" disabled selected>Select doctor</option>
-    </select>
-</div>
-<script>
-fetch('/api/doctors')
-  .then(res => res.json())
-  .then(doctors => {
-    const sel = document.getElementById('doctor');
-    sel.innerHTML = '<option value="" disabled selected>Select doctor</option>' +
-      doctors.map(doc => `<option value="${doc.name}">${doc.name} (${doc.specialty})</option>`).join('');
-  });
-</script>
-                    <div class="col-md-2">
-                        <label for="date" class="form-label">Date</label>
-                        <input type="date" class="form-control" id="date" required>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="time" class="form-label">Time</label>
-                        <input type="time" class="form-control" id="time" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="type" class="form-label">Appointment Type</label>
-                        <select class="form-select" id="type" required>
-                            <option value="" disabled selected>Select type</option>
-                            <option value="Video">Video Consultation</option>
-                            <option value="In-Person">In-Person Visit</option>
-                        </select>
-                    </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary px-4">
-                            <i class="bi bi-calendar-plus me-2"></i>Book Appointment
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </section>
-
-        <section class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h2 class="h5 mb-0">Your Appointments</h2>
-            </div>
-            <div class="card-body">
-                <div id="appointments" class="table-responsive">
-                    <p class="text-muted text-center py-3">Loading appointments...</p>
-                </div>
-            </div>
-        </section>
+            </form>
+        </li>
+      </ul>
     </div>
+  </div>
+</nav>
 
-    <!-- Edit Appointment Modal -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit Appointment</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="container py-5">
+    <header class="mb-5 text-center page-header">
+        <h1 class="mb-3"><i class="fas fa-calendar-check me-2" style="color:var(--neon-blue)"></i>Medical Appointment System</h1>
+        <p class="lead">Book and manage your doctor appointments with ease and precision.</p>
+    </header>
+
+    <section class="content-section-wrapper mb-5">
+        <div class="section-header">
+            <h2 class="h5 mb-0"><i class="fas fa-calendar-plus me-2"></i>Schedule New Appointment</h2>
+        </div>
+        <div class="card-body-content">
+            <form id="appointmentForm" class="row g-3">
+                <div class="col-md-6 col-lg-4">
+                    <label for="name" class="form-label">Patient Full Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="e.g., Jane Doe" required>
                 </div>
-                <form id="editForm">
-                    <div class="modal-body">
-                        <input type="hidden" id="edit_id">
-                        <div class="mb-3">
-                            <label for="edit_name" class="form-label">Patient Name</label>
-                            <input type="text" class="form-control" id="edit_name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_doctor" class="form-label">Doctor</label>
-                            <input type="text" class="form-control" id="edit_doctor" required>
-                        </div>
-                        <div class="row g-2 mb-3">
-                            <div class="col-md-6">
-                                <label for="edit_date" class="form-label">Date</label>
-                                <input type="date" class="form-control" id="edit_date" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="edit_time" class="form-label">Time</label>
-                                <input type="time" class="form-control" id="edit_time" required>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="edit_type" class="form-label">Appointment Type</label>
-                            <select class="form-select" id="edit_type" required>
-                                <option value="Video">Video Consultation</option>
-                                <option value="In-Person">In-Person Visit</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </div>
-                </form>
+                <div class="col-md-6 col-lg-4">
+                    <label for="doctor" class="form-label">Select Doctor</label>
+                    <select id="doctor" class="form-select" required>
+                        <option value="" disabled selected>Choose a specialist...</option>
+                        <!-- Options populated by JS -->
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label for="date" class="form-label">Preferred Date</label>
+                    <input type="date" class="form-control" id="date" required>
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label for="time" class="form-label">Preferred Time</label>
+                    <input type="time" class="form-control" id="time" required>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <label for="type" class="form-label">Appointment Type</label>
+                    <select class="form-select" id="type" required>
+                        <option value="" disabled selected>Select consultation type...</option>
+                        <option value="In-Person">In-Person Visit</option>
+                    </select>
+                </div>
+                <div class="col-12 mt-4 text-center text-lg-start">
+                    <button type="submit" class="btn btn-submit-form px-4 py-2">
+                       <i class="fas fa-check-circle me-2"></i> Book Appointment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <section class="content-section-wrapper">
+        <div class="section-header">
+            <h2 class="h5 mb-0"><i class="fas fa-clipboard-list me-2"></i>Your Upcoming Appointments</h2>
+        </div>
+        <div class="card-body-content">
+            <div id="appointments" class="table-responsive">
+                <p class="text-muted text-center py-4 fst-italic"><i class="fas fa-spinner fa-spin me-2"></i>Loading your appointments...</p>
             </div>
         </div>
+    </section>
+</div>
+
+<!-- Edit Appointment Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel"><i class="fas fa-edit me-2"></i>Edit Appointment Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="editForm">
+            <div class="modal-body">
+                <input type="hidden" id="edit_id">
+                <div class="mb-3">
+                    <label for="edit_name" class="form-label">Patient Name</label>
+                    <input type="text" class="form-control" id="edit_name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="edit_doctor" class="form-label">Doctor</label>
+                    <input type="text" class="form-control" id="edit_doctor" readonly required>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="edit_date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="edit_date" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="edit_time" class="form-label">Time</label>
+                        <input type="time" class="form-control" id="edit_time" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="edit_type" class="form-label">Appointment Type</label>
+                    <select class="form-select" id="edit_type" required>
+                        <option value="In-Person">In-Person Visit</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+            </div>
+        </form>
     </div>
+</div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        const API_URL = 'http://localhost:5000/api/appointments';
-        const appointmentsContainer = document.getElementById('appointments');
+<!-- Footer -->
+<footer>
+    <div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+        <h5><i class="fas fa-heartbeat me-2"></i>Virtual Health Assistant</h5>
+        <p>Pioneering accessible and intelligent healthcare solutions for a healthier tomorrow. Your wellness, augmented by AI.</p>
+        <div class="social-icons mt-3">
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+        </div>
+        <div class="col-lg-2 col-md-3 col-6 mb-4 mb-lg-0">
+        <h5>Quick Links</h5>
+        <ul class="list-unstyled">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/developer">Developer</a></li>
+        </ul>
+        </div>
+        <div class="col-lg-3 col-md-3 col-6 mb-4 mb-lg-0">
+        <h5>Our Platform</h5>
+        <ul class="list-unstyled">
+            <li><a href="/">Symptom Analysis</a></li>
+            <li><a href="/doctor-appointment">Doctor Appointments</a></li>
+            <li><a href="/medicine-delivery">Medicine Delivery</a></li>
+            <li><a href="/blog">Health Articles</a></li>
+        </ul>
+        </div>
+        <div class="col-lg-3 col-md-12">
+        <h5>Get In Touch</h5>
+        <ul class="list-unstyled">
+            <li><i class="fas fa-map-marker-alt me-2 opacity-75"></i> Graphic Era University, Dehradun</li>
+            <li><i class="fas fa-phone me-2 opacity-75"></i> +91 (123) 456-7890</li>
+            <li><i class="fas fa-envelope me-2 opacity-75"></i> support@virtualhealth.ai</li>
+        </ul>
+        </div>
+    </div>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+        <p class="mb-0">© 2024 Virtual Health Assistant. All rights reserved.</p>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+        <p class="mb-0">
+            <a href="#" class="me-3">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </p>
+        </div>
+    </div>
+    </div>
+</footer>
 
-        // Render appointments in a responsive table
-        function renderAppointments() {
-            fetch(API_URL)
-                .then(response => {
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.length === 0) {
-                        appointmentsContainer.innerHTML = `
-                            <div class="alert alert-info">
-                                No appointments found. Book your first appointment above.
-                            </div>`;
-                        return;
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const API_URL = 'http://localhost:9000/api/appointments';
+const appointmentsContainer = document.getElementById('appointments');
+const doctorSelectElement = document.getElementById('doctor');
+
+// --- Utility: Show Dynamic Toast ---
+function showThemedToast(message, type = 'success') {
+    const toastId = 'toast-' + Date.now();
+    let toastBgClass = '', iconHtml = '';
+    switch(type.toLowerCase()) {
+        case 'error':
+            toastBgClass = 'border-neon-pink';
+            iconHtml = '<i class="fas fa-times-circle me-2" style="color:var(--neon-pink);"></i>';
+            break;
+        case 'info':
+            toastBgClass = 'border-neon-blue';
+            iconHtml = '<i class="fas fa-info-circle me-2" style="color:var(--neon-blue);"></i>';
+            break;
+        case 'success':
+        default:
+            toastBgClass = 'border-neon-green';
+            iconHtml = '<i class="fas fa-check-circle me-2" style="color:var(--neon-green);"></i>';
+            break;
+    }
+    const toastContainer = document.querySelector('.toast-container') || (() => {
+        const container = document.createElement('div');
+        container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+        container.style.zIndex = "1090"; // Ensure toast is above modals
+        document.body.appendChild(container);
+        return container;
+    })();
+    const toastHTML = `
+        <div id="${toastId}" class="toast align-items-center show ${toastBgClass}" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000" style="background-color: var(--glass-strong); color: var(--text-primary); border-width: 1px; border-style: solid; backdrop-filter: blur(10px);">
+        <div class="d-flex">
+            <div class="toast-body small">${iconHtml}${message}</div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" style="filter:invert(1) grayscale(100%) brightness(150%);"></button>
+        </div>
+        </div>`;
+    toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+    const toastElement = new bootstrap.Toast(document.getElementById(toastId));
+    toastElement.show();
+    document.getElementById(toastId).addEventListener('hidden.bs.toast', () => {
+        document.getElementById(toastId).remove();
+        if (!toastContainer.hasChildNodes()) {
+            toastContainer.remove();
+        }
+    });
+}
+
+// Load doctor list
+if(doctorSelectElement) {
+    fetch('/api/doctors') // Assuming this endpoint exists on your backend
+    .then(res => {
+        if (!res.ok) throw new Error(`Network response was not ok: ${res.statusText}`);
+        return res.json();
+    })
+    .then(doctors => {
+        doctorSelectElement.innerHTML = '<option value="" disabled selected>Choose a specialist...</option>' +
+            doctors.map(doc => `<option value="${doc.name}">${doc.name} (${doc.specialty})</option>`).join('');
+    })
+    .catch(err => {
+        console.error('Error fetching doctors:', err);
+        showThemedToast('Could not load doctor list. Please try again later.', 'error');
+        doctorSelectElement.innerHTML = '<option value="" disabled selected>Error loading doctors</option>';
+    });
+}
+
+// Render appointments
+function renderAppointments() {
+    appointmentsContainer.innerHTML = `<p class="text-muted text-center py-4 fst-italic"><i class="fas fa-spinner fa-spin me-2"></i>Loading your appointments...</p>`;
+    fetch(API_URL)
+        .then(response => {
+            if (!response.ok) throw new Error(`Failed to fetch appointments: ${response.statusText} (Status: ${response.status})`);
+            return response.json();
+        })
+        .then(data => {
+            if (!data || data.length === 0) {
+                appointmentsContainer.innerHTML = `
+                    <div class="alert mt-3" style="background-color: var(--glass-strong); color: var(--text-secondary); border: 1px solid var(--neon-blue); border-left-width: 4px;">
+                        <i class="fas fa-info-circle me-2"></i>You have no upcoming appointments.
+                    </div>`;
+                return;
+            }
+            let html = `
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+            data.forEach(appointment => {
+                let formattedDate = 'Invalid Date';
+                if (appointment.date) {
+                    if (typeof appointment.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(appointment.date)) {
+                        const parts = appointment.date.split('-');
+                        const year = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10);
+                        const day = parseInt(parts[2], 10);
+                        if (year > 1000 && month >= 1 && month <= 12 && day >= 1 && day <= 31) {
+                            const dateObj = new Date(year, month - 1, day);
+                            if (!isNaN(dateObj.getTime()) && dateObj.getFullYear() === year && dateObj.getMonth() === month - 1 && dateObj.getDate() === day) {
+                                formattedDate = dateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+                            }
+                        }
+                    } else {
+                        const dateObj = new Date(appointment.date);
+                        if (!isNaN(dateObj.getTime())) {
+                            formattedDate = dateObj.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+                        }
                     }
+                } else {
+                    formattedDate = 'No Date';
+                }
 
-                    let html = `
-                        <table class="table table-hover align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Patient</th>
-                                    <th>Doctor</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th>Type</th>
-                                    <th class="text-end">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>`;
+                html += `
+                    <tr>
+                        <td>${appointment.name || 'N/A'}</td>
+                        <td>${appointment.doctor || 'N/A'}</td>
+                        <td>${formattedDate}</td>
+                        <td>${appointment.time || 'N/A'}</td>
+                        <td>
+                            <span class="badge ${appointment.type === 'Video' ? 'bg-video' : 'bg-in-person'}">
+                                ${appointment.type || 'N/A'}
+                            </span>
+                        </td>
+                        <td class="text-end action-buttons">
+                            <button class="btn btn-sm btn-outline-edit me-2"
+                                onclick="editAppointment(
+                                    '${appointment._id}',
+                                    '${String(appointment.name || '').replace(/'/g, "\\'")}',
+                                    '${String(appointment.doctor || '').replace(/'/g, "\\'")}',
+                                    '${appointment.date || ''}',
+                                    '${appointment.time || ''}',
+                                    '${appointment.type || 'In-Person'}'
+                                )"><i class="fas fa-pencil-alt me-1"></i>Edit</button>
+                            <button class="btn btn-sm btn-outline-delete"
+                                onclick="confirmDelete('${appointment._id}')"><i class="fas fa-trash-alt me-1"></i>Delete</button>
+                        </td>
+                    </tr>`;
+            });
+            html += '</tbody></table>';
+            appointmentsContainer.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error fetching appointments:', error);
+            appointmentsContainer.innerHTML = `
+                <div class="alert mt-3" style="background-color: var(--glass-strong); color: var(--neon-pink); border: 1px solid var(--neon-pink); border-left-width: 4px;">
+                    <i class="fas fa-exclamation-triangle me-2"></i>${error.message || `Failed to load appointments. Ensure backend is running at ${API_URL}.`}
+                </div>`;
+        });
+}
 
-                    data.forEach(appointment => {
-                        html += `
-                            <tr class="appointment-card">
-                                <td>${appointment.name}</td>
-                                <td>${appointment.doctor}</td>
-                                <td>${appointment.date}</td>
-                                <td>${appointment.time}</td>
-                                <td>
-                                    <span class="badge ${appointment.type === 'Video' ? 'bg-info' : 'bg-success'}">
-                                        ${appointment.type}
-                                    </span>
-                                </td>
-                                <td class="text-end action-buttons">
-                                    <button class="btn btn-sm btn-outline-warning me-2"
-                                        onclick="editAppointment(
-                                            '${appointment._id}',
-                                            '${appointment.name}',
-                                            '${appointment.doctor}',
-                                            '${appointment.date}',
-                                            '${appointment.time}',
-                                            '${appointment.type}'
-                                        )">
-                                        Edit
-                                    </button>
-                                    <button class="btn btn-sm btn-outline-danger"
-                                        onclick="confirmDelete('${appointment._id}')">
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>`;
-                    });
+document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const submitButton = this.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    submitButton.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Booking...`;
 
-                    html += `</tbody></table>`;
-                    appointmentsContainer.innerHTML = html;
-                })
-                .catch(error => {
-                    console.error('Error fetching appointments:', error);
-                    appointmentsContainer.innerHTML = `
-                        <div class="alert alert-danger">
-                            Failed to load appointments. Please try again later.
-                        </div>`;
-                });
+    const payload = {
+        name: document.getElementById('name').value.trim(),
+        doctor: document.getElementById('doctor').value,
+        date: document.getElementById('date').value,
+        time: document.getElementById('time').value,
+        type: document.getElementById('type').value
+    };
+
+    fetch(API_URL, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) return response.json().then(err => { throw new Error(err.message || `Booking failed: ${response.statusText} (Status: ${response.status})`)});
+        return response.json();
+    })
+    .then(() => {
+        this.reset();
+        renderAppointments();
+        showThemedToast('Appointment booked successfully!', 'success');
+    })
+    .catch(error => {
+        console.error('Error booking appointment:', error);
+        showThemedToast(error.message || 'Failed to book. Please check details and try again.', 'error');
+    })
+    .finally(() => {
+        submitButton.disabled = false;
+        submitButton.innerHTML = `<i class="fas fa-check-circle me-2"></i>Book Appointment`;
+    });
+});
+
+window.confirmDelete = function(id) {
+    console.log('Confirm delete called for ID:', id);
+    if (!id) {
+        showThemedToast('Cannot delete: Appointment ID is missing.', 'error');
+        console.error('confirmDelete: ID is undefined or null.');
+        return;
+    }
+    if (confirm("Are you sure you want to delete this appointment? This action cannot be undone.")) {
+        deleteAppointment(id);
+    }
+}
+
+function deleteAppointment(id) {
+    console.log('Attempting to delete appointment with ID:', id);
+    if (!id) { // Double check ID
+        showThemedToast('Cannot delete: Appointment ID is missing or invalid.', 'error');
+        console.error('deleteAppointment: ID is undefined, null, or empty.');
+        return;
+    }
+    const deleteUrl = `${API_URL}/${id}`;
+    console.log('Constructed DELETE URL:', deleteUrl);
+
+    fetch(deleteUrl, {
+        method: "DELETE",
+        headers: {
+            // 'Content-Type': 'application/json', // Not strictly necessary for DELETE with no body, but harmless
+            // Add any other headers your backend might require, e.g., Authorization
+        }
+    })
+    .then(response => {
+        console.log('Delete Response Status:', response.status);
+        console.log('Delete Response OK?:', response.ok);
+        // console.log('Delete Response Headers:', response.headers); // Can be verbose
+
+        if (!response.ok) {
+            // Attempt to get more info from the response body if it's an error
+            return response.text().then(text => { // Use .text() first to see raw response
+                console.error('Raw error response text from backend:', text);
+                let errorMessage = `Failed to delete (Status: ${response.status} ${response.statusText})`;
+                try {
+                    const errJson = JSON.parse(text); // Try to parse as JSON
+                    if (errJson && errJson.message) {
+                        errorMessage = errJson.message;
+                    }
+                } catch (e) {
+                    // Not JSON, or JSON parsing failed.
+                    // Use the text if it's short and not HTML, otherwise stick to status.
+                    if (text && text.length < 200 && !text.trim().startsWith('<')) {
+                        errorMessage = text;
+                    }
+                }
+                throw new Error(errorMessage);
+            });
         }
 
-        // Handle new appointment submission
-        document.getElementById('appointmentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            const payload = {
-                name: document.getElementById('name').value.trim(),
-                doctor: document.getElementById('doctor').value.trim(),
-                date: document.getElementById('date').value,
-                time: document.getElementById('time').value,
-                type: document.getElementById('type').value
-            };
-
-            fetch(API_URL, {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(payload)
-            })
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to create appointment');
-                return response.json();
-            })
-            .then(() => {
-                this.reset();
-                renderAppointments();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to book appointment. Please try again.');
-            });
+        // If response.ok is true:
+        if (response.status === 204) { // No Content
+            console.log('Appointment deleted successfully (204 No Content).');
+            return null; // Nothing to parse
+        }
+        // For 200 OK or other success statuses that might have a body
+        return response.json().catch(() => {
+            console.log('Successful delete, but no JSON body or body was not valid JSON.');
+            return null;
         });
+    })
+    .then((data) => { // data might be null here
+        console.log('Delete successful, data (if any):', data);
+        renderAppointments();
+        showThemedToast('Appointment deleted successfully.', 'info');
+    })
+    .catch(error => {
+        // This catch block handles:
+        // 1. Network errors (e.g., "Failed to fetch" if server is down or CORS preflight fails)
+        // 2. Errors thrown from the .then() blocks (e.g., when !response.ok)
+        console.error('Error during delete operation:', error.name, error.message);
+        showThemedToast(error.message || 'An unexpected error occurred while deleting.', 'error');
+    });
+}
 
-        // Confirm before deleting an appointment
-        function confirmDelete(id) {
-            if (confirm("Are you sure you want to delete this appointment?")) {
-                deleteAppointment(id);
+
+window.editAppointment = function(id, name, doctor, dateString, time, type) {
+    document.getElementById('edit_id').value = id;
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_doctor').value = doctor;
+
+    let inputDateValue = '';
+    if (dateString) {
+        if (typeof dateString === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+            inputDateValue = dateString;
+        } else {
+            const d = new Date(dateString);
+            if (!isNaN(d.getTime())) {
+                inputDateValue = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
             }
         }
+    }
+    document.getElementById('edit_date').value = inputDateValue;
+    document.getElementById('edit_time').value = time;
+    document.getElementById('edit_type').value = type;
 
-        // Delete appointment
-        function deleteAppointment(id) {
-            fetch(`${API_URL}/${id}`, {method: "DELETE"})
-                .then(response => {
-                    if (!response.ok) throw new Error('Failed to delete appointment');
-                    renderAppointments();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to delete appointment. Please try again.');
-                });
-        }
+    const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+    editModal.show();
+}
 
-        // Edit appointment - open modal with current values
-        function editAppointment(id, name, doctor, date, time, type) {
-            document.getElementById('edit_id').value = id;
-            document.getElementById('edit_name').value = name;
-            document.getElementById('edit_doctor').value = doctor;
-            document.getElementById('edit_date').value = date;
-            document.getElementById('edit_time').value = time;
-            document.getElementById('edit_type').value = type;
+document.getElementById('editForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const saveButton = this.querySelector('button[type="submit"]');
+    saveButton.disabled = true;
+    saveButton.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Saving...`;
 
-            const modal = new bootstrap.Modal(document.getElementById('editModal'));
-            modal.show();
-        }
+    const id = document.getElementById('edit_id').value;
+    const payload = {
+        name: document.getElementById('edit_name').value.trim(),
+        doctor: document.getElementById('edit_doctor').value,
+        date: document.getElementById('edit_date').value,
+        time: document.getElementById('edit_time').value,
+        type: document.getElementById('edit_type').value
+    };
 
-        // Handle edit form submission
-        document.getElementById('editForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+    fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) return response.json().then(err => { throw new Error(err.message || `Update failed: ${response.statusText} (Status: ${response.status})`)});
+        return response.json();
+    })
+    .then(() => {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+        if (modal) modal.hide();
+        renderAppointments();
+        showThemedToast('Appointment updated successfully!', 'success');
+    })
+    .catch(error => {
+        console.error('Error updating appointment:', error);
+        showThemedToast(error.message || 'Failed to update. Please try again.', 'error');
+    })
+    .finally(() => {
+        saveButton.disabled = false;
+        saveButton.innerHTML = `Save Changes`;
+    });
+});
 
-            const id = document.getElementById('edit_id').value;
-            const payload = {
-                name: document.getElementById('edit_name').value.trim(),
-                doctor: document.getElementById('edit_doctor').value.trim(),
-                date: document.getElementById('edit_date').value,
-                time: document.getElementById('edit_time').value,
-                type: document.getElementById('edit_type').value
-            };
-
-            fetch(`${API_URL}/${id}`, {
-                method: "PUT",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(payload)
-            })
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to update appointment');
-                const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
-                modal.hide();
-                renderAppointments();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to update appointment. Please try again.');
-            });
-        });
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', renderAppointments);
-    </script>
+document.addEventListener('DOMContentLoaded', renderAppointments);
+</script>
 </body>
 </html>

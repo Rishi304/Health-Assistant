@@ -1,32 +1,293 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Register | Virtual Health Assistant</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container">
-      <a class="navbar-brand" href="/">Virtual Health Assistant</a>
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
-        </ul>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register | Virtual Health Assistant</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        /* Modern Dark Theme Variables */
+        --primary-bg: #0f0f23;
+        --secondary-bg: #1a1a2e;
+        --tertiary-bg: #16213e;
+        --surface-dark: #252545;
+        --surface-light: #2d2d44;
+        --surface-hover: #343454;
+
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        --warning-gradient: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%);
+
+        --neon-blue: #00d4ff;
+        --neon-purple: #a855f7;
+        --neon-pink: #ec4899;
+        --neon-green: #10b981;
+        --neon-yellow: #f59e0b;
+
+        --text-primary: #ffffff;
+        --text-secondary: #b8bcc8;
+        --text-muted: #8b8fa3;
+        --text-accent: #667eea;
+
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --glass-strong: rgba(255, 255, 255, 0.15);
+
+        --shadow-glow: 0 0 40px rgba(102, 126, 234, 0.15);
+        --shadow-strong: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        --shadow-card: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 24px;
+        --radius-2xl: 32px;
+        --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html { scroll-behavior: smooth; height: 100%; }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--primary-bg);
+        color: var(--text-primary);
+        line-height: 1.6;
+        font-weight: 400;
+        overflow-x: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      body::before {
+        content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background:
+            radial-gradient(ellipse at 30% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 60%),
+            radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 60%),
+            radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.05) 0%, transparent 70%);
+        pointer-events: none; z-index: -1;
+      }
+
+      /* Navbar Styling */
+      .navbar {
+        background: rgba(15, 15, 35, 0.9) !important;
+        backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        border-bottom: 1px solid var(--glass-border);
+        padding: 1.2rem 0;
+        transition: var(--transition);
+        width: 100%;
+      }
+      .navbar-brand {
+        font-family: 'Manrope', sans-serif; font-weight: 800;
+        font-size: 1.5rem; color: var(--text-primary) !important;
+        display: flex; align-items: center;
+        text-shadow: 0 0 15px rgba(102, 126, 234, 0.25);
+      }
+      .navbar-brand .fa-heartbeat { color: var(--neon-blue); animation: pulse 2s infinite; }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.1); }
+      }
+      .logo { /* Navbar logo image container */
+        width: 40px; height: 40px; margin-right: 12px;
+        border-radius: 50%; background: var(--primary-gradient); padding: 2px;
+      }
+      .myimg { /* Actual image for logo */
+        width: 100%; height: 100%; border-radius: 50%;
+        object-fit: cover; background-color: var(--surface-dark); border: none;
+      }
+
+      .main-content { /* Wrapper for register container for centering */
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 2rem 0;
+      }
+
+      /* Register Container - Styled like content-section-wrapper */
+      .register-container {
+        background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        border: 1px solid var(--glass-border); border-radius: var(--radius-2xl);
+        padding: 3rem;
+        box-shadow: var(--shadow-card);
+        width: 100%; max-width: 500px;
+        position: relative; overflow: hidden;
+      }
+      .register-container::before { /* Top accent bar */
+        content: ''; position: absolute; top: 0; left: 0; right: 0;
+        height: 4px; background: var(--accent-gradient); /* Different gradient for variety */
+        border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+      }
+      .register-container h2 {
+        font-family: 'Manrope', sans-serif; font-weight: 700;
+        color: var(--text-primary); margin-bottom: 2.5rem;
+        font-size: 1.8rem;
+      }
+      .register-container h2 .fas { /* Icon in heading */
+        color: var(--neon-purple); margin-right: 0.8rem; /* Purple accent for register */
+      }
+
+      /* Form Elements */
+      .form-label {
+        color: var(--text-secondary); font-weight: 500;
+        margin-bottom: 0.6rem; font-size: 0.9rem;
+      }
+      .form-control {
+        padding: 0.9rem 1.1rem; border-radius: var(--radius-lg);
+        border: 1px solid var(--glass-border); background: var(--glass-strong);
+        color: var(--text-primary); transition: var(--transition); font-size: 0.95rem;
+      }
+      .form-control::placeholder { color: var(--text-muted); opacity: 0.8; }
+      .form-control:focus {
+        border-color: var(--neon-blue); background: var(--surface-hover);
+        box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.2); color: var(--text-primary);
+      }
+      .btn-register-submit { /* Custom class for Register button */
+        background: var(--accent-gradient); border: none; padding: 0.85rem 1.75rem;
+        border-radius: var(--radius-xl); font-weight: 600; color: var(--primary-bg); /* Dark text on bright gradient */
+        transition: var(--transition); text-transform: uppercase; font-size: 0.95rem; letter-spacing:0.8px;
+        box-shadow: var(--shadow-sm);
+      }
+      .btn-register-submit:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(79, 172, 254, 0.2), var(--shadow-glow); /* Blueish glow */
+        filter: brightness(1.15);
+      }
+      .btn-register-submit .fas { margin-right: 0.6rem; }
+
+      /* Error Messages (Alerts) */
+      .alert {
+        background-color: var(--glass-strong) !important;
+        backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+        color: var(--text-primary);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--neon-pink); /* Defaulting to error for register page flash */
+        border-left-width: 4px !important;
+        padding: 0.8rem 1rem; font-size: 0.9rem;
+      }
+      .alert-dismissible .btn-close { filter: invert(1) grayscale(100%) brightness(150%); }
+      /* If using different categories for flash, you can add more specific styles: */
+      .alert-danger::before, .alert-error::before { content:"\f06a"; font-family:"Font Awesome 6 Free"; font-weight:900; color:var(--neon-pink); margin-right:0.5em; }
+
+
+      .register-container .mt-3 p { color: var(--text-secondary); font-size: 0.9rem; }
+      .register-container .mt-3 a {
+        color: var(--neon-blue); text-decoration: none; font-weight: 500;
+      }
+      .register-container .mt-3 a:hover {
+        color: var(--text-primary); text-decoration: underline;
+        filter: brightness(1.2);
+      }
+
+      /* Footer Styling */
+      footer {
+        background: var(--secondary-bg); position: relative;
+        padding: 3rem 0 2rem;
+        overflow: hidden; border-top: 3px solid;
+        border-image-slice: 1; border-image-source: var(--primary-gradient);
+        margin-top: auto;
+        width: 100%;
+      }
+       footer p { color: var(--text-muted); font-size: 0.9rem; margin-bottom:0; }
+       footer a { color: var(--text-muted); text-decoration:none; transition: color 0.3s ease; }
+       footer a:hover { color: var(--neon-blue); }
+
+        @media (max-width: 768px) {
+          .register-container { padding: 2rem; margin: 2rem 1rem; }
+          .main-content { align-items: flex-start; padding-top:2rem; }
+        }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+           <div class="logo d-none d-sm-flex">
+             <img class="myimg" src="{{ url_for('static', filename='VirtualHealthAssistant.png') }}" alt="VHA Logo">
+           </div>
+          <i class="fas fa-heartbeat me-2 d-sm-none"></i>
+          Virtual Health Assistant
+        </a>
       </div>
-    </div>
-  </nav>
-  <div class="container">
-    <div class="login-container mt-5 p-4 shadow rounded bg-white" style="max-width: 400px; margin: auto;">
-      <h2 class="mb-3 text-center">Register</h2>
-      <form method="POST">
-        <input type="text" name="username" class="form-control mb-2" placeholder="Username" required>
-        <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
-        <button type="submit" class="btn btn-primary w-100">Register</button>
-        {% if error %}<div class="alert alert-danger mt-2">{{ error }}</div>{% endif %}
-      </form>
-    </div>
-  </div>
-</body>
+    </nav>
+
+    <main class="main-content">
+      <div class="register-container">
+        <h2 class="text-center mb-4"><i class="fas fa-user-edit me-2"></i>Create Your Account</h2>
+
+        {% if error %}
+          <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            {{ error }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endif %}
+        <!-- Example for other flashed messages if you use them with categories -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages and not error %} <!-- Only show if not already handled by `if error` -->
+                {% for category, message in messages %}
+                <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show mb-4" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+
+        <form method="POST" action="{{ url_for('register') }}">
+          {{ form.hidden_tag() if form and form.hidden_tag }}
+          <div class="mb-4">
+            <label for="username" class="form-label">Choose a Username</label>
+            <input type="text" class="form-control" id="username" name="username" required placeholder="Enter a unique username">
+          </div>
+          <div class="mb-4">
+            <label for="password" class="form-label">Create a Secure Password</label>
+            <input type="password" class="form-control" id="password" name="password" required placeholder="Minimum 8 characters">
+          </div>
+           <!-- Optional: Confirm Password field
+           <div class="mb-4">
+            <label for="confirm_password" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required placeholder="Re-enter your password">
+          </div>
+          -->
+          <button type="submit" class="btn btn-register-submit w-100 py-2 mt-2">
+            <i class="fas fa-user-check me-2"></i>Register Account
+          </button>
+        </form>
+
+        <div class="mt-4 text-center">
+          <p>Already a member? <a href="{{ url_for('login') }}">Login to Your Account</a></p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Added -->
+    <footer class="mt-auto">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                <p>© 2024 Virtual Health Assistant. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <p>
+                <a href="#" class="me-3">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                </p>
+            </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>
