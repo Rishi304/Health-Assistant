@@ -1,14 +1,15 @@
+import os
 import pickle
+
 import mysql.connector
 import numpy as np
 import pandas as pd
 from flask import (Flask, flash, jsonify, redirect, render_template, request,
-                   url_for, session)
+                   session, url_for)
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_login import (LoginManager, UserMixin, current_user, login_required,
                          login_user, logout_user)
-import os
 
 app = Flask(__name__)
 app.secret_key = '1234'
@@ -35,7 +36,9 @@ precautions = pd.read_csv("datasets/precautions_df.csv")
 workout = pd.read_csv("datasets/workout_df.csv")
 description = pd.read_csv("datasets/description.csv")
 medication = pd.read_csv("datasets/medications.csv")
+medication_sample = pd.read_csv("datasets/medication_sample.csv")
 diets = pd.read_csv("datasets/diets.csv")
+diet_sample = pd.read_csv("datasets/diet_sample.csv")
 
 # Flask Login and Bcrypt
 bcrypt = Bcrypt(app)
@@ -55,10 +58,20 @@ class User(UserMixin):
 
 
 @login_manager.user_loader
-def load_user(user_id):
+def load_user(user_id):  # user_id from session is a string
     conn = get_db_conn()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+    db_user_id_to_query = None
+    try:
+        # Attempt to convert user_id to int for DB query, assuming 'id' column in DB is INT
+        db_user_id_to_query = int(user_id)
+    except ValueError:
+        # If user_id cannot be converted to int, it's an invalid ID format for an INT column
+        cursor.close()
+        conn.close()
+        return None
+
+    cursor.execute("SELECT * FROM users WHERE id = %s", (db_user_id_to_query,))
     user_data = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -120,10 +133,14 @@ def get_predicted_value(patient_symptoms):
 
 
 def helper(disease):
-    desc = " ".join(description[description['Disease'] == disease]['Description'])
-    pre = precautions[precautions['Disease'] == disease].iloc[:, 1:].values.tolist()
+    desc = " ".join(
+        description[description['Disease'] == disease]['Description'])
+    pre = precautions[precautions['Disease']
+                      == disease].iloc[:, 1:].values.tolist()
     pre = pre[0] if pre else []
-    meds = medication[medication['Disease'] == disease]['Medication'].tolist()
+    meds = medication_sample[medication_sample['Disease']
+                             == disease].iloc[:, 1:].values.tolist()
+    meds = meds[0] if meds else []
     diet = diets[diets['Disease'] == disease]['Diet'].tolist()
     wrk = workout[workout['disease'] == disease]['workout'].tolist()
     return desc, pre, meds, diet, wrk
@@ -141,9 +158,15 @@ def index():
 @login_required
 def predict():
     symptoms = request.form.get('symptoms')
-    if not symptoms or symptoms.strip().lower() == "symptoms":
+    cleanSymptoms = ""
+    for char in symptoms:
+        if char == ' ':
+            cleanSymptoms += "_"
+        else:
+            cleanSymptoms += char
+    if not cleanSymptoms or cleanSymptoms.strip().lower() == "symptoms":
         return render_template('index.html', message="Please write correct symptoms")
-    user_symptoms = [s.strip("[]' ") for s in symptoms.split(',')]
+    user_symptoms = [s.strip("[]' ") for s in cleanSymptoms.split(',')]
     predicted_disease = get_predicted_value(user_symptoms)
     dis_des, pre, meds, diet, wrk = helper(predicted_disease)
     return render_template('index.html', predicted_disease=predicted_disease, dis_des=dis_des, my_precautions=pre,
@@ -157,17 +180,22 @@ def register():
         password = request.form['password']
         conn = get_db_conn()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
-        if cursor.fetchone():
-            flash('User already exists', 'danger')
-        else:
-            hashed_pw = bcrypt.generate_password_hash(password).decode('utf-8')
-            cursor.execute("INSERT INTO users (username, password_hash) VALUES (%s, %s)", (username, hashed_pw))
-            conn.commit()
-            flash('Registered successfully! Please login.', 'success')
-            return redirect(url_for('login'))
-        cursor.close()
-        conn.close()
+        try:
+            cursor.execute(
+                "SELECT * FROM users WHERE username = %s", (username,))
+            if cursor.fetchone():
+                flash('User already exists', 'danger')
+            else:
+                hashed_pw = bcrypt.generate_password_hash(
+                    password).decode('utf-8')
+                cursor.execute(
+                    "INSERT INTO users (username, password_hash) VALUES (%s, %s)", (username, hashed_pw))
+                conn.commit()
+                flash('Registered successfully! Please login.', 'success')
+                return redirect(url_for('login'))
+        finally:
+            cursor.close()
+            conn.close()
     return render_template('register.html')
 
 
@@ -180,15 +208,19 @@ def login():
         password = request.form['password']
         conn = get_db_conn()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
-        user_data = cursor.fetchone()
-        cursor.close()
-        conn.close()
-        if user_data and bcrypt.check_password_hash(user_data['password_hash'], password):
-            user_obj = User(user_data)
-            login_user(user_obj)
-            return redirect(url_for('index'))
-        flash('Invalid credentials', 'danger')
+        try:
+            cursor.execute(
+                "SELECT * FROM users WHERE username = %s", (username,))
+            user_data = cursor.fetchone()
+            if user_data and bcrypt.check_password_hash(user_data['password_hash'], password):
+                user_obj = User(user_data)
+                login_user(user_obj)
+                return redirect(url_for('index'))
+            else:
+                flash('Invalid credentials', 'danger')
+        finally:
+            cursor.close()
+            conn.close()
     return render_template('login.html')
 
 
@@ -203,7 +235,8 @@ def logout():
 @app.route('/session')
 def check_session():
     is_auth = current_user.is_authenticated
-    username = current_user.username if is_auth and hasattr(current_user, 'username') else None
+    username = current_user.username if is_auth and hasattr(
+        current_user, 'username') else None
     return jsonify({'authenticated': is_auth, 'username': username})
 
 
@@ -265,7 +298,8 @@ def get_categories():
     conn = get_db_conn()
     cursor = conn.cursor(dictionary=True)
     # Using DISTINCT to handle the duplicate data in your table
-    cursor.execute("SELECT DISTINCT name, description, icon_class FROM categories ORDER BY name")
+    cursor.execute(
+        "SELECT DISTINCT name, description, icon_class FROM categories ORDER BY name")
     categories = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -300,7 +334,7 @@ def get_cart():
     cursor = conn.cursor(dictionary=True)
     # Join with medicines to get full details
     cursor.execute("""
-        SELECT ci.medicine_id, m.name, m.image_url, ci.quantity, 
+        SELECT ci.medicine_id, m.name, m.image_url, ci.quantity,
                COALESCE(m.discount_price, m.price) as price_each
         FROM cart_items ci
         JOIN medicines m ON ci.medicine_id = m.id
@@ -311,7 +345,8 @@ def get_cart():
     conn.close()
 
     # Calculate total price on the server for accuracy
-    total_price = sum(float(item['price_each']) * item['quantity'] for item in cart_items)
+    total_price = sum(float(item['price_each']) *
+                      item['quantity'] for item in cart_items)
     return jsonify({'items': cart_items, 'total_price': total_price})
 
 
@@ -332,21 +367,24 @@ def add_to_cart():
     cursor = conn.cursor(dictionary=True)
 
     # Check if item already in cart
-    cursor.execute("SELECT quantity FROM cart_items WHERE cart_id = %s AND medicine_id = %s", (cart_id, medicine_id))
+    cursor.execute(
+        "SELECT quantity FROM cart_items WHERE cart_id = %s AND medicine_id = %s", (cart_id, medicine_id))
     existing_item = cursor.fetchone()
 
     # Check for available stock
-    cursor.execute("SELECT stock_quantity, name FROM medicines WHERE id = %s", (medicine_id,))
+    cursor.execute(
+        "SELECT stock_quantity, name FROM medicines WHERE id = %s", (medicine_id,))
     medicine = cursor.fetchone()
     if not medicine:
-        cursor.close();
+        cursor.close()
         conn.close()
         return jsonify({'error': 'Medicine not found'}), 404
 
-    new_quantity = (existing_item['quantity'] if existing_item else 0) + quantity_to_add
+    new_quantity = (existing_item['quantity']
+                    if existing_item else 0) + quantity_to_add
 
     if medicine['stock_quantity'] < new_quantity:
-        cursor.close();
+        cursor.close()
         conn.close()
         return jsonify(
             {'error': f"Not enough stock for {medicine['name']}. Available: {medicine['stock_quantity']}"}), 400
@@ -379,15 +417,16 @@ def update_cart_item(medicine_id):
     conn = get_db_conn()
     cursor = conn.cursor(dictionary=True)
 
-    cursor.execute("SELECT stock_quantity, name FROM medicines WHERE id = %s", (medicine_id,))
+    cursor.execute(
+        "SELECT stock_quantity, name FROM medicines WHERE id = %s", (medicine_id,))
     medicine = cursor.fetchone()
     if not medicine:
-        cursor.close();
+        cursor.close()
         conn.close()
         return jsonify({'error': 'Medicine not found'}), 404
 
     if medicine['stock_quantity'] < new_quantity:
-        cursor.close();
+        cursor.close()
         conn.close()
         return jsonify(
             {'error': f"Not enough stock for {medicine['name']}. Available: {medicine['stock_quantity']}"}), 400
@@ -410,7 +449,8 @@ def remove_from_cart(medicine_id):
 
     conn = get_db_conn()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM cart_items WHERE cart_id = %s AND medicine_id = %s", (cart_id, medicine_id))
+    cursor.execute(
+        "DELETE FROM cart_items WHERE cart_id = %s AND medicine_id = %s", (cart_id, medicine_id))
     conn.commit()
 
     affected_rows = cursor.rowcount
@@ -441,7 +481,7 @@ def create_order():
     try:
         conn.start_transaction()
         cursor.execute("""
-            SELECT ci.medicine_id, m.name, ci.quantity, 
+            SELECT ci.medicine_id, m.name, ci.quantity,
                    COALESCE(m.discount_price, m.price) as price_each,
                    m.stock_quantity
             FROM cart_items ci JOIN medicines m ON ci.medicine_id = m.id
